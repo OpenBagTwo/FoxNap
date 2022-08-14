@@ -8,15 +8,11 @@ import net.openbagtwo.foxnap.FoxNap;
 
 public class DiscRegistry {
 
-    private int comparator_output = 0;
-
-    public final MusicDiscItem TOBU_COLORS = this.registerDisc("tobu_colors");
-
-    public MusicDiscItem registerDisc(String track_name) {
+    public static MusicDiscItem registerDisc(String track_name, int comparator_output) {
         MusicDiscItem disc = Registry.register(
                 Registry.ITEM,
                 new Identifier(FoxNap.MOD_ID, track_name),
-                new Disc((++this.comparator_output) % 15 + 1, registerTrack(track_name)));
+                new Disc(comparator_output, registerTrack(track_name)));
         FoxNap.LOGGER.info("Registered " + track_name + " with comparator signal " + disc.getComparatorOutput());
         return disc;
     }
@@ -25,5 +21,8 @@ public class DiscRegistry {
         return Registry.register(Registry.SOUND_EVENT, track_id, new SoundEvent(track_id));
     }
 
-    public static void init() {}
+    public static void init() {
+        int comparator_output = 0;
+        registerDisc("tobu_colors", (comparator_output++) % 15 + 1);
+    }
 }
