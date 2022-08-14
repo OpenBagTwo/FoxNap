@@ -24,5 +24,6 @@ public class DiscRegistry {
     public static void init() {
         int comparator_output = 0;
         registerDisc("tobu-colors", (comparator_output++) % 15 + 1);
+        registerDisc("macleod-danse_macabre_saint_saens", (comparator_output++) % 15 + 1);
     }
 }
