@@ -1,6 +1,6 @@
 {
-    "foxnap.tobu-colors":{
-        "category": "records",
-        "sounds":["foxnap:records/tobu-colors"]
+    "tobu-colors": {
+        "category": "record",
+        "sounds": ["foxnap:records/tobu-colors"]
     }
 }
