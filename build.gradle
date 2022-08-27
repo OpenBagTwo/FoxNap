@@ -1,7 +1,7 @@
 plugins {
 	id 'fabric-loom' version '0.12-SNAPSHOT'
 	id 'maven-publish'
-	id "fr.brouillard.oss.gradle.jgitver" version "0.6.1"
+	id "fr.brouillard.oss.gradle.jgitver" version "0.9.1"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
