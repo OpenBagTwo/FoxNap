@@ -1,9 +1,9 @@
 {
-    "tobu-colors": {
+    "track_1": {
         "category": "record",
         "sounds": ["foxnap:records/tobu-colors"]
     },
-    "macleod-danse_macabre_saint_saens": {
+    "track_2": {
         "category": "record",
         "sounds": ["foxnap:records/macleod-danse_macabre_saint_saens"]
     }

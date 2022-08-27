@@ -1,6 +1,6 @@
 {
-  "item.foxnap.tobu-colors":  "Music Disc",
-  "item.foxnap.tobu-colors.desc": "Tobu - Colors",
-  "item.foxnap.macleod-danse_macabre_saint_saens":  "Music Disc",
-  "item.foxnap.macleod-danse_macabre_saint_saens.desc": "K. Macleod - Danse Macabre (Saint-Saënz)"
+  "item.foxnap.track_1":  "Music Disc",
+  "item.foxnap.track_1.desc": "Tobu - Colors",
+  "item.foxnap.track_2":  "Music Disc",
+  "item.foxnap.track_2.desc": "K. Macleod - Danse Macabre (Saint-Saënz)"
 }

@@ -8,6 +8,8 @@ import net.openbagtwo.foxnap.FoxNap;
 
 public class DiscRegistry {
 
+    public static final int NUMBER_OF_DISCS = 2;
+
     public static MusicDiscItem registerDisc(String track_name, int comparator_output) {
         MusicDiscItem disc = Registry.register(
                 Registry.ITEM,
@@ -22,8 +24,8 @@ public class DiscRegistry {
     }
 
     public static void init() {
-        int comparator_output = 0;
-        registerDisc("tobu-colors", (comparator_output++) % 15 + 1);
-        registerDisc("macleod-danse_macabre_saint_saens", (comparator_output++) % 15 + 1);
+        for (int i=1; i<= NUMBER_OF_DISCS; i++){
+            registerDisc(String.format("track_%d", i), i % 15 + 1);
+        }
     }
 }
