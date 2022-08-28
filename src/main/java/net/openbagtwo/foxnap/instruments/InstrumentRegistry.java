@@ -1,5 +1,6 @@
 package net.openbagtwo.foxnap.instruments;
 
+import net.minecraft.item.Item;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -46,8 +47,8 @@ public class InstrumentRegistry {
    *
    * @return A list of fully instantiated and registered instruments
    */
-  public static List<OrchestraInstrument> init() {
-    ArrayList<OrchestraInstrument> instruments = new ArrayList<>();
+  public static List<Item> init() {
+    ArrayList<Item> instruments = new ArrayList<>();
     for (String instrument : INSTRUMENTS.keySet()) {
       instruments.add(registerInstrument(instrument));
       FoxNap.LOGGER.info("Registered " + instrument);

@@ -1,10 +1,10 @@
 package net.openbagtwo.foxnap;
 
 import net.fabricmc.api.ModInitializer;
-import net.openbagtwo.foxnap.discs.Disc;
+import net.minecraft.item.Item;
+import net.minecraft.item.MusicDiscItem;
 import net.openbagtwo.foxnap.discs.DiscRegistry;
 import net.openbagtwo.foxnap.instruments.InstrumentRegistry;
-import net.openbagtwo.foxnap.instruments.OrchestraInstrument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +19,8 @@ public class FoxNap implements ModInitializer {
   @Override
   public void onInitialize() {
     LOGGER.info("Registering " + MOD_NAME);
-    List<OrchestraInstrument> instruments = InstrumentRegistry.init();
-    List<Disc> custom_discs = DiscRegistry.init();
+    List<Item> instruments = InstrumentRegistry.init();
+    List<MusicDiscItem> custom_discs = DiscRegistry.init();
     LOGGER.info(MOD_NAME + " Initialization Complete");
   }
 }

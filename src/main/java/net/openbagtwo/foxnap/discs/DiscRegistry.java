@@ -2,6 +2,7 @@ package net.openbagtwo.foxnap.discs;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.item.MusicDiscItem;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -14,7 +15,7 @@ public class DiscRegistry {
 
 
   // TODO: load from config file
-  public static final int NUMBER_OF_DISCS = 2;
+  private static final int NUMBER_OF_DISCS = 2;
 
   /**
    * Create a new music disc, and register the item and its sound event
@@ -49,8 +50,8 @@ public class DiscRegistry {
    *
    * @return A list of fully instantiated and registered music discs
    */
-  public static List<Disc> init() {
-    ArrayList<Disc> discs = new ArrayList<>();
+  public static List<MusicDiscItem> init() {
+    ArrayList<MusicDiscItem> discs = new ArrayList<>();
     for (int i = 1; i <= NUMBER_OF_DISCS; i++) {
       discs.add(registerDisc(String.format("track_%d", i), (i - 1) % 15 + 1));
     }
