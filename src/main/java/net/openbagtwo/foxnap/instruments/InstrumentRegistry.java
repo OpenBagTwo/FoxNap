@@ -9,36 +9,51 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Registry of all instruments created by this mod
+ */
 public class InstrumentRegistry {
 
-    private static final Map<String, Integer> INSTRUMENTS = Map.of(
-            "trumpet", 11
+  private static final Map<String, Integer> INSTRUMENTS = Map.of(
+      "trumpet", 11
+  );
+
+
+  /**
+   * Create a new instrument, and register the item and its sound event
+   *
+   * @param instrumentName the name of the instrument (which should also be the name of its sound
+   *                       event)
+   * @return the fully instantiated and registered instrument
+   */
+  public static OrchestraInstrument registerInstrument(String instrumentName) {
+    return Registry.register(
+        Registry.ITEM,
+        new Identifier(FoxNap.MOD_ID, instrumentName),
+        new OrchestraInstrument(
+            registerInstrumentSound(instrumentName),
+            20 * INSTRUMENTS.get(instrumentName))
     );
+  }
 
+  private static SoundEvent registerInstrumentSound(String instrumentName) {
+    Identifier playSoundId = new Identifier(FoxNap.MOD_ID, instrumentName);
+    return Registry.register(Registry.SOUND_EVENT, playSoundId, new SoundEvent(playSoundId));
+  }
 
-    public static OrchestraInstrument registerInstrument(String instrumentName) {
-        return Registry.register(
-                Registry.ITEM,
-                new Identifier(FoxNap.MOD_ID, instrumentName),
-                new OrchestraInstrument(
-                        registerInstrumentSound(instrumentName),
-                        20 * INSTRUMENTS.get(instrumentName))
-        );
+  /**
+   * Create and register all instruments defined by this mod
+   *
+   * @return A list of fully instantiated and registered instruments
+   */
+  public static List<OrchestraInstrument> init() {
+    ArrayList<OrchestraInstrument> instruments = new ArrayList<>();
+    for (String instrument : INSTRUMENTS.keySet()) {
+      instruments.add(registerInstrument(instrument));
+      FoxNap.LOGGER.info("Registered " + instrument);
     }
-
-    private static SoundEvent registerInstrumentSound(String instrumentName) {
-        Identifier playSoundId = new Identifier(FoxNap.MOD_ID, instrumentName);
-        return Registry.register(Registry.SOUND_EVENT, playSoundId, new SoundEvent(playSoundId));
-    }
-
-    public static List<OrchestraInstrument> init() {
-        ArrayList<OrchestraInstrument> instruments = new ArrayList<>();
-        for (String instrument : INSTRUMENTS.keySet()) {
-            instruments.add(registerInstrument(instrument));
-            FoxNap.LOGGER.info("Registered " + instrument);
-        }
-        return instruments;
+    return instruments;
 
 
-    }
+  }
 }
