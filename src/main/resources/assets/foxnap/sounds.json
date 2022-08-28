@@ -6,5 +6,9 @@
     "track_2": {
         "category": "record",
         "sounds": ["foxnap:records/macleod-danse_macabre_saint_saens"]
+    },
+    "trumpet": {
+    	"category": "record",
+        "sounds": ["foxnap:instruments/trumpet"]
     }
 }

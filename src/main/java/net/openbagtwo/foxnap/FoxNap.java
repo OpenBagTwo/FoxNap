@@ -2,6 +2,7 @@ package net.openbagtwo.foxnap;
 
 import net.fabricmc.api.ModInitializer;
 import net.openbagtwo.foxnap.discs.DiscRegistry;
+import net.openbagtwo.foxnap.instruments.InstrumentRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ public class FoxNap implements ModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Registering FoxNap Music Library");
+		InstrumentRegistry.init();
 		DiscRegistry.init();
 		LOGGER.info("FoxNap Initialization Complete");
 	}
