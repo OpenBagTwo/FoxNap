@@ -26,8 +26,6 @@ public class OrchestraInstrument extends Item {
         this.cooldown = cooldown;
     }
 
-
-
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         user.setCurrentHand(hand);
