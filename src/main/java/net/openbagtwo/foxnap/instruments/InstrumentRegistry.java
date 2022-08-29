@@ -48,6 +48,11 @@ public class InstrumentRegistry {
    * @return A list of fully instantiated and registered instruments
    */
   public static List<Item> init() {
+    Registry.register(
+        Registry.ITEM,
+        new Identifier(FoxNap.MOD_ID, "literally_just_a_goat_horn"),
+        new LiterallyJustAGoatHorn()
+    );
     ArrayList<Item> instruments = new ArrayList<>();
     for (String instrument : INSTRUMENTS.keySet()) {
       instruments.add(registerInstrument(instrument));
