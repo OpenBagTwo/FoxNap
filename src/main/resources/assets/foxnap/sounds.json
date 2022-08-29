@@ -1,18 +1,26 @@
 {
-    "track_1": {
-        "category": "record",
-        "sounds": ["foxnap:records/tobu-colors"]
-    },
-    "track_2": {
-        "category": "record",
-        "sounds": ["foxnap:records/macleod-danse_macabre_saint_saens"]
-    },
-    "trumpet": {
-    	"category": "record",
-        "sounds": ["foxnap:instruments/trumpet_As3_phrase_mezzo-forte_double-tonguing"]
-    },
-    "bassoon": {
-    	"category": "record",
-        "sounds": ["foxnap:instruments/bassoon_C4_phrase_mezzo-forte_tenuto"]
-    }
+  "track_1": {
+    "category": "record",
+    "sounds": [
+      "foxnap:records/tobu-colors"
+    ]
+  },
+  "track_2": {
+    "category": "record",
+    "sounds": [
+      "foxnap:records/macleod-danse_macabre_saint_saens"
+    ]
+  },
+  "trumpet": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/trumpet_as3_phrase_mezzo-forte_double-tonguing"
+    ]
+  },
+  "bassoon": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/bassoon_c4_phrase_mezzo-forte_tenuto"
+    ]
+  }
 }

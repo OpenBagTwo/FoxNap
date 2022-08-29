@@ -17,8 +17,8 @@ import java.util.Map;
 public class InstrumentRegistry {
 
   private static final Map<String, Integer> INSTRUMENTS = Map.of(
-          "trumpet", 10,
-          "bassoon", 8
+      "trumpet", 10,
+      "bassoon", 8
   );
 
 
