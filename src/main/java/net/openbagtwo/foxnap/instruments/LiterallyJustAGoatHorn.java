@@ -6,6 +6,7 @@ import net.minecraft.item.Instruments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.TagKey;
@@ -39,6 +40,10 @@ public class LiterallyJustAGoatHorn extends GoatHornItem {
              - implement two-item instruments (e.g. violin + bow)
          */
     ItemStack itemStack = user.getStackInHand(hand);
+
+    NbtCompound nbtCompound = itemStack.getOrCreateNbt();
+    nbtCompound.putString("instrument", "minecraft:ponder_goat_horn");
+
     user.setCurrentHand(hand);
 
     playSound(world, user, this.soundEvent);
