@@ -39,7 +39,7 @@ public class InstrumentRegistry {
     );
   }
 
-  private static SoundEvent registerInstrumentSound(String instrumentName) {
+  public static SoundEvent registerInstrumentSound(String instrumentName) {
     Identifier playSoundId = new Identifier(FoxNap.MOD_ID, instrumentName);
     return Registry.register(Registry.SOUND_EVENT, playSoundId, new SoundEvent(playSoundId));
   }

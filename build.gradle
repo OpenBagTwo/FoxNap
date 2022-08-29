@@ -15,6 +15,10 @@ repositories {
     mavenCentral()
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/foxnap.accesswidener")
+}
+
 dependencies {
 
     minecraft "com.mojang:minecraft:${project.minecraft_version}"

@@ -12,7 +12,7 @@ anywhere jukeboxes can be found.
 
 _TODO_
 
-## License and Credits
+## License and Acknowledgements
 
 All code in this repository is licensed under
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html).
@@ -26,3 +26,7 @@ by [@AeronicaMC](https://github.com/AeronicaMC).
 
 Instrument sounds are courtesy of [Philharmonia](https://philharmonia.co.uk)'s
 [sound sample library](https://philharmonia.co.uk/resources/sound-samples/).
+
+Many thanks to [@FoundationGames](https://github.com/FoundationGames) for making the code of
+his awesome [Sandwichable](https://github.com/FoundationGames/Sandwichable) mod so easy to
+understand and learn from.
