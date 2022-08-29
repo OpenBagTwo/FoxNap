@@ -9,6 +9,10 @@
     },
     "trumpet": {
     	"category": "record",
-        "sounds": ["foxnap:instruments/trumpet"]
+        "sounds": ["foxnap:instruments/trumpet_As3_phrase_mezzo-forte_double-tonguing"]
+    },
+    "bassoon": {
+    	"category": "record",
+        "sounds": ["foxnap:instruments/bassoon_C4_phrase_mezzo-forte_tenuto"]
     }
 }
