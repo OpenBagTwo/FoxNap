@@ -32,7 +32,7 @@ public class InstrumentRegistry {
     return Registry.register(
         Registry.ITEM,
         new Identifier(FoxNap.MOD_ID, instrumentName),
-        new LiterallyJustAGoatHorn(
+        new SecretlyJustAGoatHorn(
             registerInstrumentSound(instrumentName),
             20 * INSTRUMENTS.get(instrumentName))
     );
