@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "foxnap",
   "version": "${version}",
-
   "name": "Fox Nap",
   "description": "Live Music Concert Series at the Halperin Center for the Performing Arts at Fox Nap",
   "authors": [
@@ -12,17 +11,14 @@
     "sources": "https://github.com/OpenBagTwo/FoxNap",
     "issues": "https://github.com/OpenBagTwo/FoxNap/issues"
   },
-
   "license": "GPLV3",
   "icon": "assets/foxnap/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
       "net.openbagtwo.foxnap.FoxNap"
     ]
   },
-
   "depends": {
     "fabricloader": ">=0.14.6",
     "fabric": "*",
@@ -31,5 +27,6 @@
   },
   "suggests": {
     "sbm-jukebox": "*"
-  }
+  },
+  "accessWidener": "foxnap.accesswidener"
 }

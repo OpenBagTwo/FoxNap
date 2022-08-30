@@ -11,6 +11,12 @@
       "foxnap:records/macleod-danse_macabre_saint_saens"
     ]
   },
+  "condutor_baton": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/whip__025_forte_struck-together"
+    ]
+  },
   "trumpet": {
     "category": "record",
     "sounds": [
