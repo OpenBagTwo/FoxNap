@@ -8,8 +8,10 @@ import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerProfessionBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -113,24 +115,64 @@ public class Conductor {
    */
   public static void init(List<Item> instruments, List<MusicDiscItem> records) {
 
-    ArrayList<TradeOffers.Factory> level1Trades = new ArrayList<>();
-    level1Trades.addAll(
-        Arrays.asList(
-            buyTonewood(Items.STRIPPED_SPRUCE_WOOD),
-            buyTonewood(Items.STRIPPED_ACACIA_WOOD),
-            buyTonewood(Items.STRIPPED_DARK_OAK_WOOD),
-            buyTonewood(Items.STRIPPED_MANGROVE_WOOD)
-
-        )
+    List<TradeOffers.Factory> level1Trades = Arrays.asList(
+        buyTonewood(Items.STRIPPED_SPRUCE_WOOD),
+        buyTonewood(Items.STRIPPED_ACACIA_WOOD),
+        buyTonewood(Items.STRIPPED_DARK_OAK_WOOD),
+        buyTonewood(Items.STRIPPED_MANGROVE_WOOD)
     );
     for (Item instrument : instruments) {
       level1Trades.add(sellInstrument(instrument, 1));
     }
 
+    List<TradeOffers.Factory> level2Trades = new ArrayList<>();
+    level2Trades.add(buyShofar());
+    for (Item instrument : instruments) {
+      level2Trades.add(sellInstrument(instrument, 2));
+    }
+
+    List<TradeOffers.Factory> level3Trades = Arrays.asList(
+        buyMusicDisc(Items.MUSIC_DISC_13),
+        buyMusicDisc(Items.MUSIC_DISC_CAT),
+        buyMusicDisc(Items.DISC_FRAGMENT_5)
+    );
+    for (Item instrument : instruments) {
+      level3Trades.add(sellInstrument(instrument, 3));
+    }
+
+    List<TradeOffers.Factory> level4Trades = new ArrayList<>();
+    if (FabricLoader.getInstance().isModLoaded("betterend")) {
+      for (String end_disc_name : Arrays.asList(
+          "strange_and_alien",
+          "grasping_at_stars",
+          "endseeker",
+          "eo_dracona"
+      )) {
+        Optional<Item> endDisc = Registry.ITEM.getOrEmpty(
+            new Identifier("betterend", "music_disc_" + end_disc_name)
+        );
+        if (endDisc.isPresent()) {
+          level4Trades.add(buyMusicDisc(endDisc.get()));
+        }
+      }
+    }
+    for (Item instrument : instruments) {
+      level4Trades.add(sellInstrument(instrument, 4));
+    }
+
+    List<TradeOffers.Factory> level5Trades = new ArrayList<>();
+    for (Item disc : records) {
+      level5Trades.add(sellMusicDisc(disc, 5));
+    }
+
     Registry.register(Registry.VILLAGER_PROFESSION, CONDUCTOR.id(), CONDUCTOR);
     TradeOffers.PROFESSION_TO_LEVELED_TRADE.put(
         CONDUCTOR, TradeOffers.copyToFastUtilMap(ImmutableMap.of(
-                1, level1Trades.toArray(new TradeOffers.Factory[1])
+                1, level1Trades.toArray(new TradeOffers.Factory[1]),
+                2, level2Trades.toArray(new TradeOffers.Factory[1]),
+                3, level3Trades.toArray(new TradeOffers.Factory[1]),
+                4, level4Trades.toArray(new TradeOffers.Factory[1]),
+                5, level5Trades.toArray(new TradeOffers.Factory[1])
             )
         )
     );
