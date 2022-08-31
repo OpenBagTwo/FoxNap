@@ -3,6 +3,15 @@
   "item.foxnap.track_1.desc": "Tobu - Colors",
   "item.foxnap.track_2":  "Music Disc",
   "item.foxnap.track_2.desc": "K. Macleod - Danse Macabre (Saint-Saënz)",
+  "item.foxnap.bassoon":  "Bassoon",
+  "item.foxnap.cello":  "Cello",
+  "item.foxnap.clarinet":  "Clarinet",
+  "item.foxnap.flute":  "Flute",
+  "item.foxnap.oboe":  "Oboe",
+  "item.foxnap.saxophone":  "Saxophone",
+  "item.foxnap.trombone":  "Trombone",
   "item.foxnap.trumpet":  "Trumpet",
-  "item.foxnap.bassoon":  "Bassoon"
+  "item.foxnap.tuba":  "Tuba",
+  "item.foxnap.viola":  "Viola",
+  "item.foxnap.violin":  "Violin"
 }

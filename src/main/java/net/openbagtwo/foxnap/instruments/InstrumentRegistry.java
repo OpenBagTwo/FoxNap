@@ -16,9 +16,18 @@ import java.util.Map;
  */
 public class InstrumentRegistry {
 
-  private static final Map<String, Integer> INSTRUMENTS = Map.of(
-      "trumpet", 10,
-      "bassoon", 8
+  private static final Map<String, Integer> INSTRUMENTS = Map.ofEntries(
+      Map.entry("bassoon", 8),
+      Map.entry("cello", 10),
+      Map.entry("clarinet", 5),
+      Map.entry("flute", 6),
+      Map.entry("oboe", 8),
+      Map.entry("saxophone", 4),
+      Map.entry("trombone", 3),
+      Map.entry("trumpet", 10),
+      Map.entry("tuba", 5),
+      Map.entry("viola", 9),
+      Map.entry("violin", 5)
   );
 
 

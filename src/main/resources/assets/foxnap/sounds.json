@@ -17,16 +17,71 @@
       "foxnap:instruments/whip__025_forte_struck-together"
     ]
   },
+  "bassoon": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/bassoon_c4_phrase_mezzo-forte_tenuto"
+    ]
+  },
+  "cello": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/cello_e3_phrase_cresc-decresc_arco-normal"
+    ]
+  },
+  "clarinet": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/clarinet_f3_long_mezzo-forte_minor-trill"
+    ]
+  },
+  "flute": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/flute_cs6_phrase_mezzo-forte_tremolo"
+    ]
+  },
+  "oboe": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/oboe_cs5_phrase_mezzo-forte_tenuto"
+    ]
+  },
+  "saxophone": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/saxophone_fs4_long_mezzo-forte_glissando"
+    ]
+  },
+  "trombone": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/trombone_f5_phrase_forte_glissando"
+    ]
+  },
   "trumpet": {
     "category": "record",
     "sounds": [
       "foxnap:instruments/trumpet_as3_phrase_mezzo-forte_double-tonguing"
     ]
   },
-  "bassoon": {
+  "tuba": {
     "category": "record",
     "sounds": [
-      "foxnap:instruments/bassoon_c4_phrase_mezzo-forte_tenuto"
+      "foxnap:instruments/tuba_f3_1_forte_tremolo"
+    ]
+  },
+  "viola": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/viola_g3_phrase_fortissimo_arco-tremolo"
+    ]
+  },
+  "violin": {
+    "category": "record",
+    "sounds": [
+      "foxnap:instruments/violin_cs4_phrase_mezzo-forte_arco-glissando"
     ]
   }
+
 }
