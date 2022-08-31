@@ -59,8 +59,8 @@ public class Conductor {
   }
 
   /**
-   * Specify goat horn trades. I *believe* that the villager will accept any goat horn (including
-   * musical instruments created by this mod, lol)
+   * Specify goat horn trades. The villager should accept any goat horn (but, interestingly, not our
+   * instruments which extend the GoatHornItem class!)
    *
    * @return Trade factory for the villager buying one goat horn for one emerald
    */

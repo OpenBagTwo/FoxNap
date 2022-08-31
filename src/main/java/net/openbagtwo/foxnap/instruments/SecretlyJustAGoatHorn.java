@@ -1,5 +1,7 @@
 package net.openbagtwo.foxnap.instruments;
 
+import java.util.List;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GoatHornItem;
 import net.minecraft.item.Item;
@@ -8,11 +10,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
 public class SecretlyJustAGoatHorn extends GoatHornItem {
 
@@ -26,6 +30,10 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
     );
     this.soundEvent = soundEvent;
     this.cooldown = cooldown;
+  }
+
+  @Override
+  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
   }
 
   @Override
