@@ -115,32 +115,38 @@ public class Conductor {
    */
   public static void init(List<Item> instruments, List<MusicDiscItem> records) {
 
-    List<TradeOffers.Factory> level1Trades = Arrays.asList(
-        buyTonewood(Items.STRIPPED_SPRUCE_WOOD),
-        buyTonewood(Items.STRIPPED_ACACIA_WOOD),
-        buyTonewood(Items.STRIPPED_DARK_OAK_WOOD),
-        buyTonewood(Items.STRIPPED_MANGROVE_WOOD)
+    ArrayList<TradeOffers.Factory> level1Trades = new ArrayList<>();
+    level1Trades.addAll(
+        Arrays.asList(
+            buyTonewood(Items.STRIPPED_SPRUCE_WOOD),
+            buyTonewood(Items.STRIPPED_ACACIA_WOOD),
+            buyTonewood(Items.STRIPPED_DARK_OAK_WOOD),
+            buyTonewood(Items.STRIPPED_MANGROVE_WOOD)
+        )
     );
     for (Item instrument : instruments) {
       level1Trades.add(sellInstrument(instrument, 1));
     }
 
-    List<TradeOffers.Factory> level2Trades = new ArrayList<>();
+    ArrayList<TradeOffers.Factory> level2Trades = new ArrayList<>();
     level2Trades.add(buyShofar());
     for (Item instrument : instruments) {
       level2Trades.add(sellInstrument(instrument, 2));
     }
 
-    List<TradeOffers.Factory> level3Trades = Arrays.asList(
-        buyMusicDisc(Items.MUSIC_DISC_13),
-        buyMusicDisc(Items.MUSIC_DISC_CAT),
-        buyMusicDisc(Items.DISC_FRAGMENT_5)
+    ArrayList<TradeOffers.Factory> level3Trades = new ArrayList<>();
+    level3Trades.addAll(
+        Arrays.asList(
+            buyMusicDisc(Items.MUSIC_DISC_13),
+            buyMusicDisc(Items.MUSIC_DISC_CAT),
+            buyMusicDisc(Items.DISC_FRAGMENT_5)
+        )
     );
     for (Item instrument : instruments) {
       level3Trades.add(sellInstrument(instrument, 3));
     }
 
-    List<TradeOffers.Factory> level4Trades = new ArrayList<>();
+    ArrayList<TradeOffers.Factory> level4Trades = new ArrayList<>();
     if (FabricLoader.getInstance().isModLoaded("betterend")) {
       for (String end_disc_name : Arrays.asList(
           "strange_and_alien",
@@ -160,7 +166,7 @@ public class Conductor {
       level4Trades.add(sellInstrument(instrument, 4));
     }
 
-    List<TradeOffers.Factory> level5Trades = new ArrayList<>();
+    ArrayList<TradeOffers.Factory> level5Trades = new ArrayList<>();
     for (Item disc : records) {
       level5Trades.add(sellMusicDisc(disc, 5));
     }
