@@ -34,6 +34,7 @@ public class Conductor {
   public static final SoundEvent CONDUCTOR_WORK_SOUND = InstrumentRegistry.registerInstrumentSound(
       "condutor_baton");
   public static final VillagerProfession CONDUCTOR = makeConductor();
+  private static final int[] xpMap = {2, 5, 10, 15, 20};
 
   private static VillagerProfession makeConductor() {
 
@@ -69,16 +70,23 @@ public class Conductor {
   }
 
   /**
+   * Specify note block trades
+   *
+   * @return Trade factory for the villager buying three note blocks for one emerald
+   */
+  public static TradeOffers.Factory buyNoteblock() {
+    return new TradeOffers.BuyForOneEmeraldFactory(Items.NOTE_BLOCK, 3, 8, 25);
+  }
+
+  /**
    * Specify trades for selling common music disks to the villager
    *
    * @param disc The disc
    * @return Trade factory for the villager buying one music disc for one emerald
    */
   public static TradeOffers.Factory buyMusicDisc(Item disc) {
-    return new TradeOffers.BuyForOneEmeraldFactory(disc, 1, 12, 30);
+    return new TradeOffers.BuyForOneEmeraldFactory(disc, 1, 8, 30);
   }
-
-  private static final int[] xpMap = {2, 5, 10, 15, 20};
 
   /**
    * Specify trades for buying instruments from the villager. Like with librarians and enchanted
@@ -162,6 +170,7 @@ public class Conductor {
         }
       }
     }
+    level4Trades.add(buyNoteblock());
     for (Item instrument : instruments) {
       level4Trades.add(sellInstrument(instrument, 4));
     }
