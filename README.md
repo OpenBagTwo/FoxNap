@@ -36,3 +36,9 @@ understand and learn from, and similarly to
 tutorials on Minecraft modding, in this case
 [his tutorial for adding a custom villager profession](https://gist.github.com/Kaupenjoe/237846a971fdd254c7da9639c85e65c1)
 .
+
+Also shouting out [@Siphalor](https://github.com/Siphalor) and Reddit's
+[jSdCool](https://www.reddit.com/user/jSdCool/) for
+[this conversation](https://www.reddit.com/r/fabricmc/comments/mkumx8/comment/gticqn2/) on adding
+non-mod external libraries to a Fabric mod. It should not have been this hard to add the SnakeYAML
+library to a mod.

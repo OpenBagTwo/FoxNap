@@ -13,10 +13,6 @@ import net.openbagtwo.foxnap.FoxNap;
  */
 public class DiscRegistry {
 
-
-  // TODO: load from config file
-  private static final int NUMBER_OF_DISCS = 2;
-
   /**
    * Create a new music disc, and register the item and its sound event
    *
@@ -48,11 +44,12 @@ public class DiscRegistry {
    * with a sound event name track_i and emitting a comparator signal of strength i), starting at i
    * = 1
    *
+   * @param number_of_discs The number of discs to generate and register
    * @return A list of fully instantiated and registered music discs
    */
-  public static List<MusicDiscItem> init() {
+  public static List<MusicDiscItem> init(int number_of_discs) {
     ArrayList<MusicDiscItem> discs = new ArrayList<>();
-    for (int i = 1; i <= NUMBER_OF_DISCS; i++) {
+    for (int i = 1; i <= number_of_discs; i++) {
       discs.add(registerDisc(String.format("track_%d", i), (i - 1) % 15 + 1));
     }
     return discs;

@@ -2,6 +2,7 @@ plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
     id "fr.brouillard.oss.gradle.jgitver" version "0.9.1"
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -13,6 +14,7 @@ group = project.maven_group
 
 repositories {
     mavenCentral()
+    maven { url 'https://maven.terraformersmc.com/releases' }
 }
 
 loom {
@@ -27,6 +29,13 @@ dependencies {
 
     // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // ModMenu support
+    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+    //SnakeYAML
+    compileOnly "org.yaml:snakeyaml:${project.snakeyaml_version}"
+    shadow(implementation("org.yaml:snakeyaml:${project.snakeyaml_version}"))
 
 }
 
@@ -54,6 +63,17 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    archiveClassifier.set("dev")
+    relocate "org.yaml", "{${project.maven_group}.${project.archivesBaseName}.shadow.org.yaml"
+}
+
+remapJar {
+    dependsOn(shadowJar)
+    inputFile = tasks.shadowJar.archiveFile
 }
 
 // configure the maven publication
