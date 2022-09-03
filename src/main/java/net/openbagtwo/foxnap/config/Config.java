@@ -35,6 +35,11 @@ public class Config {
   }};
 
 
+  /**
+   * Write a new configuration file with default options
+   *
+   * @throws ConfigException If the writer encounters any sort of IO error (permissions?)
+   */
   public static void writeDefaultConfigFile() throws ConfigException {
     FileWriter configWriter;
     try {
@@ -48,6 +53,11 @@ public class Config {
     LOGGER.info("Created " + MOD_NAME + " configuration file at " + config_path);
   }
 
+  /**
+   * Load the settings for the mod, either from file or from defaults
+   *
+   * @return map of str key to the configuration value
+   */
   public static Map<String, Object> readModSettings() {
     HashMap<String, Object> settings = new HashMap<>(DEFAULTS);
     LOGGER.info("Reading " + MOD_NAME + " configuration from " + config_path);
@@ -68,7 +78,7 @@ public class Config {
     return settings;
   }
 
-  public static class ConfigException extends Exception {
+  private static class ConfigException extends Exception {
 
     ConfigException(String message, IOException e) {
       super(message, e);
