@@ -1,7 +1,5 @@
 package net.openbagtwo.foxnap.instruments;
 
-import net.minecraft.item.GoatHornItem;
-import net.minecraft.item.Item;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -38,7 +36,7 @@ public class InstrumentRegistry {
    *                       event)
    * @return the fully instantiated and registered instrument
    */
-  public static GoatHornItem registerInstrument(String instrumentName) {
+  public static SecretlyJustAGoatHorn registerInstrument(String instrumentName) {
     return Registry.register(
         Registry.ITEM,
         new Identifier(FoxNap.MOD_ID, instrumentName),
@@ -58,8 +56,8 @@ public class InstrumentRegistry {
    *
    * @return A list of fully instantiated and registered instruments
    */
-  public static List<Item> init() {
-    ArrayList<Item> instruments = new ArrayList<>();
+  public static List<SecretlyJustAGoatHorn> init() {
+    ArrayList<SecretlyJustAGoatHorn> instruments = new ArrayList<>();
     for (String instrument : INSTRUMENTS.keySet()) {
       instruments.add(registerInstrument(instrument));
       FoxNap.LOGGER.info("Registered " + instrument);
