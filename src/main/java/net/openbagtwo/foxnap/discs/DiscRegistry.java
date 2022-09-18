@@ -16,19 +16,21 @@ public class DiscRegistry {
   /**
    * Create a new music disc, and register the item and its sound event
    *
-   * @param track_name        The name of the sound event (as specified in sounds.json)
-   * @param comparator_output The output signal a comparator should read from a jukebox with this
-   *                          disc loaded
+   * @param trackName        The name of the sound event (as specified in sounds.json)
+   * @param comparatorOutput The output signal a comparator should read from a jukebox with this
+   *                         disc loaded
+   * @param trackLength      The length of the track in seconds. This value is currently only used
+   *                         by Allays (presumably to determine when to stop dancing and duping?).
    * @return the fully instantiated and registered music disc
    */
-  public static Disc registerDisc(String track_name, int comparator_output) {
+  public static Disc registerDisc(String trackName, int comparatorOutput, int trackLength) {
     Disc disc = Registry.register(
         Registry.ITEM,
-        new Identifier(FoxNap.MOD_ID, track_name),
-        new Disc(comparator_output, registerTrack(track_name))
+        new Identifier(FoxNap.MOD_ID, trackName),
+        new Disc(comparatorOutput, registerTrack(trackName), trackLength)
     );
     FoxNap.LOGGER.info(
-        "Registered " + track_name
+        "Registered " + trackName
             + " with comparator signal " + disc.getComparatorOutput()
     );
     return disc;
@@ -50,7 +52,13 @@ public class DiscRegistry {
   public static List<MusicDiscItem> init(int number_of_discs) {
     ArrayList<MusicDiscItem> discs = new ArrayList<>();
     for (int i = 1; i <= number_of_discs; i++) {
-      discs.add(registerDisc(String.format("track_%d", i), (i - 1) % 15 + 1));
+      discs.add(
+          registerDisc(
+              String.format("track_%d", i),
+              (i - 1) % 15 + 1,
+              5 * 60
+          )
+      );
     }
     return discs;
   }
