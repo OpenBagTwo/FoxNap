@@ -27,12 +27,11 @@ public class Disc extends MusicDiscItem {
    * @param comparatorOutput  the output signal a comparator should read from a jukebox with this
    *                          disc loaded
    * @param sound             the sound (track) a jukebox with this disc loaded should play
-   * @param trackLength       The length of the track in seconds. This value is currently only used
-   *                          by Allays (presumably to determine when to stop dancing and duping?).
+   * @param trackLength       This parameter is ignored prior to 1.19.1
    * @param creativeInventory whether the disc should appear in the creative inventory
    */
   public Disc(int comparatorOutput, SoundEvent sound, int trackLength, boolean creativeInventory) {
-    super(comparatorOutput, sound, generateSettings(creativeInventory), trackLength);
+    super(comparatorOutput, sound, generateSettings(creativeInventory));
   }
 
   @Override
