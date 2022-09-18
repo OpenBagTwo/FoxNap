@@ -8,7 +8,6 @@ import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerProfessionBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
@@ -43,9 +42,11 @@ public class Conductor {
         ImmutableSet.copyOf(Blocks.JUKEBOX.getStateManager().getStates())
     );
 
-    return VillagerProfessionBuilder.create().id(new Identifier(MOD_ID, "conductor"))
-        .workstation(RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE_KEY, poi_id))
-        .workSound(CONDUCTOR_WORK_SOUND).build();
+    return VillagerProfession.register(
+        (new Identifier(MOD_ID, "conductor")).toString(),
+        RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE_KEY, poi_id),
+        CONDUCTOR_WORK_SOUND
+    );
   }
 
 
@@ -126,7 +127,6 @@ public class Conductor {
       }
     }
 
-    Registry.register(Registry.VILLAGER_PROFESSION, CONDUCTOR.id(), CONDUCTOR);
     TradeOffers.PROFESSION_TO_LEVELED_TRADE.put(
         CONDUCTOR, TradeOffers.copyToFastUtilMap(ImmutableMap.of(
                 1, level1Trades.toArray(new TradeOffers.Factory[1]),
