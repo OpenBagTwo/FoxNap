@@ -21,7 +21,7 @@ public class Disc extends MusicDiscItem {
    *                         by Allays (presumably to determine when to stop dancing and duping?).
    */
   public Disc(int comparatorOutput, SoundEvent sound, int trackLength) {
-    super(comparatorOutput, sound, generateSettings(), trackLength);
+    super(comparatorOutput, sound, generateSettings());
   }
 
   private static Item.Settings generateSettings() {
