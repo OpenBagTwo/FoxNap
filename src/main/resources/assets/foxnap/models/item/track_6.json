@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "foxnap:item/pmm_wagner_ride_of_the_valkyries"
+  }
+}

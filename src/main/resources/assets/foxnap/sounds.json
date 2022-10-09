@@ -11,6 +11,30 @@
       "foxnap:records/macleod-danse_macabre_saint_saens"
     ]
   },
+  "track_3": {
+    "category": "record",
+    "sounds": [
+      "foxnap:records/pmm_strauss_r_also_sprach_zarathustra"
+    ]
+  },
+  "track_4": {
+    "category": "record",
+    "sounds": [
+      "foxnap:records/pmm_tchaikovsky_love_theme_romeo_juliet"
+    ]
+  },
+  "track_5": {
+    "category": "record",
+    "sounds": [
+      "foxnap:records/pmm_vivaldi_four_seasons_winter"
+    ]
+  },
+  "track_6": {
+    "category": "record",
+    "sounds": [
+      "foxnap:records/pmm_wagner_ride_of_the_valkyries"
+    ]
+  },
   "condutor_baton": {
     "category": "record",
     "sounds": [

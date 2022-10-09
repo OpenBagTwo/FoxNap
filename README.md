@@ -34,8 +34,7 @@ his awesome [Sandwichable](https://github.com/FoundationGames/Sandwichable) mod 
 understand and learn from, and similarly to
 [Modding by Kaupenjoe](https://www.youtube.com/c/TKaupenjoe) for his awesome and detailed
 tutorials on Minecraft modding, in this case
-[his tutorial for adding a custom villager profession](https://gist.github.com/Kaupenjoe/237846a971fdd254c7da9639c85e65c1)
-.
+[his tutorial for adding a custom villager profession](https://gist.github.com/Kaupenjoe/237846a971fdd254c7da9639c85e65c1).
 
 Also shouting out [@Siphalor](https://github.com/Siphalor) and Reddit's
 [jSdCool](https://www.reddit.com/user/jSdCool/) for
