@@ -22,3 +22,7 @@ Licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/li
 # PM Music - Richard Wagner: Flight of the Valkyries
 https://www.youtube.com/watch?v=uNkRW_9pHRQ
 Licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/)
+
+# The US Army Band: Nikokai Rimsky-Korsakov: Flight of the Bumblebee from Tsar Saltan
+https://commons.wikimedia.org/wiki/File:Rimsky-Korsakov_-_flight_of_the_bumblebee.oga
+Part of the Public Domain

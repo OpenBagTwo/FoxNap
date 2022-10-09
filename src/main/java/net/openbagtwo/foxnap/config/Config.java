@@ -25,7 +25,7 @@ public class Config {
       .resolve(MOD_ID + ".yaml").toAbsolutePath();
 
   public static final ImmutableMap<String, Object> DEFAULTS = ImmutableMap.of(
-      "n_discs", 6
+      "n_discs", 7
   );
 
   private static final DumperOptions configFormat = new DumperOptions() {{

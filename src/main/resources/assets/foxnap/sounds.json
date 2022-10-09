@@ -35,6 +35,12 @@
       "foxnap:records/pmm_wagner_ride_of_the_valkyries"
     ]
   },
+  "track_7": {
+    "category": "record",
+    "sounds": [
+      "foxnap:records/army_band_rimsky_korsakov_flight_of_the_bumblebee"
+    ]
+  },
   "condutor_baton": {
     "category": "record",
     "sounds": [
