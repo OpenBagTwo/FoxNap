@@ -17,7 +17,7 @@ dynamic = ["version"]
 "Homepage" = "https://github.com/OpenBagTwo/FoxNap/"
 
 [project.scripts]
-"versioneer" = "foxnap_rpg.cli:main"
+"FoxNapRPG" = "foxnap_rpg.cli:main"
 
 [tool.versioneer]
 VCS = "git"
