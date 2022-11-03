@@ -24,7 +24,7 @@ Of course, if you really want to, you _can_ build this from source as well. Simp
 ### Any Operating System
 
 Place the generator executable in an empty folder, then move any music you
-want to turn into a record into that folder. **There is no limit** to the
+want to turn into records into that folder. **There is no limit** to the
 number of tracks you can include, and they **do not** need to be pre-converted
 to [Ogg](https://en.wikipedia.org/wiki/Ogg). **The only requirement** is that
 the files have to be

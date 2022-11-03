@@ -1,3 +1,5 @@
+"""Functionality for converting a selection of audio tracks into a resource pack"""
+
 import io
 import json
 import os
