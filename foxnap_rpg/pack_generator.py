@@ -7,6 +7,7 @@ import random
 import shutil
 from pathlib import Path
 from tempfile import NamedTemporaryFile, TemporaryDirectory
+from typing import NamedTuple
 
 import ffmpeg
 from PIL import Image
@@ -14,21 +15,35 @@ from PIL import Image
 from . import assets
 
 
-def generate_resourcepack(
-    output_path: os.PathLike | str, *tracks: tuple[int, os.PathLike | str, bool]
-) -> None:
+class Track(NamedTuple):
+    """The specification of a track to be converted into a record
+
+    Attributes
+    ----------
+    num : int
+        the number of the track (need not be sequential, can overwrite  one of the
+        default tracks)
+    path : pathlike
+         the path to the music track
+    colored : bool
+        if True, make the item texture a colored vinyl (if False, use the black
+        record template)
+    """
+
+    num: int
+    path: os.PathLike | str
+    colored: bool = True
+
+
+def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> None:
     """Generate a FoxNap resource pack!
 
     Parameters
     ----------
     output_path : pathlike
-        The filename of the resourcepack (omit the ".zip" extension)
-    *tracks : (int, pathlike, bool) tuples
-        The tracks to generate in the following format:
-        - int : the number of the track (need not be sequential, can overwrite
-                one of the default tracks)
-        - pathlike : the path to the music track to include
-        - bool : if True, make the item texture a colored vinyl.
+        The filename of the resourcepack
+    *tracks : Tracks
+        The tracks to generate
 
     Returns
     -------
@@ -49,9 +64,9 @@ def generate_resourcepack(
 
         sounds = foxnap_root / "sounds"
         sounds.mkdir(exist_ok=True)
-        for (track_num, track_path, _) in tracks:
-            ffmpeg.input(os.fspath(track_path)).audio.output(
-                os.fspath(sounds / f"track_{track_num}.ogg"), acodec="libvorbis", ac=1
+        for track in tracks:
+            ffmpeg.input(os.fspath(track.path)).audio.output(
+                os.fspath(sounds / f"track_{track.num}.ogg"), acodec="libvorbis", ac=1
             ).overwrite_output().run()
 
         with (foxnap_root / "sounds.json").open("w") as f:
@@ -65,13 +80,13 @@ def generate_resourcepack(
 
         textures = foxnap_root / "textures"
         textures.mkdir(exist_ok=True)
-        for (track_num, track_path, colored_vinyl) in tracks:
-            inlay = extract_album_art(track_path)
+        for track in tracks:
+            inlay = extract_album_art(track.path)
             if inlay is None:
                 inlay = generate_random_inlay()
             else:
                 inlay = inlay.resize((5, 3), resample=0)
-            if colored_vinyl:
+            if track.colored:
                 template = create_colored_vinyl(colored_vinyl_template)
             else:
                 template = record_template
@@ -84,11 +99,12 @@ def generate_resourcepack(
         lang = foxnap_root / "lang"
         lang.mkdir(exist_ok=True)
         with (lang / "en_us.json").open("w") as f:
-            json.dump(
-                generate_lang_file(*((track[0], track[1]) for track in tracks)), f
-            )
+            json.dump(generate_lang_file(*tracks), f)
 
-        shutil.make_archive(str(output_path), "zip", root)
+        output_path_as_str = str(output_path)
+        if output_path_as_str.endswith(".zip"):
+            output_path_as_str = output_path_as_str[:-4]
+        shutil.make_archive(output_path_as_str, "zip", root)
 
 
 def create_colored_vinyl(
@@ -221,13 +237,35 @@ def generate_model(track_number: int) -> dict:
     }
 
 
-def extract_track_description(track: os.PathLike | str) -> str:
+def generate_lang_file(*tracks: Track) -> dict[str, str]:
+    """Generate the language file for all new tracks
+
+    Parameters
+    ----------
+    *tracks : Tracks
+        The tracks to generate entries for.
+
+    Returns
+    -------
+    dict
+        The language file, all set to be written as json
+    """
+    lang: dict[str, str] = {}
+    for track in tracks:
+        lang[f"item.foxnap.track_{track.num}"] = "Music Disc"
+        lang[f"item.foxnap.track_{track.num}.desc"] = extract_track_description(
+            track.path
+        )
+    return lang
+
+
+def extract_track_description(track_path: os.PathLike | str) -> str:
     """Extract a description from an audio track, if the track
     has metadata encoded
 
     Parameters
     ----------
-    track: pathlike
+    track_path: pathlike
         path to the track
 
     Returns
@@ -236,14 +274,14 @@ def extract_track_description(track: os.PathLike | str) -> str:
         A description of the track (comprising title, artist, composer, etc.)
         if such information was encoded, or just the filename otherwise.
     """
-    metadata = ffmpeg.probe(os.fspath(track))
+    metadata = ffmpeg.probe(os.fspath(track_path))
     track_info = metadata.get("format", {}).get("tags", {})
     title = track_info.get("title")
     artist = track_info.get("artist")
     composer = track_info.get("composer")
 
     if title is None:
-        return Path(track).name
+        return Path(track_path).name
 
     if artist is None and composer is None:
         return title
@@ -255,28 +293,3 @@ def extract_track_description(track: os.PathLike | str) -> str:
         return f"{composer} - {title}"
 
     return f"{artist} - {title} ({composer})"
-
-
-def generate_lang_file(*tracks: tuple[int, os.PathLike | str]) -> dict[str, str]:
-    """Generate the language file for all new tracks
-
-    Parameters
-    ----------
-    *tracks : (int, pathlike) tuples
-        The numbers and paths to the racks to generate. Need not
-        be sequential if, for example, we're overwriting
-        one of the default tracks
-
-    Returns
-    -------
-    dict
-        The language file, all set to be written as json
-    """
-    lang: dict[str, str] = {}
-    for track in tracks:
-        track_num, track_path = track
-        lang[f"item.foxnap.track_{track_num}"] = "Music Disc"
-        lang[f"item.foxnap.track_{track_num}.desc"] = extract_track_description(
-            track_path
-        )
-    return lang
