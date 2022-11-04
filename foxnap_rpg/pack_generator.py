@@ -74,9 +74,9 @@ def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> Non
 
         models = foxnap_root / "models" / "item"
         models.mkdir(parents=True, exist_ok=True)
-        for (track_num, _, _) in tracks:
-            with (models / f"track_{track_num}.json").open("w") as f:
-                json.dump(generate_model(track_num), f)
+        for track in tracks:
+            with (models / f"track_{track.num}.json").open("w") as f:
+                json.dump(generate_model(track.num), f)
 
         textures = foxnap_root / "textures"
         textures.mkdir(exist_ok=True)
@@ -93,7 +93,7 @@ def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> Non
             record = Image.new("RGBA", (16, 16))
             record.paste(inlay, (5, 6))
             record.paste(template, (0, 0), mask=template)
-            with (textures / f"record_{track_num}.png").open("wb") as f:
+            with (textures / f"record_{track.num}.png").open("wb") as f:
                 record.save(f, format="png")
 
         lang = foxnap_root / "lang"
