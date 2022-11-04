@@ -3,6 +3,8 @@ import os
 
 import ffmpeg
 
+from . import bin
+
 
 def is_valid_music_track(file_path: str | os.PathLike) -> bool:
     """Probe a file to determine if it's convertible using ffmpeg
@@ -19,7 +21,7 @@ def is_valid_music_track(file_path: str | os.PathLike) -> bool:
         if not
     """
     try:
-        metadata = ffmpeg.probe(file_path)
+        metadata = ffmpeg.probe(file_path, cmd=bin.ffprobe)
     except ffmpeg.Error:
         return False
 

@@ -12,7 +12,7 @@ from typing import NamedTuple
 import ffmpeg
 from PIL import Image
 
-from . import assets
+from . import assets, bin
 
 
 class Track(NamedTuple):
@@ -67,7 +67,7 @@ def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> Non
         for track in tracks:
             ffmpeg.input(os.fspath(track.path)).audio.output(
                 os.fspath(sounds / f"track_{track.num}.ogg"), acodec="libvorbis", ac=1
-            ).overwrite_output().run()
+            ).overwrite_output().run(cmd=bin.ffmpeg)
 
         with (foxnap_root / "sounds.json").open("w") as f:
             json.dump(generate_sound_registry(*(track[0] for track in tracks)), f)
@@ -161,13 +161,13 @@ def extract_album_art(track: os.PathLike | str) -> Image.Image | None:
         track didn't have any album art embedded
     """
     track_path = os.fspath(track)
-    metadata = ffmpeg.probe(track_path)
+    metadata = ffmpeg.probe(track_path, cmd=bin.ffprobe)
     if "video" not in (stream["codec_type"] for stream in metadata["streams"]):
         return None
     with NamedTemporaryFile(mode="w+b", suffix=".png") as cover:
         ffmpeg.input(track_path).video.output(
             os.fspath(cover.name)
-        ).overwrite_output().run()
+        ).overwrite_output().run(bin.ffmpeg)
 
         # move it to in-memory buffer so tempfile can be deleted
         album_art = Image.open(cover.name)
@@ -274,7 +274,7 @@ def extract_track_description(track_path: os.PathLike | str) -> str:
         A description of the track (comprising title, artist, composer, etc.)
         if such information was encoded, or just the filename otherwise.
     """
-    metadata = ffmpeg.probe(os.fspath(track_path))
+    metadata = ffmpeg.probe(os.fspath(track_path), cmd=bin.ffprobe)
     track_info = metadata.get("format", {}).get("tags", {})
     title = track_info.get("title")
     artist = track_info.get("artist")
