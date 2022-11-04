@@ -2,8 +2,8 @@
 import argparse
 import logging
 import sys
+from collections.abc import Generator, Iterable, Sequence
 from pathlib import Path
-from typing import Generator, Iterable, Sequence
 
 from . import __version__, _start_at
 from .pack_generator import Track, generate_resourcepack
