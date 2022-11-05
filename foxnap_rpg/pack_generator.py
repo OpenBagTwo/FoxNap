@@ -26,10 +26,10 @@ class Track(NamedTuple):
     path : pathlike
         the path to the music track
     hue : bool or float, optional
-        specification of the record texture template.
-        - False: use the regular record template
-        - True: use the colored vinyl template, with a random hue (default)
-        - numeric value: use the specified hue shift in degrees
+        specification of the record texture template:
+          - False: use the regular record template
+          - True: use the colored vinyl template, with a random hue (default)
+          - numeric value: use the specified hue shift, in degrees
     description: str, optional
         The name to give the track (in the language file). If None is specified, the
         name will be extracted from the track metadata
@@ -198,7 +198,9 @@ def create_colored_vinyl(
     if template is None:
         template = Image.open(assets.COLORED_VINYL_TEMPLATE)
     if hue_shift is None:
-        hue_shift = 256.0 * random.random()
+        hue_shift = 360.0 * random.random()
+
+    dh = int(256 * hue_shift // 360)
 
     hsv = template.convert("HSV")
 
@@ -207,7 +209,7 @@ def create_colored_vinyl(
     for i in range(hsv.size[0]):
         for j in range(hsv.size[1]):
             h, s, v = accesser[i, j]
-            accesser[i, j] = (int(h + hue_shift) % 256, s, v)
+            accesser[i, j] = ((h + dh) % 256, s, v)
 
     new_template = hsv.convert("RGB")
     new_template.putalpha(template.getchannel("A"))
