@@ -1,11 +1,14 @@
 """Assorted helper functions"""
 import os
 from collections import Counter
-from typing import cast
+from pathlib import Path
+from typing import Iterable, TypeVar, cast
 
 import ffmpeg
 
 from . import _start_at, bin
+
+T = TypeVar("T")
 
 
 def is_valid_music_track(file_path: str | os.PathLike) -> bool:
@@ -43,8 +46,8 @@ def validate_track_numbers(*nums: int | None, check_contiguous: bool = False) ->
         The set of track numbers to validate (None functions as a wild card)
     check_contiguous : bool, optional
         By default, this method only checks for conflicts. If this method is called with
-        check_contiguous=True, then check also if the specified set of track numbers
-        will result in gaps.
+        check_contiguous=True, then it will also check if the specified set of track
+        numbers will result in gaps.
 
     Raises
     ------
@@ -66,11 +69,7 @@ def validate_track_numbers(*nums: int | None, check_contiguous: bool = False) ->
             "The provided track numbers contain invalid values:" + invalid_report
         )
 
-    dupes_report: str = ""
-    for num, count in sorted(counter.items()):
-        if count > 1:
-            dupes_report += f"\n - {num} is included {count} times"
-    if dupes_report:
+    if dupes_report := _generate_dupes_report(counter):
         raise RuntimeError(
             "The provided track numbers contain duplicates:" + dupes_report
         )
@@ -103,3 +102,84 @@ def validate_track_numbers(*nums: int | None, check_contiguous: bool = False) ->
         )
         message += wildcard_line + "."
         raise RuntimeError(message)
+
+
+def validate_track_file_specs(*file_specs: str, strict=False) -> None:
+    """Validate a given list of file name specs
+
+    Parameters
+    ----------
+    *file_specs: str
+        The file names of the tracks. These can either be the full (or terminating)
+        path, or the file name, with or without extension.
+    strict: bool, optional
+        Whether to raise a validation error for *possible* conflicts in addition to
+        definite ones. Default is False.
+
+    Raises
+    ------
+    ValueError
+        If any of the file specs are invalid
+    RuntimeError
+        If any of the validations fail
+    """
+    counter: dict[str, int] = Counter(file_specs)
+
+    # TODO: check for invalid file specs. But what is an invalid filename on *nix?
+
+    conflicts_report: str = _generate_dupes_report(counter)
+
+    specs_with_ext = []
+    no_ext_specs = []
+    for file_spec in sorted(counter.keys()):
+        if Path(file_spec).suffix == "":
+            no_ext_specs.append(file_spec)
+        else:
+            specs_with_ext.append(file_spec)
+
+    for file_spec in sorted(counter.keys()):
+        for reference_spec in specs_with_ext:
+            if file_spec == reference_spec:
+                continue
+            if file_spec.endswith(reference_spec):
+                conflicts_report += (
+                    f"\n - Files matching '{file_spec}' would also match"
+                    f" any files matching '{reference_spec}'"
+                )
+        for reference_spec in no_ext_specs:
+            if file_spec == reference_spec:
+                continue
+            if os.fspath(Path(file_spec).with_suffix("")).endswith(
+                os.fspath(Path(reference_spec))
+            ):
+                conflicts_report += (
+                    f"\n - Files matching '{file_spec}' would also match"
+                    f" any files matching '{reference_spec}'"
+                )
+            if strict and os.fspath(Path(reference_spec)).endswith(
+                os.fspath(Path(file_spec).with_suffix(""))
+            ):
+                conflicts_report += (
+                    f"\n - Files matching '{file_spec}' may also match"
+                    f" files matching '{reference_spec}'"
+                )
+
+    # regex will go here, and BOY WILL IT BE FUN TO PROVE THOSE ARE MUTUALLY EXCLUSIVE
+
+    if conflicts_report:
+        raise RuntimeError(
+            "The provided file specifications contain the following conflicts:"
+            + conflicts_report
+        )
+
+
+def _generate_dupes_report(counts: dict[T, int]) -> str:
+    dupes_report: str = ""
+    try:
+        items: Iterable[tuple[T, int]] = sorted(counts.items())
+    except TypeError:
+        items = counts.items()
+    for value, count in items:
+        if count > 1:
+            dupes_report += f"\n - {repr(value)} is included {count} times"
+    return dupes_report

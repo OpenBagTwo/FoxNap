@@ -1,5 +1,7 @@
 """Tests of the validation utils"""
+import os
 import random
+from pathlib import Path
 
 import pytest
 
@@ -65,7 +67,6 @@ class TestValidateTrackNumbers:
     def test_raise_if_number_of_missing_nums_exceeds_number_of_wildcards(
         self, n_wildcards
     ):
-
         expected = r"(\s|.)*".join(
             (
                 r"No tracks are specified with numbers \(4, 5, 9\)",
@@ -85,3 +86,77 @@ class TestValidateTrackNumbers:
                 10,
                 check_contiguous=True,
             )
+
+
+class TestValidateTrackFileSpecs:
+    def test_empty_list_is_trivially_valid(self):
+        utils.validate_track_file_specs()
+
+    def test_non_conflicting_set_of_specs_produces_no_error(self):
+        utils.validate_track_file_specs(
+            "hello",
+            "world.mp3",
+            os.fspath(
+                Path.home() / "Music" / "Best Album Ever" / "01 Best Song Ever.aac"
+            ),
+        )
+
+    def test_raise_when_specs_contain_literal_dupes(self):
+        expected = r"(.|\s)*".join(
+            (
+                r"'hello' is included 2 times",
+                r"'world.mp3' is included 3 times",
+            )
+        )
+
+        with pytest.raises(RuntimeError, match=expected):
+            utils.validate_track_file_specs(
+                "world.mp3",
+                "blah.aac",
+                "hello",
+                "world.mp3",
+                "hello",
+                "world.mp3",
+                os.fspath(
+                    Path.home() / "Music" / "Best Album Ever" / "01 Best Song Ever.aac"
+                ),
+            )
+
+    @pytest.mark.parametrize("start_level", range(1, 4))
+    def test_raise_when_specs_include_path_ambiguity(self, start_level):
+        path_parts = (Path.home(), "Music", "Best Album Ever", "01 Best Song Ever.aac")
+
+        full_path = Path(path_parts[0])
+        short_path = Path(path_parts[start_level])
+        for level, path_part in enumerate(path_parts):
+            full_path /= path_part
+            if level > start_level:
+                short_path /= path_part
+        full_path = os.fspath(full_path)
+        short_path = os.fspath(short_path)
+
+        expected = rf"'{full_path}' would also match any files matching '{short_path}'"
+
+        with pytest.raises(RuntimeError, match=expected):
+            utils.validate_track_file_specs(full_path, short_path)
+
+    def test_raise_when_theres_a_conflict_with_extensionless_files(self):
+        expected = rf"'hello.m4a' would also match any files matching 'hello'"
+
+        with pytest.raises(RuntimeError, match=expected):
+            utils.validate_track_file_specs("hello", "hello.m4a")
+
+    def test_raise_on_conflict_with_extensionless_files_with_path_ambiguity(self):
+        expected = rf"'Music/hello.m4a' would also match any files matching 'hello'"
+
+        with pytest.raises(RuntimeError, match=expected):
+            utils.validate_track_file_specs("hello", "Music/hello.m4a")
+
+    def test_ignore_possible_conflicts_by_default(self):
+        utils.validate_track_file_specs("Music/hello", "hello.m4a")
+
+    def test_raise_on_possible_conflict_when_strict(self):
+        expected = rf"'hello.m4a' may also match files matching 'Music/hello'"
+
+        with pytest.raises(RuntimeError, match=expected):
+            utils.validate_track_file_specs("Music/hello", "hello.m4a", strict=True)
