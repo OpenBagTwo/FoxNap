@@ -37,6 +37,78 @@ def is_valid_music_track(file_path: str | os.PathLike) -> bool:
     return False
 
 
+def spec_matches_path(
+    path_spec: os.PathLike | str | tuple[str, ...],
+    file_path: os.PathLike | str | tuple[str, ...],
+) -> bool:
+    """Determine if a given path spec matches a provided file path
+
+    Parameters
+    ----------
+    path_spec : pathlike
+        The path specification to match against
+    file_path : pathlike
+        The path to evaluate
+
+    Returns
+    -------
+    bool
+        True if the file_path matches the path_spec, False otherwise
+
+    Notes
+    -----
+    - The plan is for this to eventually support wildcards and regular expressions
+    """
+    if isinstance(path_spec, (str, os.PathLike)):
+        path_spec = _part_out_path(path_spec)
+    if isinstance(file_path, (str, os.PathLike)):
+        file_path = _part_out_path(os.path.abspath(file_path))
+    spec_ext, *spec_parts = path_spec
+    file_ext, *file_parts = file_path
+    if file_parts[: len(spec_parts)] != spec_parts:
+        return False
+    if file_ext == spec_ext or spec_ext == "":
+        return True
+    return False
+
+
+def _part_out_path(path: os.PathLike | str) -> tuple[str, ...]:
+    """Split a given path into a format that's easier to evaluate against
+
+    Parameters
+    ----------
+    path : pathlike
+        The path to split out
+
+    Returns
+    -------
+    str
+        The extension of the path
+    *str
+        The parts of the path (sans extension) in reverse order
+    """
+    path = Path(path)
+    return path.suffix, *reversed(path.with_suffix("").parts)
+
+
+def _reassemble_path(ext: str, *parts: str) -> str:
+    """Undo the above operation to return the original path (as string)
+
+    Parameters
+    ----------
+    ext : str
+        The file extension
+    *parts : str
+        The parts of the path (sans extension) in reverse order
+
+    Returns
+    -------
+    str
+        The original path that was parted out
+    """
+    return os.path.join(*reversed(parts)) + ext
+
+
 def validate_track_numbers(*nums: int | None, check_contiguous: bool = False) -> None:
     """Validate a given list of track numbers
 
@@ -104,12 +176,12 @@ def validate_track_numbers(*nums: int | None, check_contiguous: bool = False) ->
         raise RuntimeError(message)
 
 
-def validate_track_file_specs(*file_specs: os.PathLike | str, strict=False) -> None:
+def validate_track_file_specs(*path_specs: os.PathLike | str, strict=False) -> None:
     """Validate a given list of file name specs
 
     Parameters
     ----------
-    *file_specs: pathlike
+    *path_specs: pathlike
         The file paths of the tracks. These can either be the full (or terminating)
         paths, or the file names, with or without extension.
     strict: bool, optional
@@ -123,43 +195,42 @@ def validate_track_file_specs(*file_specs: os.PathLike | str, strict=False) -> N
     RuntimeError
         If any of the validations fail
     """
-    counter: dict[str, int] = Counter((os.fspath(Path(spec)) for spec in file_specs))
+    counter: dict[str, int] = Counter((os.fspath(Path(spec)) for spec in path_specs))
 
     # TODO: check for invalid file specs. But what is an invalid filename on *nix?
 
     conflicts_report: str = _generate_dupes_report(counter)
 
     parted_specs: list[tuple[str, ...]] = sorted(
-        [  # reverse the parts
-            tuple(reversed((*Path(spec).with_suffix("").parts, Path(spec).suffix)))
-            for spec in counter.keys()
-        ]
+        _part_out_path(spec) for spec in counter.keys()
     )
 
-    def reassemble_spec_parts(ext: str, *parts: str) -> str:
-        return os.path.join(*reversed(parts)) + ext
-
-    for ext, *spec in parted_specs:
-        for reference_ext, *reference_spec in parted_specs:
-            if (ext, spec) == (reference_ext, reference_spec):
+    for spec in parted_specs:
+        for reference_spec in parted_specs:
+            if spec == reference_spec:
                 continue
-            if spec[: len(reference_spec)] == reference_spec:
-                spec_path = reassemble_spec_parts(ext, *spec)
-                reference_path = reassemble_spec_parts(reference_ext, *reference_spec)
-                if ext == reference_ext or reference_ext == "":
-                    conflicts_report += (
-                        f"\n - Files matching '{spec_path}'"
-                        " would also match any files matching"
-                        f" '{reference_path}'"
-                    )
-                elif strict and ext == "":
-                    conflicts_report += (
-                        f"\n - Files matching '{spec_path}'"
-                        " may also match files matching"
-                        f" '{reference_path}'"
-                    )
+            if spec_matches_path(reference_spec, spec):
+                spec_path = _reassemble_path(*spec)
+                reference_path = _reassemble_path(*reference_spec)
+                conflicts_report += (
+                    f"\n - Files matching '{spec_path}'"
+                    " would also match any files matching"
+                    f" '{reference_path}'"
+                )
+            elif strict:
+                if spec[0] == "":  # if spec has no extension
+                    reference_ext, *reference_parts = reference_spec
+                    if spec_matches_path(("", *reference_parts), spec):
+                        spec_path = _reassemble_path(*spec)
+                        reference_path = _reassemble_path(*reference_spec)
+                        conflicts_report += (
+                            f"\n - Files matching '{spec_path}'"
+                            " may also match files matching"
+                            f" '{reference_path}'"
+                        )
 
-    # regex will go here, and BOY WILL IT BE FUN TO PROVE THOSE ARE MUTUALLY EXCLUSIVE
+                # regex will go here, and BOY WILL IT BE FUN
+                # TO PROVE THOSE ARE MUTUALLY EXCLUSIVE
 
     if conflicts_report:
         raise RuntimeError(

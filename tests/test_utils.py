@@ -1,6 +1,8 @@
 """Tests of the validation utils"""
 import os
 import random
+from copy import deepcopy
+from itertools import product
 from pathlib import Path
 
 import pytest
@@ -8,6 +10,76 @@ import pytest
 from foxnap_rpg import utils
 
 # TODO: ffmpeg tests
+
+
+class TestSpecMatchesPath:
+    @staticmethod
+    def munge_path(
+        path: os.PathLike | str | tuple[str, ...], how: str
+    ) -> os.PathLike | str | tuple[str, ...]:
+        """Convert a given path into a different format"""
+        if isinstance(path, tuple):
+            path = utils._reassemble_path(*path)
+        if how == "to_string":
+            return os.fspath(path)
+        elif how == "to_path":
+            return Path(path)
+        elif how == "to_parts":
+            return utils._part_out_path(path)
+        else:
+            raise NotImplementedError
+
+    @pytest.mark.parametrize("munge", ("to_string", "to_path", "to_parts"))
+    @pytest.mark.parametrize("which", ("spec", "file"))
+    @pytest.mark.parametrize(
+        "spec, file",
+        product(
+            (
+                "ello",
+                "hello",
+                "world.ogg",
+                "world.mp3",
+                "Album/01 track.mp3",
+                Path.home() / "Music" / "Best Album Ever" / "01 Best Song Ever.aac",
+                (".m4a", "song", "album", "artist", "collection"),
+            ),
+            repeat=2,
+        ),
+    )
+    def test_simple_equality_comparison(self, spec, file, which, munge):
+        args = {"spec": deepcopy(spec), "file": deepcopy(file)}
+
+        args[which] = self.munge_path(args[which], how=munge)
+
+        assert utils.spec_matches_path(args["spec"], args["file"]) == (spec == file)
+
+    @pytest.mark.parametrize("munge", ("to_string", "to_path", "to_parts"))
+    @pytest.mark.parametrize("start_level", range(1, 4))
+    def test_spec_matches_against_path_tail(self, start_level, munge):
+        path_parts = (Path.home(), "Music", "Best Album Ever", "01 Best Song Ever.aac")
+
+        full_path = Path(path_parts[0])
+        short_path = Path(path_parts[start_level])
+        for level, path_part in enumerate(path_parts):
+            full_path /= path_part
+            if level > start_level:
+                short_path /= path_part
+        full_path = os.fspath(full_path)
+        short_path = os.fspath(short_path)
+
+        assert utils.spec_matches_path(
+            self.munge_path(short_path, how=munge), full_path
+        )
+
+    @pytest.mark.parametrize("munge", ("to_string", "to_path", "to_parts"))
+    @pytest.mark.parametrize("with_folder", (False, True))
+    def test_extensionless_spec_matching(self, with_folder, munge):
+        spec = Path("world")
+        if with_folder:
+            spec = Path("folder") / spec
+        assert utils.spec_matches_path(
+            self.munge_path(spec, how=munge), Path("folder") / "world.mp3"
+        )
 
 
 class TestValidateTrackNumbers:
