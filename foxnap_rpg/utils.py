@@ -104,14 +104,14 @@ def validate_track_numbers(*nums: int | None, check_contiguous: bool = False) ->
         raise RuntimeError(message)
 
 
-def validate_track_file_specs(*file_specs: str, strict=False) -> None:
+def validate_track_file_specs(*file_specs: os.PathLike | str, strict=False) -> None:
     """Validate a given list of file name specs
 
     Parameters
     ----------
-    *file_specs: str
-        The file names of the tracks. These can either be the full (or terminating)
-        path, or the file name, with or without extension.
+    *file_specs: pathlike
+        The file paths of the tracks. These can either be the full (or terminating)
+        paths, or the file names, with or without extension.
     strict: bool, optional
         Whether to raise a validation error for *possible* conflicts in addition to
         definite ones. Default is False.
@@ -123,46 +123,41 @@ def validate_track_file_specs(*file_specs: str, strict=False) -> None:
     RuntimeError
         If any of the validations fail
     """
-    counter: dict[str, int] = Counter(file_specs)
+    counter: dict[str, int] = Counter((os.fspath(Path(spec)) for spec in file_specs))
 
     # TODO: check for invalid file specs. But what is an invalid filename on *nix?
 
     conflicts_report: str = _generate_dupes_report(counter)
 
-    specs_with_ext = []
-    no_ext_specs = []
-    for file_spec in sorted(counter.keys()):
-        if Path(file_spec).suffix == "":
-            no_ext_specs.append(file_spec)
-        else:
-            specs_with_ext.append(file_spec)
+    parted_specs: list[tuple[str, ...]] = sorted(
+        [  # reverse the parts
+            tuple(reversed((*Path(spec).with_suffix("").parts, Path(spec).suffix)))
+            for spec in counter.keys()
+        ]
+    )
 
-    for file_spec in sorted(counter.keys()):
-        for reference_spec in specs_with_ext:
-            if file_spec == reference_spec:
+    def reassemble_spec_parts(ext: str, *parts: str) -> str:
+        return os.path.join(*reversed(parts)) + ext
+
+    for ext, *spec in parted_specs:
+        for reference_ext, *reference_spec in parted_specs:
+            if (ext, spec) == (reference_ext, reference_spec):
                 continue
-            if file_spec.endswith(reference_spec):
-                conflicts_report += (
-                    f"\n - Files matching '{file_spec}' would also match"
-                    f" any files matching '{reference_spec}'"
-                )
-        for reference_spec in no_ext_specs:
-            if file_spec == reference_spec:
-                continue
-            if os.fspath(Path(file_spec).with_suffix("")).endswith(
-                os.fspath(Path(reference_spec))
-            ):
-                conflicts_report += (
-                    f"\n - Files matching '{file_spec}' would also match"
-                    f" any files matching '{reference_spec}'"
-                )
-            if strict and os.fspath(Path(reference_spec)).endswith(
-                os.fspath(Path(file_spec).with_suffix(""))
-            ):
-                conflicts_report += (
-                    f"\n - Files matching '{file_spec}' may also match"
-                    f" files matching '{reference_spec}'"
-                )
+            if spec[: len(reference_spec)] == reference_spec:
+                spec_path = reassemble_spec_parts(ext, *spec)
+                reference_path = reassemble_spec_parts(reference_ext, *reference_spec)
+                if ext == reference_ext or reference_ext == "":
+                    conflicts_report += (
+                        f"\n - Files matching '{spec_path}'"
+                        " would also match any files matching"
+                        f" '{reference_path}'"
+                    )
+                elif strict and ext == "":
+                    conflicts_report += (
+                        f"\n - Files matching '{spec_path}'"
+                        " may also match files matching"
+                        f" '{reference_path}'"
+                    )
 
     # regex will go here, and BOY WILL IT BE FUN TO PROVE THOSE ARE MUTUALLY EXCLUSIVE
 

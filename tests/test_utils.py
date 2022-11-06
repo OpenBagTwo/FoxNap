@@ -96,6 +96,7 @@ class TestValidateTrackFileSpecs:
         utils.validate_track_file_specs(
             "hello",
             "world.mp3",
+            "ello",
             os.fspath(
                 Path.home() / "Music" / "Best Album Ever" / "01 Best Song Ever.aac"
             ),
@@ -156,7 +157,7 @@ class TestValidateTrackFileSpecs:
         utils.validate_track_file_specs("Music/hello", "hello.m4a")
 
     def test_raise_on_possible_conflict_when_strict(self):
-        expected = rf"'hello.m4a' may also match files matching 'Music/hello'"
+        expected = rf"'Music/hello' may also match files matching 'hello.m4a'"
 
         with pytest.raises(RuntimeError, match=expected):
             utils.validate_track_file_specs("Music/hello", "hello.m4a", strict=True)
