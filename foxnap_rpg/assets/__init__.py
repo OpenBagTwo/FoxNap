@@ -5,14 +5,23 @@ PACK_ICON = files("foxnap_rpg.assets") / "icon.png"
 RECORD_TEMPLATE = files("foxnap_rpg.assets") / "template_black.png"
 COLORED_VINYL_TEMPLATE = files("foxnap_rpg.assets") / "template_colored_vinyl.png"
 
-MCMETA: dict[str, Any] = {
-    "pack": {
-        "pack_format": 10,
-        "description": [
-            {"text": "Custom FoxNap Records", "color": "aqua"},
-            {"text": "\nGenerated using FoxNapRPG", "color": "green"},
-        ],
-    }
+MCMETA: str = r"""{
+  "pack": {
+    "pack_format": 10
+    "description": [
+      {
+        "text": "%%title%%"
+        "color": "%%title_color%%",
+        
+      },
+      {
+        "text": "\n%%license%%"
+        "color": "%%license_color%%",
+      }
+    ],
+    
+  }
 }
+"""
 
 __all__ = ["PACK_ICON", "RECORD_TEMPLATE", "COLORED_VINYL_TEMPLATE", "MCMETA"]

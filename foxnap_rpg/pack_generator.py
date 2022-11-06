@@ -2,9 +2,11 @@
 
 import io
 import json
+import logging
 import os
 import random
 import shutil
+from enum import IntEnum, auto
 from pathlib import Path
 from tempfile import NamedTemporaryFile, TemporaryDirectory
 from typing import Any, NamedTuple
@@ -13,6 +15,28 @@ import ffmpeg
 from PIL import Image
 
 from . import assets, bin
+
+LOGGER = logging.getLogger(__name__)
+
+
+class License(IntEnum):
+    """More properly, "permissions" for usage of the music track and, by extension
+    the pack"""
+
+    UNRESTRICTED = auto()
+    """e.g. Public Domain, CC0 -- use anywhere, no attribution required"""
+
+    ATTRIBUTION = auto()
+    """e.g. CC-BY, CC-BY-SA, GPL -- use anywhere, but credit the artist"""
+
+    RESTRICTED = auto()
+    """e.g. CC-BY-NC, YouTube Audio Library License, most royalty-free music services:
+    these are free to use in specific places, by specific people or under specific
+    conditions
+    """
+
+    PERSONAL = auto()
+    """most things in your private music library -- for personal use only"""
 
 
 class Track(NamedTuple):
@@ -37,6 +61,9 @@ class Track(NamedTuple):
         If True, the generator will attempt to extract album art from the track to use
         for the inlay of the record texture. If False, the track will always use a
         random inlay. Default is True.
+    license : License, optional
+        The permission level for use of the specified track. If None is specified,
+        it will be assumed that the track is for PERSONAL use only.
     """
 
     num: int
@@ -44,9 +71,21 @@ class Track(NamedTuple):
     hue: bool | float = True
     description: str | None = None
     use_album_art: bool = True
+    license: License = License.PERSONAL
+
+    def __str__(self):
+        return repr(self.description or os.fspath(self.path))
 
 
-def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> None:
+def generate_resourcepack(
+    output_path: os.PathLike | str,
+    *tracks: Track,
+    title: str = "Custom FoxNap Records",
+    license_summary: License | str | None = None,
+    license_file: os.PathLike | str | None = None,
+    title_color: str = "gold",
+    license_color: str | None = None,
+) -> None:
     """Generate a FoxNap resource pack!
 
     Parameters
@@ -55,10 +94,47 @@ def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> Non
         The filename of the resourcepack
     *tracks : Tracks
         The tracks to generate
+    title : str, optional
+        The title for the pack to be displayed on the resource pack loading screen.
+        Default is "Custom FoxNap Records"
+    license_summary : License or str, optional
+        The usage summary to display on the resource pack loading screen. If using a
+        License level enum, the level must be at least as restrictive as the most
+        restrictively-licensed track. See notes.  If None is provided, the license
+        level will be set to the most permissive level appropriate for the included
+        tracks.
+    license_file : pathlike, optional
+        The path to a license or credits file to include with the resource pack (for
+        compliance with the terms of attribution-style or restricted use licenses)
+    title_color : str, optional
+        The color code to use for the title text on the resource pack loading screen.
+        Default is "gold"
+    license_color : str, optional
+        The color code to use for the usage summary on the resource pack loading screen.
+        If None is provided, one will be selected automatically.
 
     Returns
     -------
     None
+
+    Raises
+    ------
+    RuntimeError
+        - If license_summary is set to License.ATTRIBUTION or License.RESTRICTED
+          and no license_file is provided
+        - If the license level specified is less restrictive than the license level
+          for any of the provided tracks (this is not checked when license_summary
+          is provided via a custom string)
+
+    Notes
+    -----
+    - If the license summary is not explicitly provided and all provided tracks are
+      permissively licensed (License.UNRESTRICTED), the license summary will state that
+      the pack is licensed under CC0: https://creativecommons.org/publicdomain/zero/1.0/
+    - If the license summary is not explicitly provided, and the minimum license level
+      from the provided tracks is determined to be License.ATTRIBUTION or
+      License.RESTRICTED, the license summary will *still* be set to LICENSE.PERSONAL
+      if no license file is provided.
     """
     colored_vinyl_template = Image.open(assets.COLORED_VINYL_TEMPLATE)
     record_template = Image.open(assets.RECORD_TEMPLATE)
@@ -67,8 +143,61 @@ def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> Non
     with TemporaryDirectory() as tmpdir:
         root = Path(tmpdir)
 
+        if license_file:
+            LOGGER.info(f"Copying in license file {repr(os.fspath(license_file))}")
+            shutil.copy(license_file, root / Path(license_file).name)
+        else:
+            LOGGER.info("Skipping license file--none specified.")
+
+        if isinstance(license_summary, License) or license_summary is None:
+            license_level = license_summary or License.UNRESTRICTED
+            non_compliance_report = ""
+            for track in tracks:
+                if track.license > license_level:
+                    if license_summary is None:
+                        license_level = track.license
+                    else:
+                        if track.license == License.ATTRIBUTION:
+                            compliance_str = "requires an attribution license"
+                        elif track.license == License.RESTRICTED:
+                            compliance_str = "requires a restricted license"
+                        elif track.license == License.PERSONAL:
+                            compliance_str = "is for personal use only"
+                        else:
+                            raise NotImplementedError(
+                                f"Unrecognized license type {track.license}"
+                            )
+                        non_compliance_report += f"\n - {track} {compliance_str}"
+
+            if non_compliance_report:
+                raise RuntimeError(
+                    f"The selected license level ({license_summary})"
+                    " is too permissive for the following tracks:"
+                    f"{non_compliance_report}"
+                )
+
+            if license_file is None and license_level in (
+                License.ATTRIBUTION,
+                License.RESTRICTED,
+            ):
+                message = (
+                    f"Cannot use {license_level} due to lack of a license file."
+                    "\nEither provide a license file or select a different license."
+                )
+                if license_summary is None:
+                    LOGGER.warning(message, RuntimeWarning)
+                else:
+                    raise RuntimeError(message)
+                license_level = License.PERSONAL
+
+            # this should do nothing if license_summary is not None
+            LOGGER.info(f"Setting license level to {license_level}")
+            license_summary = license_level
+
+        LOGGER.info("Writing pack.mcmeta")
         with (root / "pack.mcmeta").open("w") as f:
-            json.dump(assets.MCMETA, f, **json_opts)
+            f.write(generate_mcmeta(title, license_summary, title_color, license_color))
+        LOGGER.info("Copying pack icon")
         shutil.copy(assets.PACK_ICON, root / "icon.png")  # type: ignore[call-overload]
 
         foxnap_root = root / "assets" / "foxnap"
@@ -76,9 +205,13 @@ def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> Non
 
         sounds = foxnap_root / "sounds"
         sounds.mkdir(exist_ok=True)
+        LOGGER.info("Beginning music track conversion")
         for track in tracks:
+            LOGGER.info(f"Converting {track}")
             convert_music_to_ogg(track.path, sounds / f"track_{track.num}.ogg")
+        LOGGER.info("Music track conversion complete")
 
+        LOGGER.info("Writing sound registry")
         with (foxnap_root / "sounds.json").open("w") as f:
             json.dump(
                 generate_sound_registry(*(track.num for track in tracks)),
@@ -88,17 +221,24 @@ def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> Non
 
         models = foxnap_root / "models" / "item"
         models.mkdir(parents=True, exist_ok=True)
+        LOGGER.info("Writing record item model jsons")
         for track in tracks:
             with (models / f"track_{track.num}.json").open("w") as f:
                 json.dump(generate_model(track.num), f, **json_opts)
 
         textures = foxnap_root / "textures"
         textures.mkdir(exist_ok=True)
+        LOGGER.info("Beginning record item texture generation")
         for track in tracks:
+            LOGGER.info(f"Creating texture for {track}")
             inlay: Image.Image | None = None
             if track.use_album_art:
+                LOGGER.info(f"Attempting to extract inlay from album art for {track}")
                 inlay = extract_album_art(track.path)
+                if inlay is None:
+                    LOGGER.warning(f"Failed to extract album art for {track}")
             if inlay is None:
+                LOGGER.info("Generating random inlay")
                 inlay = generate_random_inlay()
 
             if track.hue is False:
@@ -115,13 +255,68 @@ def generate_resourcepack(output_path: os.PathLike | str, *tracks: Track) -> Non
 
         lang = foxnap_root / "lang"
         lang.mkdir(exist_ok=True)
+        LOGGER.info("Writing language file")
         with (lang / "en_us.json").open("w") as f:
             json.dump(generate_lang_file(*tracks), f, **json_opts)
 
         output_path_as_str = str(output_path)
         if output_path_as_str.endswith(".zip"):
             output_path_as_str = output_path_as_str[:-4]
+        LOGGER.info(
+            "Compressing archive and saving as"
+            f" {Path(output_path_as_str).with_suffix('.zip').absolute()}"
+        )
         shutil.make_archive(output_path_as_str, "zip", root)
+
+
+def generate_mcmeta(
+    title: str,
+    license_summary: License | str,
+    title_color: str,
+    license_color: str | None,
+) -> str:
+    """Fill out the pack.mcmeta template
+
+    Parameters
+    ----------
+    title : str
+        The resource pack title
+    license_summary : License or str
+        The resource pack license
+    title_color : str
+        The color for the title line
+    license_color : str or None
+        The color for the license line. If None is provided, this will be chosen to
+        match the license.
+
+    Returns
+    -------
+    str
+        The filled-out mcmeta, ready to be written to file
+    """
+    if isinstance(license_summary, License):
+        if license_summary == License.PERSONAL:
+            license_summary = "For personal use only"
+            license_color = license_color or "red"
+        elif license_summary == License.RESTRICTED:
+            license_summary = "For limited public use. See pack for details."
+            license_color = license_color or "dark_purple"
+        elif license_summary == License.ATTRIBUTION:
+            license_summary = "For public use. See pack for terms and attribution."
+            license_color = license_color or "aqua"
+        elif license_summary == License.UNRESTRICTED:
+            license_summary = "For public use. Licensed under CC0."
+            license_color = license_color or "green"
+        else:
+            raise NotImplementedError("This license type is not supported")
+    else:
+        license_color = license_color or "white"
+    return (
+        assets.MCMETA.replace("%%title%%", title)
+        .replace("%%title_color%%", title_color)
+        .replace("%%license%%", license_summary)
+        .replace("%%license_color%%", license_color)
+    )
 
 
 def convert_music_to_ogg(
@@ -132,7 +327,10 @@ def convert_music_to_ogg(
         .audio.output(os.fspath(os.fspath(output_path)), acodec="libvorbis", ac=1)
         .overwrite_output()
     )
-    converter.run(cmd=bin.ffmpeg)
+    LOGGER.debug(
+        f"Converting using the following command: {' '.join(converter.compile())}"
+    )
+    converter.run(cmd=bin.ffmpeg, quiet=True)
 
 
 def generate_sound_registry(*track_numbers: int) -> dict:
@@ -237,7 +435,7 @@ def extract_album_art(track: os.PathLike | str) -> Image.Image | None:
     with NamedTemporaryFile(mode="w+b", suffix=".png") as cover:
         ffmpeg.input(track_path).video.output(
             os.fspath(cover.name)
-        ).overwrite_output().run(bin.ffmpeg)
+        ).overwrite_output().run(bin.ffmpeg, quiet=True)
 
         # move it to in-memory buffer so tempfile can be deleted
         album_art = Image.open(cover.name)

@@ -6,6 +6,7 @@ from collections.abc import Generator, Iterable, Sequence
 from pathlib import Path
 
 from . import __version__, _start_at
+from .pack_generator import LOGGER as PACKGEN_LOGGER
 from .pack_generator import Track, generate_resourcepack
 from .utils import is_valid_music_track
 
@@ -127,11 +128,11 @@ def resolve_tracks(
 
 def main():
     console_logger = logging.StreamHandler()
-    console_logger.setLevel(logging.WARNING)
     console_logger.setFormatter(
         logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     )
     LOGGER.addHandler(console_logger)
+    PACKGEN_LOGGER.addHandler(console_logger)
 
     output_path, inputs, config = parse_args(sys.argv)
     tracks = resolve_tracks(*inputs, config=config)
