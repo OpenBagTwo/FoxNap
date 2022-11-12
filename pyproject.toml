@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools", "versioneer[toml]"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "FoxNapRPG"
+description = "Resourcepack generator for the FoxNap mod"
+authors = [
+  { name = "Gili \"OpenBagTwo\" Barlev" },
+]
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.10"
+dynamic = ["version"]
+
+[project.urls]
+"Homepage" = "https://github.com/OpenBagTwo/FoxNap/"
+
+[project.scripts]
+"FoxNapRPG" = "foxnap_rpg.cli:main"
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "foxnap_rpg/_version.py"
+versionfile_build = "foxnap_rpg/_version.py"
+tag_prefix = "v"
+parentdir_prefix = "foxnap_rpg-"
+
+[tool.mypy]
+ignore_missing_imports = true
+show_error_codes = true
+
+[tool.isort]
+line_length = 88
+profile = "black"
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = "E203"
+
