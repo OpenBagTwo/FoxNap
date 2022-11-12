@@ -5,7 +5,9 @@ import sys
 from collections.abc import Generator, Iterable, Sequence
 from pathlib import Path
 
-from . import __version__, _start_at
+from . import __version__
+from .builder import Spec, TrackBuilder
+from .config import read_specs_from_config_file
 from .pack_generator import LOGGER as PACKGEN_LOGGER
 from .pack_generator import Track, generate_resourcepack
 from .utils import is_valid_music_track
@@ -13,7 +15,9 @@ from .utils import is_valid_music_track
 LOGGER = logging.getLogger(__name__)
 
 
-def parse_args(argv: Sequence[str]) -> tuple[Path, list[Path], Path | None]:
+def parse_args(
+    argv: Sequence[str],
+) -> tuple[Path, list[Path], Path | None, dict[str, bool | str]]:
     """Parse the provided command-line options to identify the parameters to use
     when generating the resource pack
 
@@ -29,6 +33,8 @@ def parse_args(argv: Sequence[str]) -> tuple[Path, list[Path], Path | None]:
         The paths of music files or folders to include
     Path or None
         The path of a configuration file to load (or None if one is not specified)
+    dict
+        Settings for the TrackBuilder
     """
     parser = argparse.ArgumentParser(
         prog="FoxNapRPG",
@@ -61,7 +67,7 @@ def parse_args(argv: Sequence[str]) -> tuple[Path, list[Path], Path | None]:
         type=Path,
         help=(
             "path and filename for saving the resource pack"
-            "\n(default is FoxNapRP.zip in the current working directory.)"
+            "\n(default is FoxNapRP.zip in the current working directory)"
         ),
     )
 
@@ -74,23 +80,65 @@ def parse_args(argv: Sequence[str]) -> tuple[Path, list[Path], Path | None]:
         help="a configuration file to load (for fine-grained resource pack control)",
     )
 
+    parser.add_argument(
+        "--ignore-missing",
+        dest="default_required",
+        action="store_false",
+        help="ignore any missing files specified in the config unless they are"
+        "\nexplicitly marked as required (default behavior is that all specified"
+        "\nfiles are required unless explicitly marked otherwise)",
+    )
+
+    parser.add_argument(
+        "--unspecified-file-handling",
+        default="use-defaults",
+        type=str,
+        choices=("use-defaults", "warning", "error"),
+        help="behavior when a file is found that does not match a provided spec."
+        "Options are:"
+        "\n - use-defaults : (default) create the track based on default handling"
+        " settings"
+        "\n - warning : create the track based on default handling settings, but"
+        " emit a warning"
+        "\n - error : raise an error",
+    )
+
+    parser.add_argument(
+        "--allow-track-number-gaps",
+        dest="enforce_contiguous",
+        action="store_false",
+        help="do not raise an error if the resulting resource pack would have gaps in"
+        " track / record numbers."
+        "\nYou only want to do this if your resource pack is being layered on top"
+        "of an existing resource pack.",
+    )
+
     args = parser.parse_args(argv[1:])
-    return args.output, args.inputs, args.config
+    builder_kwargs = {
+        "required": args.default_required,
+        "unspecified_file_handling": args.unspecified_file_handling,
+        "enforce_contiguous_track_numbers": "error"
+        if args.enforce_contiguous
+        else "ignore",
+    }
+
+    return args.output, args.inputs, args.config, builder_kwargs
 
 
 def resolve_tracks(
-    *inputs: Path, config: Path | None = None
+    builder: TrackBuilder,
+    *inputs: Path,
 ) -> Generator[Track, None, None]:
     """Given a list of input paths (and, optionally, a configuration file), generate
     the track specifications
 
     Parameters
     ----------
+    builder : TrackBuilder
+        A configured TrackBuilder responsible for creating the Tracks per user intent
     *inputs : Path
         The paths to grab inputs from. If no paths are provided, any files in the
         current working directory will be scanned
-    config : Path, optional
-        Optionally, a config file to read
 
     Returns
     -------
@@ -98,12 +146,9 @@ def resolve_tracks(
         A generator that will loop through all the input paths and yield Track
         specifications
     """
-    if config is not None:
-        raise NotImplementedError("Config files are not yet implemented")
     if len(inputs) == 0:
         inputs = (Path("."),)
 
-    next_track_number = _start_at
     for input_path in inputs:
         if input_path.is_file():
             input_files: Iterable[Path] = (input_path,)
@@ -115,15 +160,10 @@ def resolve_tracks(
         for input_file in input_files:
             if input_file.is_dir():
                 continue
-            # yield config[input_file] or
             if is_valid_music_track(input_file):
-                yield Track(next_track_number, input_file, True)
+                yield builder[input_file]
             else:
                 continue
-            while True:
-                next_track_number += 1
-                # if next_track_number not in config.track_numbers:
-                break
 
 
 def main():
@@ -134,6 +174,11 @@ def main():
     LOGGER.addHandler(console_logger)
     PACKGEN_LOGGER.addHandler(console_logger)
 
-    output_path, inputs, config = parse_args(sys.argv)
-    tracks = resolve_tracks(*inputs, config=config)
-    generate_resourcepack(output_path, *tracks)
+    output_path, inputs, config, builder_kwargs = parse_args(sys.argv)
+    if config:
+        specs: Iterable[Spec] = read_specs_from_config_file(config)
+    else:
+        specs = ()
+    with TrackBuilder(*specs, **builder_kwargs) as builder:
+        tracks = resolve_tracks(builder, *inputs)
+        generate_resourcepack(output_path, *tracks)

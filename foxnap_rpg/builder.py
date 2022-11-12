@@ -203,7 +203,7 @@ class TrackBuilder(AbstractContextManager):
 
             missing_track_numbers = tuple(
                 i
-                for i in range(_start_at, max(self._assigned_track_numbers))
+                for i in range(_start_at, max(self._assigned_track_numbers or (-1,)))
                 if i not in self._assigned_track_numbers
             )
 
