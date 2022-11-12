@@ -21,7 +21,7 @@ class Spec(NamedTuple):
     distinct : bool, optional
         Whether this spec is allowed to match more than one file. Right now only True
         (default) is supported.
-    license : License, optional
+    license_type : License, optional
         The permission level for use of the specified track. If None is specified,
         use the handler's default.
     required : bool, optional
@@ -58,7 +58,7 @@ class Spec(NamedTuple):
 
     path_spec: Path
     distinct: bool | None = True
-    license: License | None = None
+    license_type: License | None = None
     required: bool | None = None
     description: str | None = None
     num: int | None = None
@@ -171,7 +171,7 @@ class TrackBuilder(AbstractContextManager):
             use_album_art=spec.use_album_art
             if spec.use_album_art is not None
             else self.defaults["use_album_art"],
-            license=spec.license or self.defaults["license"],
+            license=spec.license_type or self.defaults["license"],
         )
 
     def __enter__(self):
