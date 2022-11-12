@@ -5,8 +5,8 @@ from contextlib import AbstractContextManager
 from pathlib import Path
 from typing import Any, NamedTuple
 
-from foxnap_rpg import _start_at, utils
-from foxnap_rpg.pack_generator import License, Track
+from . import _start_at, utils
+from .pack_generator import License, Track
 
 LOGGER = logging.getLogger(__name__)
 
