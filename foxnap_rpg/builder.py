@@ -163,8 +163,10 @@ class TrackBuilder(AbstractContextManager):
         track_file: os.PathLike | str,
         spec: Spec,
     ) -> Track:
+        track_num = spec.num or self._next_track_num()
+        self._assigned_track_numbers.append(track_num)
         return Track(
-            spec.num or self._next_track_num(),
+            track_num,
             track_file,
             hue=spec.hue if spec.hue is not None else self.defaults["hue"],
             description=spec.description,
@@ -255,7 +257,6 @@ class TrackBuilder(AbstractContextManager):
             if utils.spec_matches_path(spec.path_spec, track_file):
                 track = self._generate_track_from_spec(track_file, spec)
                 self._unused.remove(spec)
-                self._assigned_track_numbers.append(track.num)
                 return track
 
         # not found? search all specs

@@ -287,12 +287,21 @@ class TestBuildingTracks:
             with pytest.raises(KeyError, match="Could not find matching spec for"):
                 _ = track_builder[Path.home() / "Music" / "what a wonderful world.m4a"]
 
+    def test_track_builder_increments_track_number(self, track_builder):
+        tracks: list[Track] = []
+        with track_builder:
+            tracks.append(track_builder[Path.home() / "Music" / "hello.mp3"])
+            tracks.append(track_builder[Path.home() / "Music" / "bonjour.mp3"])
+            tracks.append(track_builder[Path.home() / "Music" / "hola.mp3"])
+            tracks.append(track_builder[Path.home() / "Music" / "shalom.mp3"])
+
+        assert [track.num for track in tracks] == [4, 5, 6, 7]
+
     def test_track_builder_outside_context_raises_helpful_error(self, track_builder):
         with pytest.raises(ValueError, match=r"(context manager)(.|\s)*(with)"):
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
     def test_track_builders_can_be_reused(self, track_builder):
-
         track_fives = []
         for _ in range(100):
             with track_builder:
