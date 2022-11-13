@@ -4,6 +4,7 @@ import logging
 import sys
 from collections.abc import Generator, Iterable, Sequence
 from pathlib import Path
+from typing import Any
 
 from . import __version__
 from .builder import Spec, TrackBuilder
@@ -17,7 +18,7 @@ LOGGER = logging.getLogger(__name__)
 
 def parse_args(
     argv: Sequence[str],
-) -> tuple[Path, list[Path], Path | None, dict[str, bool | str]]:
+) -> tuple[Path, list[Path], Path | None, dict[str, Any]]:
     """Parse the provided command-line options to identify the parameters to use
     when generating the resource pack
 
@@ -113,8 +114,25 @@ def parse_args(
         "of an existing resource pack.",
     )
 
+    parser.add_argument(
+        "--silent",
+        dest="verbosity",
+        action="store_const",
+        const=30,
+        help="Only print messages to the console if there's a problem.",
+    )
+
+    parser.add_argument(
+        "--verbose",
+        dest="verbosity",
+        action="store_const",
+        const=10,
+        help="Print debug messages to the console.",
+    )
+
     args = parser.parse_args(argv[1:])
     builder_kwargs = {
+        "verbosity": args.verbosity or 20,
         "required": args.default_required,
         "unspecified_file_handling": args.unspecified_file_handling,
         "enforce_contiguous_track_numbers": "error"
@@ -122,7 +140,9 @@ def parse_args(
         else "ignore",
     }
 
-    return args.output, args.inputs, args.config, builder_kwargs
+    inputs = args.inputs or [Path(".")]
+
+    return args.output, inputs, args.config, builder_kwargs
 
 
 def resolve_tracks(
@@ -175,6 +195,9 @@ def main():
     PACKGEN_LOGGER.addHandler(console_logger)
 
     output_path, inputs, config, builder_kwargs = parse_args(sys.argv)
+
+    PACKGEN_LOGGER.setLevel(builder_kwargs.pop("verbosity"))
+
     if config:
         specs: Iterable[Spec] = read_specs_from_config_file(config)
     else:
