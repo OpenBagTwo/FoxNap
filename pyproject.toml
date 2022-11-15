@@ -3,7 +3,7 @@ requires = ["setuptools", "versioneer[toml]"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "FoxNapRPG"
+name = "foxnap_rpg"
 description = "Resourcepack generator for the FoxNap mod"
 authors = [
   { name = "Gili \"OpenBagTwo\" Barlev" },

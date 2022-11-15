@@ -1,1 +1,3 @@
 include foxnap_rpg/assets/*.png
+include foxnap_rpg/bin/ffmpeg
+include foxnap_rpg/bin/ffprobe

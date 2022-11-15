@@ -3,7 +3,7 @@ from setuptools import setup
 import versioneer
 
 setup(
-    name="FoxNapRPG",
+    name="foxnap_rpg",
     python_requires=">=3.10",
     description="Resourcepack generator for the FoxNap mod",
     author='Gili "OpenBagTwo" Barlev',

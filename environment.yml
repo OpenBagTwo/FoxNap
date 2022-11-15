@@ -18,4 +18,4 @@ dependencies:
   - pip>=22
   - pre-commit
   - versioneer
-
+  - pyinstaller
