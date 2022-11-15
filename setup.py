@@ -8,7 +8,7 @@ setup(
     description="Resourcepack generator for the FoxNap mod",
     author='Gili "OpenBagTwo" Barlev',
     url="https://github.com/OpenBagTwo/FoxNap",
-    packages=["foxnap_rpg"],
+    packages=["foxnap_rpg", "foxnap_rpg.assets", "foxnap_rpg.bin"],
     entry_points={
         "console_scripts": [
             "FoxNapRPG = foxnap_rpg.cli:main",
