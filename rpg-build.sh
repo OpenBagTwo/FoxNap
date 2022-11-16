@@ -6,5 +6,5 @@
 pip install --user --upgrade --force-reinstall .
 
 # build with PyInstaller
-pyinstaller launcher.py --onefile -n FoxNapRPG \
+pyinstaller launcher.py --console --onefile -n FoxNapRPG \
   --collect-all foxnap_rpg
