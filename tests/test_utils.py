@@ -208,7 +208,7 @@ class TestValidateTrackFileSpecs:
         full_path = os.fspath(full_path)
         short_path = os.fspath(short_path)
 
-        expected = rf"'{full_path}' would also match any files matching '{short_path}'"
+        expected = f"'{full_path}' would also match any files matching '{short_path}'"
 
         with pytest.raises(RuntimeError, match=expected):
             utils.validate_track_file_specs(full_path, short_path)
