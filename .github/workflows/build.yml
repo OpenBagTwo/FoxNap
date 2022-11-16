@@ -100,7 +100,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install .
-        pip install pytest
+        pip install pytest pyinstaller
     - name: Run unit tests
       run: |
         pytest -vv
