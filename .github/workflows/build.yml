@@ -67,7 +67,7 @@ jobs:
     - name: Grab ffmpeg binaries (Windows)
       if: ${{ runner.os == 'Windows' }}
       run: |
-        wget https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z
+        curl -JL https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z --output ffmpeg-release-full.7z
         mkdir ffmpeg-release
     - name: Extract ffmpeg (Windows)
       if: ${{ runner.os == 'Windows' }}
