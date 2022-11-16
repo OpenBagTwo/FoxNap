@@ -51,7 +51,7 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
         uses: actions/upload-artifact@v2
         with:
-          name: Artifacts
+          name: ModJar
           path: build/libs/
   test_and_build_rpg:
     strategy:
@@ -111,5 +111,5 @@ jobs:
     - name: capture build artifacts    
       uses: actions/upload-artifact@v2
       with:
-        name: RPG-builds-${{ runner.os }}
-        path: dists/
+        name: ResourcepackGenerator-${{ runner.os }}
+        path: dist/
