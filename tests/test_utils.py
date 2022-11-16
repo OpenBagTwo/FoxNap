@@ -209,6 +209,7 @@ class TestValidateTrackFileSpecs:
         short_path = os.fspath(short_path)
 
         expected = f"'{full_path}' would also match any files matching '{short_path}'"
+        expected = expected.replace("\\", "\\\\")
 
         with pytest.raises(RuntimeError, match=expected):
             utils.validate_track_file_specs(full_path, short_path)
@@ -220,7 +221,8 @@ class TestValidateTrackFileSpecs:
             utils.validate_track_file_specs("hello", "hello.m4a")
 
     def test_raise_on_conflict_with_extensionless_files_with_path_ambiguity(self):
-        expected = rf"'{os.path.join('Music', 'hello.m4a')}' would also match any files matching 'hello'"
+        expected = f"'{os.path.join('Music', 'hello.m4a')}' would also match any files matching 'hello'"
+        expected = expected.replace("\\", "\\\\")
 
         with pytest.raises(RuntimeError, match=expected):
             utils.validate_track_file_specs("hello", Path("Music") / "hello.m4a")
@@ -229,7 +231,8 @@ class TestValidateTrackFileSpecs:
         utils.validate_track_file_specs(Path("Music") / "hello", "hello.m4a")
 
     def test_raise_on_possible_conflict_when_strict(self):
-        expected = rf"'{os.path.join('Music', 'hello')}' may also match files matching 'hello.m4a'"
+        expected = f"'{os.path.join('Music', 'hello')}' may also match files matching 'hello.m4a'"
+        expected = expected.replace("\\", "\\\\")
 
         with pytest.raises(RuntimeError, match=expected):
             utils.validate_track_file_specs(
