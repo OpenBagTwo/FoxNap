@@ -92,7 +92,7 @@ jobs:
     - name: Grab FFMPEG Binaries (Linux)
       if: ${{ runner.os == 'Linux' }}
       run: |
-        wget --trust-server-names wget --trust-server-names https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -O ffmpeg-release.tar.xz
+        wget --trust-server-names https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -O ffmpeg-release.tar.xz
         mkdir ffmpeg-release
         tar -xJvf ffmpeg-release.tar.xz -C ffmpeg-release
         mv ffmpeg-release/*/ff* foxnap_rpg/bin/
