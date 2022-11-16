@@ -7,19 +7,35 @@ name: build
 on: [pull_request, push]
 
 jobs:
-  build:
+  lint:  # python only so far, but would be nice to do Java as well
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Install package and dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .
+        pip install pytest mypy black isort
+    - name: Run code quality checks
+      run: |
+        isort . --profile="black"
+        black .
+    - name: Type check with mypy
+      run: |
+        mypy .
+  build_mod:
     strategy:
       matrix:
-        # Use these Java versions
-        java: [
-          17,    # Current Java LTS & minimum supported by Minecraft
-        ]
-        # and run on both Linux and Windows
-        os: [ubuntu-20.04, windows-2022]
+        java: [17]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: validate gradle wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: setup jdk ${{ matrix.java }}
@@ -37,3 +53,62 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
+  test_and_build_rpg:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Grab ffmpeg binaries (Windows)
+      if: ${{ runner.os == 'Windows' }}
+      run: |
+        wget https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z
+        mkdir ffmpeg-release
+    - name: Extract ffmpeg (Windows)
+      if: ${{ runner.os == 'Windows' }}
+      uses: DuckSoft/extract-7z-action@v1.0
+      with:
+        # archive path to extract
+        pathSource: ffmpeg-release-full.7z
+        # path to place the extract
+        pathTarget: ffmpeg-release
+    - name: Place ffmpeg binaries in correct folder (Windows)
+      if: ${{ runner.os == 'Windows' }}
+      run: |
+        move ffmpeg-release\ffmpeg.exe foxnap_rpg\bin\ffmpeg
+        move ffmpeg-release\ffprobe.exe foxnap_rpg\bin\ffprobe
+    - name: Grab FFMPEG Binaries (Mac)
+      if: ${{ runner.os == 'macOS' }}
+      run: |
+        wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/zip -O ffmpeg-release.zip
+        wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip  -O ffprobe-release.zip
+        unzip ffmeg-release.zip -d foxnap_rpg/bin/
+        unzip ffprobe-release.zip -d foxnap_rpg/bin/
+    - name: Grab FFMPEG Binaries (Linux)
+      if: ${{ runner.os == 'Linux' }}
+      run: |
+        wget --trust-server-names wget --trust-server-names https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -O ffmpeg-release.tar.xz
+        mkdir ffmpeg-release
+        tar -xJvf ffmpeg-release.tar.xz -C ffmpeg-release
+        mv ffmpeg-release/*/ff* foxnap_rpg/bin/
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .
+    - name: Run unit tests
+      run: |
+        pytest -vv
+    - name: Build
+      run: |
+        pip install --user --upgrade --force-reinstall .
+        pyinstaller launcher.py --onefile -n FoxNapRPG --collect-all foxnap_rpg
+    - name: capture build artifacts    
+      uses: actions/upload-artifact@v2
+      with:
+        name: RPG-builds-${{ runner.os }}
+        path: dists/
