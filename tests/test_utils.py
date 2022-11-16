@@ -220,16 +220,18 @@ class TestValidateTrackFileSpecs:
             utils.validate_track_file_specs("hello", "hello.m4a")
 
     def test_raise_on_conflict_with_extensionless_files_with_path_ambiguity(self):
-        expected = rf"'Music/hello.m4a' would also match any files matching 'hello'"
+        expected = rf"'{os.path.join('Music', 'hello.m4a')}' would also match any files matching 'hello'"
 
         with pytest.raises(RuntimeError, match=expected):
-            utils.validate_track_file_specs("hello", "Music/hello.m4a")
+            utils.validate_track_file_specs("hello", Path("Music") / "hello.m4a")
 
     def test_ignore_possible_conflicts_by_default(self):
-        utils.validate_track_file_specs("Music/hello", "hello.m4a")
+        utils.validate_track_file_specs(Path("Music") / "hello", "hello.m4a")
 
     def test_raise_on_possible_conflict_when_strict(self):
-        expected = rf"'Music/hello' may also match files matching 'hello.m4a'"
+        expected = rf"'{os.path.join('Music', 'hello')}' may also match files matching 'hello.m4a'"
 
         with pytest.raises(RuntimeError, match=expected):
-            utils.validate_track_file_specs("Music/hello", "hello.m4a", strict=True)
+            utils.validate_track_file_specs(
+                Path("Music") / "hello", "hello.m4a", strict=True
+            )

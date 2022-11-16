@@ -9,6 +9,8 @@ A simple mod that adds custom music discs to be played in my Survival world's ou
 Or, I guess,
 anywhere jukeboxes can be found.
 
+[![build](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build.yml/badge.svg?branch=1.19.2)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build.yml)
+
 ## Setup and Use
 
 _TODO_
