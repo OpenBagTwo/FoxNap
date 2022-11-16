@@ -23,10 +23,10 @@ jobs:
     - name: Run code quality checks
       run: |
         isort . --profile="black"
-        black .
+        black foxnap_rpg
     - name: Type check with mypy
       run: |
-        mypy .
+        mypy foxnap_rpg --exclude build
   build_mod:
     strategy:
       matrix:
