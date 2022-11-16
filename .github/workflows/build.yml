@@ -87,7 +87,7 @@ jobs:
       run: |
         wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/zip -O ffmpeg-release.zip
         wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip  -O ffprobe-release.zip
-        unzip ffmeg-release.zip -d foxnap_rpg/bin/
+        unzip ffmpeg-release.zip -d foxnap_rpg/bin/
         unzip ffprobe-release.zip -d foxnap_rpg/bin/
     - name: Grab FFMPEG Binaries (Linux)
       if: ${{ runner.os == 'Linux' }}
