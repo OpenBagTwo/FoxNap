@@ -140,7 +140,7 @@ def parse_args(
         else "ignore",
     }
 
-    inputs = args.inputs or [Path(".")]
+    inputs = args.inputs or [Path(sys.argv[0]).parent]
 
     return args.output, inputs, args.config, builder_kwargs
 
@@ -166,10 +166,8 @@ def resolve_tracks(
         A generator that will loop through all the input paths and yield Track
         specifications
     """
-    if len(inputs) == 0:
-        inputs = (Path("."),)
-
     for input_path in inputs:
+        LOGGER.debug(f"Searching {input_path}")
         if input_path.is_file():
             input_files: Iterable[Path] = (input_path,)
         elif input_path.is_dir():
@@ -181,6 +179,7 @@ def resolve_tracks(
             if input_file.is_dir():
                 continue
             if is_valid_music_track(input_file):
+                LOGGER.debug(f"Found music file {input_file}")
                 yield builder[input_file]
             else:
                 continue
@@ -188,6 +187,7 @@ def resolve_tracks(
 
 def main():
     console_logger = logging.StreamHandler()
+
     console_logger.setFormatter(
         logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     )
@@ -196,7 +196,9 @@ def main():
 
     output_path, inputs, config, builder_kwargs = parse_args(sys.argv)
 
-    PACKGEN_LOGGER.setLevel(builder_kwargs.pop("verbosity"))
+    log_level = builder_kwargs.pop("verbosity")
+    LOGGER.setLevel(log_level)
+    PACKGEN_LOGGER.setLevel(log_level)
 
     if config:
         specs: Iterable[Spec] = read_specs_from_config_file(config)
