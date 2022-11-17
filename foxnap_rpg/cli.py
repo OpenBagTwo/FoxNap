@@ -16,6 +16,17 @@ from .utils import is_valid_music_track
 LOGGER = logging.getLogger(__name__)
 
 
+def _get_cwd() -> Path:
+    """Get the folder that should be considered the current working directory,
+    which will be different depending on whether this is being run from inside
+    a PyInstaller bundle"""
+    if getattr(sys, "frozen", False):
+        if hasattr(sys, "_MEIPASS"):
+            # then we're inside a PyInstaller bundle
+            return Path(sys.argv[0]).parent
+    return Path(".")
+
+
 def parse_args(
     argv: Sequence[str],
 ) -> tuple[Path, list[Path], Path | None, dict[str, Any]]:
@@ -64,7 +75,7 @@ def parse_args(
         "--output",
         dest="output",
         action="store",
-        default=Path("FoxNapRP.zip"),
+        default=_get_cwd() / "FoxNapRP.zip",
         type=Path,
         help=(
             "path and filename for saving the resource pack"
@@ -140,7 +151,7 @@ def parse_args(
         else "ignore",
     }
 
-    inputs = args.inputs or [Path(sys.argv[0]).parent]
+    inputs = args.inputs or [_get_cwd()]
 
     return args.output, inputs, args.config, builder_kwargs
 
