@@ -105,11 +105,11 @@ jobs:
       run: |
         pytest -vv
     - name: Copy launcher into build dir (Windows)
-      if: ${{ runner.os == "Windows" }}
+      if: ${{ runner.os == 'Windows' }}
       run: |
         copy launcher.py build\launcher.py
     - name: Copy launcher into build dir (*nix)
-      if: ${{ runner.os != "Windows" }}
+      if: ${{ runner.os != 'Windows' }}
       run: |
         cp launcher.py build/launcher.py
     - name: Build
