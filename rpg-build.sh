@@ -2,8 +2,10 @@
 
 # build script for the resourcepack generator
 
-# pip install
-pip install --user --upgrade --force-reinstall .
+# build package
+python setup.py build
+
+cp launcher.py build/. && cd build
 
 # build with PyInstaller
 pyinstaller launcher.py --console --onefile -n FoxNapRPG \

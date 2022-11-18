@@ -106,10 +106,11 @@ jobs:
         pytest -vv
     - name: Build
       run: |
-        pip install --user --upgrade --force-reinstall .
+        python setup.py build
+        cd build
         pyinstaller launcher.py --console --onefile -n FoxNapRPG --collect-all foxnap_rpg
     - name: capture build artifacts    
       uses: actions/upload-artifact@v2
       with:
         name: ResourcepackGenerator-${{ runner.os }}
-        path: dist/
+        path: build/dist/
