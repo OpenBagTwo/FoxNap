@@ -114,8 +114,8 @@ jobs:
         cp launcher.py build/launcher.py
     - name: Build
       run: |
-        python setup.py build
-        cd build
+        pip install .
+        cd build  # to avoid relative importing
         pyinstaller launcher.py --console --onefile -n FoxNapRPG --collect-all foxnap_rpg
     - name: capture build artifacts    
       uses: actions/upload-artifact@v2
