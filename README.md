@@ -73,12 +73,6 @@ game. You will then need to go into your minecraft `config` folder and edit `fox
 the number of `n_discs` to include the ones added by the resource pack (this number needs to be
 the number of built-in tracks plus the number of custom tracks you added).
 
-#### Bonus for Windows Only
-
-If you're a Windows user, you can _also_ take a folder containing all your music and _drag and drop
-it onto_ `FoxNapRPG.exe`,
-which will create `FoxNapRP.zip` in the folder containing the exe.
-
 #### Advanced Users (any operating system)
 
 You can also run the generator from the command-line, which will give you access to a bunch of
