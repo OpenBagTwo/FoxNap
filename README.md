@@ -37,7 +37,17 @@ You can also build the generator from source.
    files from your music library and that has support for encoding using `libvorbis`. Put the
    executable (or symbolic links to the executable) in the `foxnap_rpg/bin` folder.
 1. Create and activate a virtual environment using python 3.10 or above
-1. From the repo's root run `python -m pip install .`
+   1. If you have a [`conda`-based](https://docs.conda.io/en/latest/) environment and package manager installed on your
+      system, such as [mambaforge](https://github.com/conda-forge/miniforge#mambaforge), you can use the project's
+      dedicated dev/build environment, creatable from the repo root via
+      `mamba env create -f environment.yml` (substitute `conda` for `mamba` as needed)
+1. From the repo's root, with your virtual environment activated, run `python -m pip install .`
+1. At this point, you have two options:
+   1. Use FoxNap as a python package, with `$ FoxNapRPG` available from the command line
+   1. Create a stand-alone executable using [`pyinstaller`](https://pyinstaller.org/en/stable/) (included in the `conda`
+      environment). The scripts `./rpg-build.sh` for \*Nix or `.\rpg-build.bat` for Windows are available for reference.
+  
+
 
 ### Usage
 

@@ -5,6 +5,7 @@
 # build package
 python setup.py build
 
+# cd to build folder to avoid relative importing
 cp launcher.py build/. && cd build
 
 # build with PyInstaller
