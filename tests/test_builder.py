@@ -160,13 +160,15 @@ class TestBuildingTracks:
         with track_builder:
             track = track_builder[Path.home() / "Music" / "hello.mp3"]
 
-        assert (track.num, track.use_album_art) == (4, False)
+        assert (track.num, track.use_album_art, track_builder.n_discs) == (4, False, 4)
 
     def test_track_builder_errors_on_multi_matches(self, track_builder):
         with track_builder:
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
             with pytest.raises(RuntimeError, match="already used"):
                 _ = track_builder[Path.home() / "Music" / "hello.mp3"]
+
+        assert track_builder.n_discs == 4
 
     def test_track_builder_falls_back_to_builder_defaults(self, track_builder):
         track_builder.defaults["hue"] = 87
@@ -181,7 +183,7 @@ class TestBuildingTracks:
             track = track_builder[Path.home() / "Music" / "i love you.mp3"]
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
-        assert track.num == 5
+        assert (track.num, track_builder.n_discs) == (5, 5)
 
     def test_track_builder_re_validates_on_enter(self, track_builder):
         track_builder._specs.append(Spec(Path("Music/hello.mp3")))
@@ -203,7 +205,7 @@ class TestBuildingTracks:
                 track_4 = track_builder[Path.home() / "Music" / "hello.mp3"]
 
         # to check explicitly that the raise is on exit
-        assert (track_4.num, track_5.num) == (4, 5)
+        assert (track_4.num, track_5.num, track_builder.n_discs) == (4, 5, 5)
 
     def test_track_builder_checks_for_skipped_track_numbers_on_exit(
         self, track_builder
@@ -217,7 +219,7 @@ class TestBuildingTracks:
                 _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
         # to check explicitly that the raise is on exit
-        assert track.num == 6
+        assert (track.num, track_builder.n_discs) == (6, 6)
 
     def test_skipped_track_numbers_can_be_set_to_warn_instead(
         self, track_builder, caplog
@@ -231,7 +233,7 @@ class TestBuildingTracks:
             track = track_builder[Path.home() / "Music" / "i love you.mp3"]
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
-        assert track.num == 6
+        assert (track.num, track_builder.n_discs) == (6, 6)
 
         assert len(caplog.record_tuples) == 1
         assert "5" in caplog.record_tuples[0][2]
@@ -246,7 +248,7 @@ class TestBuildingTracks:
             track = track_builder[Path.home() / "Music" / "i love you.mp3"]
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
-        assert track.num == 6
+        assert (track.num, track_builder.n_discs) == (6, 6)
 
         assert len(caplog.record_tuples) == 0
 
@@ -261,6 +263,7 @@ class TestBuildingTracks:
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
         assert (track.num, track.use_album_art, track.hue) == (5, True, 87)
+        assert track_builder.n_discs == 5
 
         assert len(caplog.record_tuples) >= 1
         assert any(("default spec" in record[2] for record in caplog.record_tuples))
@@ -275,6 +278,7 @@ class TestBuildingTracks:
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
         assert (track.num, track.use_album_art, track.hue) == (5, True, 87)
+        assert track_builder.n_discs == 5
 
         assert len(caplog.record_tuples) == 1
         assert "default spec" in caplog.record_tuples[0][2]
@@ -287,6 +291,8 @@ class TestBuildingTracks:
             with pytest.raises(KeyError, match="Could not find matching spec for"):
                 _ = track_builder[Path.home() / "Music" / "what a wonderful world.m4a"]
 
+        assert track_builder.n_discs == 4
+
     def test_track_builder_increments_track_number(self, track_builder):
         tracks: list[Track] = []
         with track_builder:
@@ -295,11 +301,18 @@ class TestBuildingTracks:
             tracks.append(track_builder[Path.home() / "Music" / "hola.mp3"])
             tracks.append(track_builder[Path.home() / "Music" / "shalom.mp3"])
 
-        assert [track.num for track in tracks] == [4, 5, 6, 7]
+        assert (track_builder.n_discs, [track.num for track in tracks]) == (
+            7,
+            [4, 5, 6, 7],
+        )
 
     def test_track_builder_outside_context_raises_helpful_error(self, track_builder):
         with pytest.raises(ValueError, match=r"(context manager)(.|\s)*(with)"):
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
+
+    def test_n_discs_before_track_builder_use_raises_helpful_error(self, track_builder):
+        with pytest.raises(ValueError, match=r"yet to be used"):
+            _ = track_builder.n_discs
 
     def test_track_builders_can_be_reused(self, track_builder):
         track_fives = []
@@ -311,3 +324,4 @@ class TestBuildingTracks:
                 _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
         assert all((track.num == 5 for track in track_fives))
+        assert track_builder.n_discs == 5
