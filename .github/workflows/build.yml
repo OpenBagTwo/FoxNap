@@ -4,33 +4,33 @@
 # against bad commits.
 
 name: build
-on: [pull_request, push]
+on: [ pull_request, push ]
 
 jobs:
-  lint:  # python only so far, but would be nice to do Java as well
+  lint: # python only so far, but would be nice to do Java as well
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Install package and dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install .
-        pip install mypy black isort
-    - name: Run code quality checks
-      run: |
-        isort . --profile="black"
-        black foxnap_rpg
-    - name: Type check with mypy
-      run: |
-        mypy foxnap_rpg --exclude build
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install package and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+          pip install mypy black isort
+      - name: Run code quality checks
+        run: |
+          isort . --profile="black"
+          black foxnap_rpg
+      - name: Type check with mypy
+        run: |
+          mypy foxnap_rpg --exclude build
   build_mod:
     strategy:
       matrix:
-        java: [17]
+        java: [ 17 ]
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -59,66 +59,69 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Grab ffmpeg binaries (Windows)
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        curl -JL https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z --output ffmpeg-release-full.7z
-        mkdir ffmpeg-release
-    - name: Extract ffmpeg (Windows)
-      if: ${{ runner.os == 'Windows' }}
-      uses: DuckSoft/extract-7z-action@v1.0
-      with:
-        # archive path to extract
-        pathSource: ffmpeg-release-full.7z
-        # path to place the extract
-        pathTarget: ffmpeg-release
-    - name: Place ffmpeg binaries in correct folder (Windows)
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        move ffmpeg-release\*\ffmpeg.exe foxnap_rpg\bin\ffmpeg
-        move ffmpeg-release\*\ffprobe.exe foxnap_rpg\bin\ffprobe
-    - name: Grab FFMPEG Binaries (Mac)
-      if: ${{ runner.os == 'macOS' }}
-      run: |
-        wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/zip -O ffmpeg-release.zip
-        wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip  -O ffprobe-release.zip
-        unzip ffmpeg-release.zip -d foxnap_rpg/bin/
-        unzip ffprobe-release.zip -d foxnap_rpg/bin/
-    - name: Grab FFMPEG Binaries (Linux)
-      if: ${{ runner.os == 'Linux' }}
-      run: |
-        wget --trust-server-names https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -O ffmpeg-release.tar.xz
-        mkdir ffmpeg-release
-        tar -xJvf ffmpeg-release.tar.xz -C ffmpeg-release
-        mv ffmpeg-release/*/ff* foxnap_rpg/bin/
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install .
-        pip install pytest pyinstaller
-    - name: Run unit tests
-      run: |
-        pytest -vv
-    - name: Copy launcher into build dir (Windows)
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        copy launcher.py build\launcher.py
-    - name: Copy launcher into build dir (*nix)
-      if: ${{ runner.os != 'Windows' }}
-      run: |
-        cp launcher.py build/launcher.py
-    - name: Build
-      run: |
-        pip install .
-        cd build  # to avoid relative importing
-        pyinstaller launcher.py --console --onefile -n FoxNapRPG --collect-all foxnap_rpg
-    - name: capture build artifacts    
-      uses: actions/upload-artifact@v2
-      with:
-        name: ResourcepackGenerator-${{ runner.os }}
-        path: build/dist/
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Grab ffmpeg binaries (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          curl -JL https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z --output ffmpeg-release-full.7z
+          mkdir ffmpeg-release
+      - name: Extract ffmpeg (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        uses: DuckSoft/extract-7z-action@v1.0
+        with:
+          # archive path to extract
+          pathSource: ffmpeg-release-full.7z
+          # path to place the extract
+          pathTarget: ffmpeg-release
+      - name: Place ffmpeg binaries in correct folder (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          move ffmpeg-release\*\ffmpeg.exe foxnap_rpg\bin\ffmpeg
+          move ffmpeg-release\*\ffprobe.exe foxnap_rpg\bin\ffprobe
+      - name: Grab FFMPEG Binaries (Mac)
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/zip -O ffmpeg-release.zip
+          wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip  -O ffprobe-release.zip
+          unzip ffmpeg-release.zip -d foxnap_rpg/bin/
+          unzip ffprobe-release.zip -d foxnap_rpg/bin/
+      - name: Grab FFMPEG Binaries (Linux)
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          wget --trust-server-names https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -O ffmpeg-release.tar.xz
+          mkdir ffmpeg-release
+          tar -xJvf ffmpeg-release.tar.xz -C ffmpeg-release
+          mv ffmpeg-release/*/ff* foxnap_rpg/bin/
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+          pip install pytest pyinstaller
+      - name: Run unit tests
+        run: |
+          pytest -vv
+      - name: Copy launcher into build dir (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          copy launcher.py build\launcher.py
+      - name: Copy launcher into build dir (*nix)
+        if: ${{ runner.os != 'Windows' }}
+        run: |
+          cp launcher.py build/launcher.py
+      - name: Build
+        run: |
+          pip install .
+          cd build  # to avoid relative importing
+          pyinstaller launcher.py --console --onefile -n FoxNapRPG --collect-all foxnap_rpg
+      - name: Run Integration Tests
+        run: |
+          python run_integration_tests.py build/dist/FoxNapRPG 7
+      - name: capture build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ResourcepackGenerator-${{ runner.os }}
+          path: build/dist/
