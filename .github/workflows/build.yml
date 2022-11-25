@@ -122,9 +122,13 @@ jobs:
           pip install .
           cd build  # to avoid relative importing
           pyinstaller launcher.py --console --onefile -n FoxNapRPG --collect-all foxnap_rpg
+      - name: Download music files
+        run: |
+          curl -JL "https://archive.org/compress/gustav-holst-the-planets-op.-32/formats=VBR%20MP3&file=/gustav-holst-the-planets-op.-32.zip" --output holst-the-planets.zip
+          python -c "from zipfile import ZipFile; zip = ZipFile('holst-the-planets.zip'); zip.extractall('build/dist')"
       - name: Run Integration Tests
         run: |
-          python run_integration_tests.py build/dist/FoxNapRPG 7
+          python run_integration_tests.py build/dist/FoxNapRPG 14
       - name: capture build artifacts
         uses: actions/upload-artifact@v2
         if: always()
