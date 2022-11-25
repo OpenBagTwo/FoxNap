@@ -4,7 +4,12 @@
 # against bad commits.
 
 name: build
-on: [ pull_request, push ]
+on:
+  pull_request:
+  push:
+    branches:
+      - 1.19
+      - 1.19.2
 
 jobs:
   lint: # python only so far, but would be nice to do Java as well
