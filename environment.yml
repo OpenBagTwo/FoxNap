@@ -1,0 +1,23 @@
+name: foxnap
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - pillow
+  - pip:
+      - ffmpeg-python  # conda dep will install conda ffmpeg which we don't want
+  # development env extras
+  - ipython>=8
+  - jupyterlab>=3
+  - black
+  - isort
+  - jupyterlab_code_formatter
+  - mypy
+  - pytest
+  - nbqa
+  - pip>=22
+  - pre-commit
+  - versioneer
+  - pyinstaller
+  - pyyaml
+  - types-pyyaml

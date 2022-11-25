@@ -9,9 +9,87 @@ A simple mod that adds custom music discs to be played in my Survival world's ou
 Or, I guess,
 anywhere jukeboxes can be found.
 
+[![build](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build.yml/badge.svg?branch=1.19.2)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build.yml)
+
 ## Setup and Use
 
 _TODO_
+
+## Resource Pack Generator
+
+This repo also contains a stand-alone resource pack generator to simplify the process of adding
+your own music discs.
+
+### Installation
+
+The resource pack generator is entirely portable and comes bundled
+with all dependencies that are needed to run it. No installation
+necessary--simply download the executable for your particular computer
+and operating system from [the release page](../../releases) that
+matches your version of the FoxNap mod.
+
+#### Building from Source
+
+You can also build the generator from source.
+
+1. Clone this repo
+1. [Download](https://ffmpeg.org/download.html) or install a version of `ffmpeg` that can decode
+   files from your music library and that has support for encoding using `libvorbis`. Put the
+   executable (or symbolic links to the executable) in the `foxnap_rpg/bin` folder.
+1. Create and activate a virtual environment using python 3.10 or above
+   1. If you have a [`conda`-based](https://docs.conda.io/en/latest/) environment and package manager installed on your
+      system, such as [mambaforge](https://github.com/conda-forge/miniforge#mambaforge), you can use the project's
+      dedicated dev/build environment, creatable from the repo root via
+      `mamba env create -f environment.yml` (substitute `conda` for `mamba` as needed)
+1. From the repo's root, with your virtual environment activated, run `python -m pip install .`
+1. At this point, you have two options:
+   1. Use FoxNap as a python package, with `$ FoxNapRPG` available from the command line
+   1. Create a stand-alone executable using [`pyinstaller`](https://pyinstaller.org/en/stable/) (included in the `conda`
+      environment). The scripts `./rpg-build.sh` for \*Nix or `.\rpg-build.bat` for Windows are available for reference.
+  
+
+
+### Usage
+
+#### Any Operating System
+
+Place the generator executable in an empty folder, then move any music you
+want to turn into records into that folder. **There is no limit** to the
+number of tracks you can include, and they **do not** need to be pre-converted
+to [Ogg](https://en.wikipedia.org/wiki/Ogg). **The only requirement** is that
+the files have to be
+[decodable by `ffmpeg`](https://www.ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features)
+.
+
+_**Pro Tip:** if your music files include [metadata](https://en.wikipedia.org/wiki/ID3), the title
+and artist
+name will get automatically extracted, and any album art will be used to help generate the music
+disc texture._
+
+When you're ready, simply double-click the `FoxNapRPG` executable. A terminal window should pop
+up showing progress of the resource pack creation, and before you know it you should soon have a
+new file in your folder named `FoxNapRP.zip`, which you can then add as a resource pack to your
+game. You will then need to go into your minecraft `config` folder and edit `foxnap.yaml` to raise
+the number of `n_discs` to include the ones added by the resource pack (this number needs to be
+the number of built-in tracks plus the number of custom tracks you added).
+
+#### Advanced Users (any operating system)
+
+You can also run the generator from the command-line, which will give you access to a bunch of
+additional customization options.
+
+For details, run
+
+```bash
+$ ./FoxNapRPG --help
+```
+
+from the folder where you saved the generator executable.
+
+## Contributing
+
+Find a bug? Have a suggestion or a question? Want to contribute a new feature or enhancement?
+[Open an issue](https://github.com/OpenBagTwo/FoxNap/issues/new)!
 
 ## License and Acknowledgements
 

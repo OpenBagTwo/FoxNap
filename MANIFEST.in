@@ -1,0 +1,2 @@
+include foxnap_rpg/assets/*.png
+include foxnap_rpg/bin/ff*
