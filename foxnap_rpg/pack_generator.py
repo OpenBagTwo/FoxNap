@@ -120,11 +120,11 @@ def generate_resource_pack(
     Raises
     ------
     RuntimeError
-        - If license_summary is set to License.ATTRIBUTION or License.RESTRICTED
-          and no license_file is provided
-        - If the license level specified is less restrictive than the license level
-          for any of the provided tracks (this is not checked when license_summary
-          is provided via a custom string)
+      - If license_summary is set to License.ATTRIBUTION or License.RESTRICTED
+        and no license_file is provided
+      - If the license level specified is less restrictive than the license level
+        for any of the provided tracks (this is not checked when license_summary
+        is provided via a custom string)
 
     Notes
     -----
