@@ -19,7 +19,7 @@ _Banner Pending_
       * [Installation](#installation)
       * [Generating Resource Packs](#generating-resource-packs)
       * [Advanced Options](#advanced-options)
-    * [Obtaining Records _and More!_](#obtaining-records-_and-more_)
+    * [Obtaining Records _and More!_](#obtaining-records-and-more)
   * [Contributing](#contributing)
     * [Building the Mod from Source](#building-the-mod-from-source)
     * [Building the Resource Pack Generator from Source](#building-the-resource-pack-generator-from-source)
@@ -71,7 +71,7 @@ them with this mod under the [Creative Commons Attribution-ShareAlike 4.0 Licens
 
 If this built-in playlist sounds like your jam, and you have no desire to add anything else, then
 congrats! This is easy! Just download the mod to your instance's mods folder, start the game, and
-[go find a village](#obtaining-records-_and-more_).
+[go find a village](#obtaining-records-and-more).
 
 But if you're interested in some customization, read on:
 
