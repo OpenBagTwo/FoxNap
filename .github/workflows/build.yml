@@ -127,6 +127,7 @@ jobs:
           python run_integration_tests.py build/dist/FoxNapRPG 7
       - name: capture build artifacts
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: ResourcepackGenerator-${{ runner.os }}
           path: build/dist/
