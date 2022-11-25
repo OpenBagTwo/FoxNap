@@ -198,7 +198,7 @@ def generate_resource_pack(
         with (root / "pack.mcmeta").open("w") as f:
             f.write(generate_mcmeta(title, license_summary, title_color, license_color))
         LOGGER.info("Copying pack icon")
-        shutil.copy(assets.PACK_ICON, root / "icon.png")  # type: ignore[call-overload]
+        shutil.copy(assets.PACK_ICON, root / "pack.png")  # type: ignore[call-overload]
 
         foxnap_root = root / "assets" / "foxnap"
         foxnap_root.mkdir(parents=True, exist_ok=True)
