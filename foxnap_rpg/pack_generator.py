@@ -77,7 +77,7 @@ class Track(NamedTuple):
         return repr(self.description or os.fspath(self.path))
 
 
-def generate_resourcepack(
+def generate_resource_pack(
     output_path: os.PathLike | str,
     *tracks: Track,
     title: str = "Custom FoxNap Records",
@@ -91,7 +91,7 @@ def generate_resourcepack(
     Parameters
     ----------
     output_path : pathlike
-        The filename of the resourcepack
+        The filename of the resource pack
     *tracks : Tracks
         The tracks to generate
     title : str, optional

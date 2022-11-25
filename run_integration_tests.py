@@ -41,8 +41,8 @@ def test_version(executable: Path) -> None:
     assert "dirty" not in result.stdout, message
 
 
-def test_resourcepack_generation(executable: Path, expected_mod_config: dict) -> None:
-    """Test actually generating a resourcepack
+def test_resource_pack_generation(executable: Path, expected_mod_config: dict) -> None:
+    """Test actually generating a resource pack
 
     Parameters
     ----------
@@ -54,7 +54,7 @@ def test_resourcepack_generation(executable: Path, expected_mod_config: dict) ->
     Raises
     ------
     AssertionError
-        If resourcepack generation fails to complete successfully or if one of the
+        If resourcep ack generation fails to complete successfully or if one of the
         expected outputs is not present (or is wrong)
     FileNotFoundError
         If, explicitly, foxnap.yaml cannot be found
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "executable",
-        help="the path of the Resourcepack Generator executable to test",
+        help="the path of the Resource Pack Generator executable to test",
         type=Path,
     )
     parser.add_argument(
@@ -106,4 +106,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     test_version(args.executable)
-    test_resourcepack_generation(args.executable, {"n_discs": args.n_discs})
+    test_resource_pack_generation(args.executable, {"n_discs": args.n_discs})
