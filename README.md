@@ -86,11 +86,11 @@ notepad, TextEditor, vim or any plaintext editor, and changing the number set in
 
 From there, if you're used to vanilla disc replacement resourcepacks, the differences will be:
 - instead of `assets/minecraft`, all your files should be in `assets/foxnap`
-- the ids of the sound files you'll be replacing (in `assets/foxnap/sounds.jsonm`) will be
-  `track_1`, `track_2`, etc. all the way up to the number `n_discs` you set in the `foxnap.yaml`
-  config file stored in your instance's mod `config` folder.
-- to replace the record textures, you'll need to create files named `track_1.json`, `track_2.json`,
-  etc. within `assets/foxnap/models/item`
+- the ids of the sound files you'll be replacing (in `assets/foxnap/sounds.json`) will be
+  `foxnap:track_1`, `foxnap:track_2`, etc. all the way up to the number `n_discs`
+  you set in the `foxnap.yaml` config file stored in your instance's mod `config` folder.
+- to set or replace the record textures, you'll need to create files named `track_1.json`,
+  `track_2.json`, etc. within `assets/foxnap/models/item`
 - when changing the names of the tracks to display, you'll need to edit
   `assets/foxnap/lang/en_us.json` and refer to the language entries as `item.foxnap.track_1` /
   `item.foxnap.track_1.desc`, `item.foxnap.track_2` / `item.foxnap.track_2.desc`, etc.
