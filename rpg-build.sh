@@ -13,4 +13,4 @@ pyinstaller launcher.py --console --onefile -n FoxNapRPG \
   --collect-all foxnap_rpg
 
 # clean up
-pip uninstall .
+pip uninstall -y foxnap_rpg

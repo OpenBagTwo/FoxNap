@@ -9,3 +9,6 @@ cd build
 
 :: build stand-alone executable with PyInstaller
 pyinstaller launcher.py --console --onefile -n FoxNapRPG --collect-all foxnap_rpg
+
+::clean up
+pip uninstall -y foxnap_rpg
