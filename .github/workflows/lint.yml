@@ -1,0 +1,30 @@
+# Check that code complies with style conventions. Currently only for the python
+# bits, but it would be great if we could get the Java parts in too. Would also
+# be awesome if the linter could not only *check* for issues but automatically correct
+# them.
+
+name: lint
+on:  # so lightweight I have zero qualms about doing it on all branches
+    push:
+
+jobs:
+  lint-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install package and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+          pip install mypy black isort pyyaml types-PyYAML
+      - name: Run code quality checks
+        run: |
+          isort . --profile="black"
+          black foxnap_rpg
+      - name: Type check with mypy
+        run: |
+          mypy foxnap_rpg --exclude build

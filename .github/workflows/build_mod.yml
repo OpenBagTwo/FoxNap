@@ -1,0 +1,40 @@
+# Rebuild the mod both to catch errors and to produce
+# a compiled jar for testing (or manual publishing)
+
+name: build_mod
+on:  # run on any push to the supported version branches,
+     # or force building by opening a PR to anywhere
+  pull_request:
+  push:
+    branches:
+      - 1.19
+      - 1.19.2
+      - 1.19.3
+
+jobs:
+  build_mod:
+    strategy:
+      matrix:
+        java: [ 17 ]
+        os: [ ubuntu-latest ]  # have yet to come across a cross-platform Java build issue
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: setup jdk ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: make gradle wrapper executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+      - name: build
+        run: ./gradlew build
+      - name: capture build artifacts
+        if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: build/libs/
