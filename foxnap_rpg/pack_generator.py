@@ -226,8 +226,8 @@ def generate_resource_pack(
             with (models / f"track_{track.num}.json").open("w") as f:
                 json.dump(generate_model(track.num), f, **json_opts)
 
-        textures = foxnap_root / "textures"
-        textures.mkdir(exist_ok=True)
+        item_textures = foxnap_root / "textures" / "item"
+        item_textures.mkdir(exist_ok=True, parents=True)
         LOGGER.info("Beginning record item texture generation")
         for track in tracks:
             LOGGER.info(f"Creating texture for {track}")
@@ -250,7 +250,7 @@ def generate_resource_pack(
                 )
 
             record_texture = composite_record_texture(template, inlay)
-            with (textures / f"track_{track.num}.png").open("wb") as f:
+            with (item_textures / f"track_{track.num}.png").open("wb") as f:
                 record_texture.save(f, format="png")
 
         lang = foxnap_root / "lang"
@@ -350,7 +350,10 @@ def generate_sound_registry(*track_numbers: int) -> dict:
     """
     sounds = {}
     for track in track_numbers:
-        sounds[f"track_{track}"] = {"category": "record", "sounds": [f"track_{track}"]}
+        sounds[f"track_{track}"] = {
+            "category": "record",
+            "sounds": [f"foxnap:track_{track}"],
+        }
     return sounds
 
 
@@ -369,7 +372,7 @@ def generate_model(track_number: int) -> dict:
     """
     return {
         "parent": "minecraft:item/generated",
-        "textures": {"layer0": f"track_{track_number}"},
+        "textures": {"layer0": f"foxnap:item/track_{track_number}"},
     }
 
 
