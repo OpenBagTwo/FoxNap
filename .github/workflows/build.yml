@@ -10,6 +10,7 @@ on:
     branches:
       - 1.19
       - 1.19.2
+      - 1.19.3
 
 jobs:
   lint: # python only so far, but would be nice to do Java as well
