@@ -1,10 +1,12 @@
 # Fox Nap 🦊
 ![server + client mod](https://img.shields.io/badge/Server\/Client-both-purple)
 ![mod loader: fabric](https://img.shields.io/badge/Mod_Loader-fabric-dbd0b4)
-![supported versions](https://img.shields.io/badge/Supported_Versions-1.19,1.19.2,1.19.3-blue)
 [![lint status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml)
 [![mod build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_mod.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_mod.yml)
 [![RPG build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml)
+![supported versions](https://img.shields.io/badge/Supported_Versions-1.19,1.19.2,1.19.3-blue)
+
+
 
 _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music to Minecraft**_
 
