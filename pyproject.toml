@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "foxnap_rpg"
-description = "Resourcepack generator for the FoxNap mod"
+description = "Resource pack generator for the FoxNap mod"
 authors = [
   { name = "Gili \"OpenBagTwo\" Barlev" },
 ]

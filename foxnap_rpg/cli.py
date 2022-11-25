@@ -10,7 +10,7 @@ from . import __version__
 from .builder import Spec, TrackBuilder
 from .config import read_specs_from_config_file
 from .pack_generator import LOGGER as PACKGEN_LOGGER
-from .pack_generator import Track, generate_resourcepack
+from .pack_generator import Track, generate_resource_pack
 from .utils import is_valid_music_track
 
 LOGGER = logging.getLogger(__name__)
@@ -52,7 +52,7 @@ def parse_args(
     """
     parser = argparse.ArgumentParser(
         prog="FoxNapRPG",
-        description=f"Resourcepack generator for the FoxNap mod\nv{__version__}",
+        description=f"Resource pack generator for the FoxNap mod\nv{__version__}",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
@@ -235,7 +235,7 @@ def main():
         specs = ()
     with TrackBuilder(*specs, **builder_kwargs) as builder:
         tracks = resolve_tracks(builder, *inputs)
-        generate_resourcepack(output_path, *tracks)
+        generate_resource_pack(output_path, *tracks)
     LOGGER.info(f"Writing config file to {config_path}")
     with config_path.open("w") as config_file:
         # TODO: make pyyaml a requirement and actually use YAML dump

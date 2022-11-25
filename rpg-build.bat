@@ -1,4 +1,4 @@
-:: build script for the resourcepack generator
+:: build script for the resource pack generator
 
 :: build package
 pip install .

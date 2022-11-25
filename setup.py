@@ -5,7 +5,7 @@ import versioneer
 setup(
     name="foxnap_rpg",
     python_requires=">=3.10",
-    description="Resourcepack generator for the FoxNap mod",
+    description="Resource Pack generator for the FoxNap mod",
     author='Gili "OpenBagTwo" Barlev',
     url="https://github.com/OpenBagTwo/FoxNap",
     packages=["foxnap_rpg", "foxnap_rpg.assets", "foxnap_rpg.bin"],
