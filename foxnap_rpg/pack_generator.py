@@ -250,7 +250,7 @@ def generate_resource_pack(
                 )
 
             record_texture = composite_record_texture(template, inlay)
-            with (textures / f"record_{track.num}.png").open("wb") as f:
+            with (textures / f"track_{track.num}.png").open("wb") as f:
                 record_texture.save(f, format="png")
 
         lang = foxnap_root / "lang"
@@ -350,7 +350,7 @@ def generate_sound_registry(*track_numbers: int) -> dict:
     """
     sounds = {}
     for track in track_numbers:
-        sounds[f"track_{track}"] = {"category": "record", "sounds": [f"record_{track}"]}
+        sounds[f"track_{track}"] = {"category": "record", "sounds": [f"track_{track}"]}
     return sounds
 
 
@@ -369,7 +369,7 @@ def generate_model(track_number: int) -> dict:
     """
     return {
         "parent": "minecraft:item/generated",
-        "textures": {"layer0": f"record_{track_number}"},
+        "textures": {"layer0": f"track_{track_number}"},
     }
 
 
