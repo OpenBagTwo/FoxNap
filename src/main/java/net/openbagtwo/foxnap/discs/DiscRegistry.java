@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.Registries;
 import net.openbagtwo.foxnap.FoxNap;
 
 /**
@@ -23,8 +24,8 @@ public class DiscRegistry {
    * @return the fully instantiated and registered music disc
    */
   public static Disc registerDisc(String trackName, int comparatorOutput, int trackLength) {
-    Disc disc = Registry.register(Registry.ITEM, new Identifier(FoxNap.MOD_ID, trackName),
-        new Disc(comparatorOutput, registerTrack(trackName), trackLength, true));
+    Disc disc = Registry.register(Registries.ITEM, new Identifier(FoxNap.MOD_ID, trackName),
+        new Disc(comparatorOutput, registerTrack(trackName), trackLength));
     FoxNap.LOGGER.debug(
         "Registered " + trackName + " with comparator signal " + disc.getComparatorOutput());
     return disc;
@@ -32,15 +33,15 @@ public class DiscRegistry {
 
   public static void registerPlaceholderDisc(String trackName) {
     Track track = registerTrack(trackName);
-    Disc disc = Registry.register(Registry.ITEM, new Identifier(FoxNap.MOD_ID, trackName),
-        new Disc(0, track, 0, false));
+    Disc disc = Registry.register(Registries.ITEM, new Identifier(FoxNap.MOD_ID, trackName),
+        new Disc(0, track, 0));
     disc.isPlaceholder = true;
     track.isPlaceholder = true;
   }
 
   private static Track registerTrack(String trackName) {
     Identifier track_id = new Identifier(FoxNap.MOD_ID, trackName);
-    return Registry.register(Registry.SOUND_EVENT, track_id, new Track(track_id));
+    return Registry.register(Registries.SOUND_EVENT, track_id, new Track(track_id));
   }
 
   /**
