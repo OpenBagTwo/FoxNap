@@ -195,12 +195,12 @@ def resolve_tracks(
         A generator that will loop through all the input paths and yield Track
         specifications
     """
-    for input_path in inputs:
+    for input_path in sorted(inputs):
         LOGGER.debug(f"Searching {input_path}")
         if input_path.is_file():
             input_files: Iterable[Path] = (input_path,)
         elif input_path.is_dir():
-            input_files = input_path.rglob("*")
+            input_files = sorted(input_path.rglob("*"))
         else:
             LOGGER.warning(f"{input_path} is not a valid path")
             continue
