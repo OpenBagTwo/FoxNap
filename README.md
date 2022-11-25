@@ -10,6 +10,22 @@ _Banner Pending_
 
 <img src="https://i.imgur.com/Ol1Tcf8.png" alt="Requires Fabric" width="150"/>
 
+<!-- TOC -->
+* [Fox Nap 🦊](#fox-nap-)
+  * [What is This?](#what-is-this)
+  * [Setup and Customization](#setup-and-customization)
+    * [Manual Resource Pack Creation](#manual-resource-pack-creation)
+    * [Resource Pack Generator](#resource-pack-generator)
+      * [Installation](#installation)
+      * [Generating Resource Packs](#generating-resource-packs)
+      * [Advanced Options](#advanced-options)
+    * [Obtaining Records _and More!_](#obtaining-records-_and-more_)
+  * [Contributing](#contributing)
+    * [Building the Mod from Source](#building-the-mod-from-source)
+    * [Building the Resource Pack Generator from Source](#building-the-resource-pack-generator-from-source)
+  * [License and Acknowledgements](#license-and-acknowledgements)
+<!-- TOC -->
+
 ## What is This?
 
 FoxNap is a simple "Vanilla Plus" mod I wrote to enable putting on
@@ -41,10 +57,12 @@ This mod comes pre-bundled with seven new music discs:
 2. [Camille Saint-Saëns: "Danse Macabre," performed by Kevin MacLeod](https://freemusicarchive.org/music/Kevin_MacLeod/Classical_Sampler)
 * Four tracks performed by [PM Music](https://pmmusic.pro)
   from [Lud and Schlatts Musical Emporium](https://www.youtube.com/channel/UCFbtXFIaAJ0fOtgyeDs8Jog/)
+
   3. [Richard Strauss: Theme from _Also Sprach Zarathustra_](https://www.youtube.com/watch?v=9K3GQdD30F0)
   4. [Peter Ilyich Tchaikovsky: Love Theme from _Romeo & Juliet_](https://www.youtube.com/watch?v=unvW5g_YWEk)
   5. [Antonio Vivaldi: "Winter" from _The Four Seasons_](https://www.youtube.com/watch?v=VBSP75pr2bg)
   6. [Richard Wagner: Flight of the Valkyries](https://www.youtube.com/watch?v=uNkRW_9pHRQ)
+ 
 7. [Nikokai Rimsky-Korsakov: "Flight of the Bumblebee" from _Tsar Saltan_, performed by The US Army Band](https://commons.wikimedia.org/wiki/File:Rimsky-Korsakov_-_flight_of_the_bumblebee.oga)
 
 all of which are permissively licensed under the terms specified
@@ -91,7 +109,7 @@ setup required) resource pack generator.
    to explicitly make the resource pack generator executable (on \*nix systems,
    you can do this from a terminal by running `chmod u+x /path/to/FoxNapRPG`
 
-You can also [build thee generator from source](#building-the-resource-pack-generator-from-source).
+You can also [build the generator from source](#building-the-resource-pack-generator-from-source).
 
 #### Generating Resource Packs
 
