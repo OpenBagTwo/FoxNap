@@ -7,7 +7,6 @@
 ![supported versions](https://img.shields.io/badge/Supported_Versions-1.19,1.19.2,1.19.3-blue)
 
 
-
 _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music to Minecraft**_
 
 _Banner Pending_
@@ -15,18 +14,12 @@ _Banner Pending_
 <img src="https://i.imgur.com/Ol1Tcf8.png" alt="Requires Fabric" width="150"/>
 
 <!-- TOC -->
-* [Fox Nap 🦊](#fox-nap-)
   * [What is This?](#what-is-this)
   * [Setup and Customization](#setup-and-customization)
     * [Manual Resource Pack Creation](#manual-resource-pack-creation)
     * [Resource Pack Generator](#resource-pack-generator)
-      * [Installation](#installation)
-      * [Generating Resource Packs](#generating-resource-packs)
-      * [Advanced Options](#advanced-options)
     * [Obtaining Records _and More!_](#obtaining-records-and-more)
   * [Contributing](#contributing)
-    * [Building the Mod from Source](#building-the-mod-from-source)
-    * [Building the Resource Pack Generator from Source](#building-the-resource-pack-generator-from-source)
   * [License and Acknowledgements](#license-and-acknowledgements)
 <!-- TOC -->
 
@@ -136,12 +129,13 @@ game. You will then need to go into your minecraft `config` folder and edit `fox
 the number of `n_discs` to include the ones added by the resource pack (this number needs to be
 the number of built-in tracks plus the number of custom tracks you added).
 
-#### Advanced Options
+#### Advanced Options: Command-Line Options
 
 You can also run the generator from the command-line, which will give you access to a bunch of
-additional customization options.
+additional customization options, such as setting the directories to search for music or the
+locations the generated resource pack and mod config should be saved.
 
-For details, run
+For further details, run:
 
 ```bash
 $ ./FoxNapRPG --help
@@ -149,7 +143,42 @@ $ ./FoxNapRPG --help
 
 from the folder where you saved the generator executable.
 
+#### Advanced Options: Spec File
+
+The Resource Pack Generator also allows you to finely tune the resource pack generation
+behavior via a configuration file. The pack generator currently supports the following formats:
+- INI (.ini, .cfg, .config, .conf, .txt)
+- JSON (.json)
+- CSV (.csv, .tsv)
+where each entry specifies a single track via either its full path or its file name.
+
+For each track, you can specify:
+- `num`: a track number (to override the tracks bundled with the mod or just to make sure the tracks
+  are ordered consistently)
+- `description`: the name to give to the track (if you don't want this read from the ID3 tag)
+- `hue`: the color to give to the vinyl part of the record template
+- `use_album_art`: whether the album art (embedded in the track tag data) for the inlay
+
+To use a spec configuration file when running the resource pack generator, use the `-s` command-line
+flag, _e.g._
+
+```bash
+$ ./FoxNapRPG -i /path/to/my/music -s track_specs.conf
+```
+
 ### Obtaining Records _and More!_
+
+So now that you've registered these custom records to the game, how do you actually get them?
+Outside of commands (_e.g._ `/give @s foxnap:track_1`) and Creative Mode, the sole way to obtain
+FoxNap records is by trading with _The Maestro_, a new villager who has a Jukebox as a job site
+(note that [The Maestro does not currently spawn naturally, but this feature is planned](https://github.com/OpenBagTwo/FoxNap/issues/13)).
+
+_Picture of The Maestro goes here_
+
+The Maestro will pay top dollar for [tonewood](https://en.wikipedia.org/wiki/Tonewood)--stripped
+blocks of rare wood types--goat horns and non-FoxNap records and sells, alongside your custom
+music discs, a wide variety of musical instruments (with textures adopted from the classic
+[mxTune mod](https://github.com/AeronicaMC/mxTune)).
 
 ## Contributing
 
