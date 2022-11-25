@@ -171,7 +171,7 @@ You can also build the generator from source.
 1. At this point, you have two options:
     1. Use FoxNap as a python package, with `$ FoxNapRPG` available from the command line
     1. Create a stand-alone executable using [`pyinstaller`](https://pyinstaller.org/en/stable/) (included in the `conda`
-       environment). The scripts `./rpg-build.sh` for \*Nix or `.\rpg-build.bat` for Windows are available for reference.
+       environment). The scripts `./rpg-build.sh` for \*nix or `.\rpg-build.bat` for Windows are available for reference.
 
 ## License and Acknowledgements
 
