@@ -14,10 +14,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.MusicDiscItem;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.VillagerProfession;
 import net.openbagtwo.foxnap.FoxNap;
@@ -44,7 +44,7 @@ public class Conductor {
 
     return VillagerProfession.register(
         (new Identifier(MOD_ID, "conductor")).toString(),
-        RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE_KEY, poi_id),
+        RegistryKey.of(Registries.POINT_OF_INTEREST_TYPE.getKey(), poi_id),
         CONDUCTOR_WORK_SOUND
     );
   }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 /**
  * Tonewood and music disc integration for the BetterEnd mod
@@ -39,12 +39,10 @@ public class BetterEnd {
   public static List<Item> getTonewoods() {
     ArrayList<Item> tonewoodItemList = new ArrayList<>();
     for (String woodType : tonewoods) {
-      Optional<Item> strippedWood = Registry.ITEM.getOrEmpty(
+      Optional<Item> strippedWood = Registries.ITEM.getOrEmpty(
           new Identifier(mod_id, woodType + "_stripped_bark")
       );
-      if (strippedWood.isPresent()) {
-        tonewoodItemList.add(strippedWood.get());
-      }
+      strippedWood.ifPresent(tonewoodItemList::add);
     }
     return tonewoodItemList;
   }
@@ -56,12 +54,10 @@ public class BetterEnd {
     ArrayList<Item> discList = new ArrayList<>();
 
     for (String end_disc_name : tracks) {
-      Optional<Item> endDisc = Registry.ITEM.getOrEmpty(
+      Optional<Item> endDisc = Registries.ITEM.getOrEmpty(
           new Identifier("betterend", "music_disc_" + end_disc_name)
       );
-      if (endDisc.isPresent()) {
-        discList.add(endDisc.get());
-      }
+      endDisc.ifPresent(discList::add);
     }
     return discList;
   }
