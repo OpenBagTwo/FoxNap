@@ -1,65 +1,106 @@
-# Music Discs for Fox Nap 🦊
+# Fox Nap 🦊
+![server + client mod](https://img.shields.io/badge/Server\/Client-both-purple)
+![mod loader: fabric](https://img.shields.io/badge/Mod_Loader-fabric-dbd0b4)
+![supported versions](https://img.shields.io/badge/Supported_Versions-1.19,1.19.2,1.19.3-blue)
+![build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build.yml/badge.svg)
+
+_**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music to Minecraft**_
 
 _Banner Pending_
 
 <img src="https://i.imgur.com/Ol1Tcf8.png" alt="Requires Fabric" width="150"/>
 
+## What is This?
 
-A simple mod that adds custom music discs to be played in my Survival world's outdoor concert venue.
-Or, I guess,
-anywhere jukeboxes can be found.
+FoxNap is a simple "Vanilla Plus" mod I wrote to enable putting on
+["live music" concerts](https://www.google.com/search?q=lip+syncing+concert) in my
+single-player survival world. In the process of putting together my voxel-island playlist,
+I realized there was a core problem: **including the music I wanted within the mod's assets
+would violate copyright**. I wasn't even looking at music I'd ~~downloaded from Kazaa in college~~
+ripped from my personal music collection, it was tracks from Youtube's "Free"
+[audio library](youtube.com/audiolibrary), where the license terms explicitly state:
 
-[![build](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build.yml/badge.svg?branch=1.19.2)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build.yml)
+> You may not make available, distribute or perform the music files from this library separately
+> from videos and other content into which you have incorporated these music files
+> (e.g., **standalone distribution of these files is not permitted**).
 
-## Setup and Use
+As I saw it, there were two options for getting around this limitation (besides abandoning the
+project or not sharing the mod with anyone)
 
-_TODO_
+1. Limit the music included with the mod to permissively-licensed (public domain, attribution or
+   [copyleft](https://www.gnu.org/licenses/copyleft.en.html)) audio
+1. Allow for mod users to provide their own music via a config or a resource pack
 
-## Resource Pack Generator
+In the end, I decided, [why not both?](https://www.youtube.com/watch?v=vqgSO8_cRio&t=5s)
 
-This repo also contains a stand-alone resource pack generator to simplify the process of adding
-your own music discs.
+## Setup and Customization
 
-### Installation
+This mod comes pre-bundled with seven new music discs:
 
-The resource pack generator is entirely portable and comes bundled
-with all dependencies that are needed to run it. No installation
-necessary--simply download the executable for your particular computer
-and operating system from [the release page](../../releases) that
-matches your version of the FoxNap mod.
+1. ["Colors," by Tobu](https://www.youtube.com/watch?v=eyLml-zzXzw)
+2. [Camille Saint-Saëns: "Danse Macabre," performed by Kevin MacLeod](https://freemusicarchive.org/music/Kevin_MacLeod/Classical_Sampler)
+* Four tracks performed by [PM Music](https://pmmusic.pro)
+  from [Lud and Schlatts Musical Emporium](https://www.youtube.com/channel/UCFbtXFIaAJ0fOtgyeDs8Jog/)
+  3. [Richard Strauss: Theme from _Also Sprach Zarathustra_](https://www.youtube.com/watch?v=9K3GQdD30F0)
+  4. [Peter Ilyich Tchaikovsky: Love Theme from _Romeo & Juliet_](https://www.youtube.com/watch?v=unvW5g_YWEk)
+  5. [Antonio Vivaldi: "Winter" from _The Four Seasons_](https://www.youtube.com/watch?v=VBSP75pr2bg)
+  6. [Richard Wagner: Flight of the Valkyries](https://www.youtube.com/watch?v=uNkRW_9pHRQ)
+7. [Nikokai Rimsky-Korsakov: "Flight of the Bumblebee" from _Tsar Saltan_, performed by The US Army Band](https://commons.wikimedia.org/wiki/File:Rimsky-Korsakov_-_flight_of_the_bumblebee.oga)
 
-#### Building from Source
+all of which are permissively licensed under the terms specified
+[here](src/main/resources/assets/foxnap/sounds/records/LICENSES.md), allowing me to redistribute
+them with this mod under the [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).
 
-You can also build the generator from source.
+If this built-in playlist sounds like your jam, and you have no desire to add anything else, then
+congrats! This is easy! Just download the mod to your instance's mods folder, start the game, and
+[go find a village](#obtaining-records-_and-more_).
 
-1. Clone this repo
-1. [Download](https://ffmpeg.org/download.html) or install a version of `ffmpeg` that can decode
-   files from your music library and that has support for encoding using `libvorbis`. Put the
-   executable (or symbolic links to the executable) in the `foxnap_rpg/bin` folder.
-1. Create and activate a virtual environment using python 3.10 or above
-   1. If you have a [`conda`-based](https://docs.conda.io/en/latest/) environment and package manager installed on your
-      system, such as [mambaforge](https://github.com/conda-forge/miniforge#mambaforge), you can use the project's
-      dedicated dev/build environment, creatable from the repo root via
-      `mamba env create -f environment.yml` (substitute `conda` for `mamba` as needed)
-1. From the repo's root, with your virtual environment activated, run `python -m pip install .`
-1. At this point, you have two options:
-   1. Use FoxNap as a python package, with `$ FoxNapRPG` available from the command line
-   1. Create a stand-alone executable using [`pyinstaller`](https://pyinstaller.org/en/stable/) (included in the `conda`
-      environment). The scripts `./rpg-build.sh` for \*Nix or `.\rpg-build.bat` for Windows are available for reference.
-  
+But if you're interested in some customization, read on:
 
+### Manual Resource Pack Creation
 
-### Usage
+FoxNap's item and sound registration structure was designed to make it as easy as possible for you
+to replace or add to the built-in tracks via a resource pack similar to what 
+[you'd make if you were replacing one of the vanilla discs](https://www.planetminecraft.com/blog/how-to-add-costume-music-the-easy-way-1-12/),
+with the advantage that the number of discs provided by the mod is _completely dynamic_ and can be
+set or changed simply by going into your instance's mod `config` folder, opening `foxnap.yaml` in
+notepad, TextEditor, vim or any plaintext editor, and changing the number set in `n_discs`.
 
-#### Any Operating System
+From there, if you're used to vanilla disc replacement resourcepacks, the differences will be:
+- instead of `assets/minecraft`, all your files should be in `assets/foxnap`
+- the ids of the sound files you'll be replacing (in `assets/foxnap/sounds.jsonm`) will be
+  `track_1`, `track_2`, etc. all the way up to the number `n_discs` you set in the `foxnap.yaml`
+  config file stored in your instance's mod `config` folder.
+- to replace the record textures, you'll need to create files named `track_1.json`, `track_2.json`,
+  etc. within `assets/foxnap/models/item`
+- when changing the names of the tracks to display, you'll need to edit
+  `assets/foxnap/lang/en_us.json` and refer to the language entries as `item.foxnap.track_1` /
+  `item.foxnap.track_1.desc`, `item.foxnap.track_2` / `item.foxnap.track_2.desc`, etc.
+
+### Resource Pack Generator
+
+If manually converting mp3s and hand-editing JSON isn't your idea of a fun time, **this project
+provides an alternative** in the form of a stand-alone and portable (read: no installation or
+setup required) resource pack generator.
+
+#### Installation
+
+1. Download the executable from [the release page](../../releases) that
+   matches your operating system and your version of the mod.
+1. Depending on your operating system and security settings, you may need
+   to explicitly make the resource pack generator executable (on \*nix systems,
+   you can do this from a terminal by running `chmod u+x /path/to/FoxNapRPG`
+
+You can also [build thee generator from source](#building-the-resource-pack-generator-from-source).
+
+#### Generating Resource Packs
 
 Place the generator executable in an empty folder, then move any music you
 want to turn into records into that folder. **There is no limit** to the
 number of tracks you can include, and they **do not** need to be pre-converted
-to [Ogg](https://en.wikipedia.org/wiki/Ogg). **The only requirement** is that
+to [Ogg](https://en.wikipedia.org/wiki/Ogg). The only requirement is that
 the files have to be
-[decodable by `ffmpeg`](https://www.ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features)
-.
+[decodable by `ffmpeg`](https://www.ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features).
 
 _**Pro Tip:** if your music files include [metadata](https://en.wikipedia.org/wiki/ID3), the title
 and artist
@@ -73,7 +114,7 @@ game. You will then need to go into your minecraft `config` folder and edit `fox
 the number of `n_discs` to include the ones added by the resource pack (this number needs to be
 the number of built-in tracks plus the number of custom tracks you added).
 
-#### Advanced Users (any operating system)
+#### Advanced Options
 
 You can also run the generator from the command-line, which will give you access to a bunch of
 additional customization options.
@@ -86,10 +127,33 @@ $ ./FoxNapRPG --help
 
 from the folder where you saved the generator executable.
 
+### Obtaining Records _and More!_
+
 ## Contributing
 
 Find a bug? Have a suggestion or a question? Want to contribute a new feature or enhancement?
 [Open an issue](https://github.com/OpenBagTwo/FoxNap/issues/new)!
+
+### Building the Mod from Source
+
+### Building the Resource Pack Generator from Source
+
+You can also build the generator from source.
+
+1. Clone this repo
+1. [Download](https://ffmpeg.org/download.html) or install a version of `ffmpeg` that can decode
+   files from your music library and that has support for encoding using `libvorbis`. Put the
+   executable (or symbolic links to the executable) in the `foxnap_rpg/bin` folder.
+1. Create and activate a virtual environment using python 3.10 or above
+    1. If you have a [`conda`-based](https://docs.conda.io/en/latest/) environment and package manager installed on your
+       system, such as [mambaforge](https://github.com/conda-forge/miniforge#mambaforge), you can use the project's
+       dedicated dev/build environment, creatable from the repo root via
+       `mamba env create -f environment.yml` (substitute `conda` for `mamba` as needed)
+1. From the repo's root, with your virtual environment activated, run `python -m pip install .`
+1. At this point, you have two options:
+    1. Use FoxNap as a python package, with `$ FoxNapRPG` available from the command line
+    1. Create a stand-alone executable using [`pyinstaller`](https://pyinstaller.org/en/stable/) (included in the `conda`
+       environment). The scripts `./rpg-build.sh` for \*Nix or `.\rpg-build.bat` for Windows are available for reference.
 
 ## License and Acknowledgements
 
