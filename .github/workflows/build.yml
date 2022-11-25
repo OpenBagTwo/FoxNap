@@ -85,8 +85,8 @@ jobs:
       - name: Place ffmpeg binaries in correct folder (Windows)
         if: ${{ runner.os == 'Windows' }}
         run: |
-          move ffmpeg-release\*\ffmpeg.exe foxnap_rpg\bin\ffmpeg
-          move ffmpeg-release\*\ffprobe.exe foxnap_rpg\bin\ffprobe
+          copy ffmpeg-release\*\bin\ffmpeg.exe foxnap_rpg\bin\ffmpeg.exe
+          copy ffmpeg-release\*\bin\ffprobe.exe foxnap_rpg\bin\ffprobe.exe
       - name: Grab FFMPEG Binaries (Mac)
         if: ${{ runner.os == 'macOS' }}
         run: |
