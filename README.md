@@ -30,34 +30,33 @@ _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music 
 FoxNap is a simple "Vanilla Plus" mod for adding custom music discs to Minecraft.
 
 * Unlike what you can achieve with
-  [resource packs alone]((https://www.planetminecraft.com/blog/how-to-add-costume-music-the-easy-way-1-12/)
+  [resource packs alone](https://www.planetminecraft.com/blog/how-to-add-costume-music-the-easy-way-1-12/)
   music discs added via FoxNap **do not overwrite** the vanilla music discs.
-* Unlike other similar mods, FoxNap allows you to:
+* Unlike similar mods, FoxNap allows you to:
     * add as many or as few music discs as you want
     * add _whatever_ music you want
     * use _different_ music than other players on the same server
     * obtain all music discs in survival, via a
-      [new villager profession](#obtaining-records-and-more) (utilities for modifying
-      creeper / treasure chest loot tables are planned--see: #16)
+      [new villager profession](#obtaining-records-and-more)
+      ([utilities for modifying creeper / treasure chest loot tables are planned](https://github.com/OpenBagTwo/FoxNap/issues/16))
 
 FoxNap also adds custom musical instruments that you can play like goat horns,
 giving you the creative freedom to stage
-["live music" performances]((https://www.google.com/search?q=lip+syncing+concert).
+["live music" performances](https://www.google.com/search?q=lip+syncing+concert).
 
-_TODO: picture of an armor stand musical ensemble_
+![The Armor Stand Ensemble](_static/ensemble.png)
 
 ### Motivation
 
 I started work on this mod after being inspired to extend the
 [SBM Jukebox mod](https://github.com/StrikerRockers-Mods/SBM-Jukebox-fabric), which
-brings the Bedrock music disc playlist functionality to Java.
-<--TODO: link to my SBM tutorial if I ever post it-->
-I wanted to add an outdoor concert venue to my survival world (the name FoxNap is a play on the
-[Wolf Trap](https://www.wolftrap.org/) center for the performing arts, which was a huge fixture of
-my childhood), but what I kept getting hung up on was how I could source and provide the music
-without violating copyright. Forget about adding my own personal music collection, even Youtube's
-"Free" [audio library](youtube.com/audiolibrary) was off-limits, as the license terms explicitly
-state:
+brings the Bedrock music disc playlist functionality to Java. <!--TODO: link to my SBM tutorial if
+I ever post it--> I wanted to add an outdoor concert venue to my survival world (the name FoxNap
+is an homage to the [Wolf Trap](https://www.wolftrap.org/) center for the performing arts, which was
+a huge fixture of my childhood), but what I kept getting hung up on was how I could source and
+provide the music without violating copyright--forget about adding my own personal music collection,
+even Youtube's "Free" [audio library](https://www.youtube.com/audiolibrary) was off-limits, as the
+license terms explicitly state:
 
 > You may not make available, distribute or perform the music files from this library separately
 > from videos and other content into which you have incorporated these music files
