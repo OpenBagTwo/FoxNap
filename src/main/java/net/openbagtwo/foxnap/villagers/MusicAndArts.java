@@ -125,7 +125,7 @@ public class MusicAndArts implements TradeOffers.Factory {
    * Factory to enable a villager to buy tonewood at a base rate of 4 blocks / 1 emerald
    */
   public static final TradeOffers.Factory BUY_TONEWOOD = new BuyItemFromPoolForOneEmeraldFactory(
-      TONEWOODS, 4, 16, 8);
+      TONEWOODS, 4, 16, 4);
 
   /**
    * Factory to enable a villager to buy noteblocks at a base rate of 2 blocks / 1 emerald
