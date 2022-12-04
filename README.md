@@ -27,24 +27,48 @@ _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music 
 
 ## What is This?
 
-FoxNap is a simple "Vanilla Plus" mod I wrote to enable putting on
-["live music" concerts](https://www.google.com/search?q=lip+syncing+concert) in my
-single-player survival world. In the process of putting together my voxel-island playlist,
-I realized there was a core problem: **including the music I wanted within the mod's assets
-would violate copyright**. I wasn't even looking at music I'd ~~downloaded from Kazaa in college~~
-ripped from my personal music collection, it was tracks from Youtube's "Free"
-[audio library](youtube.com/audiolibrary), where the license terms explicitly state:
+FoxNap is a simple "Vanilla Plus" mod for adding custom music discs to Minecraft.
+
+* Unlike what you can achieve with
+  [resource packs alone]((https://www.planetminecraft.com/blog/how-to-add-costume-music-the-easy-way-1-12/)
+  music discs added via FoxNap **do not overwrite** the vanilla music discs.
+* Unlike other similar mods, FoxNap allows you to:
+    * add as many or as few music discs as you want
+    * add _whatever_ music you want
+    * use _different_ music than other players on the same server
+    * obtain all music discs in survival, via a
+      [new villager profession](#obtaining-records-and-more) (utilities for modifying
+      creeper / treasure chest loot tables are planned--see: #16)
+
+FoxNap also adds custom musical instruments that you can play like goat horns,
+giving you the creative freedom to stage
+["live music" performances]((https://www.google.com/search?q=lip+syncing+concert).
+
+_TODO: picture of an armor stand musical ensemble_
+
+### Motivation
+
+I started work on this mod after being inspired to extend the
+[SBM Jukebox mod](https://github.com/StrikerRockers-Mods/SBM-Jukebox-fabric), which
+brings the Bedrock music disc playlist functionality to Java.
+<--TODO: link to my SBM tutorial if I ever post it-->
+I wanted to add an outdoor concert venue to my survival world (the name FoxNap is a play on the
+[Wolf Trap](https://www.wolftrap.org/) center for the performing arts, which was a huge fixture of
+my childhood), but what I kept getting hung up on was how I could source and provide the music
+without violating copyright. Forget about adding my own personal music collection, even Youtube's
+"Free" [audio library](youtube.com/audiolibrary) was off-limits, as the license terms explicitly
+state:
 
 > You may not make available, distribute or perform the music files from this library separately
 > from videos and other content into which you have incorporated these music files
 > (e.g., **standalone distribution of these files is not permitted**).
 
 As I saw it, there were two options for getting around this limitation (besides abandoning the
-project or not sharing the mod with anyone)
+project or not sharing this mod with anyone)
 
 1. Limit the music included with the mod to permissively-licensed (public domain, attribution or
    [copyleft](https://www.gnu.org/licenses/copyleft.en.html)) audio
-1. Allow for mod users to provide their own music via a config or a resource pack
+1. Allow users to provide their own music via a config or a resource pack
 
 In the end, I decided, [why not both?](https://www.youtube.com/watch?v=vqgSO8_cRio&t=5s)
 
@@ -70,12 +94,15 @@ This mod comes pre-bundled with seven new music discs:
    Saltan_, performed by The US Army Band](https://commons.wikimedia.org/wiki/File:Rimsky-Korsakov_-_flight_of_the_bumblebee.oga)
 
 all of which are permissively licensed under the terms specified
-[here](src/main/resources/assets/foxnap/sounds/records/LICENSES.md), allowing me to redistribute
-them with this mod under
-the [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).
+[here](src/main/resources/assets/foxnap/sounds/records/LICENSES.md)
+(I am redistributing them via this repo and mod under the compatible
+[Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/)).
 
 If this built-in playlist sounds like your jam, and you have no desire to add anything else, then
-congrats! This is easy! Just download the mod to your instance's mods folder, start the game, and
+congrats! This is easy! This is a Fabric mod with builds for 1.19+ and depends only on
+the [Fabric API](https://modrinth.com/mod/fabric-api) (_that being said, I highly recommend
+grabbing the [SBM Jukebox mod](https://modrinth.com/mod/sbm-jukebox/)_), so just download
+the appropriate build to your instance's mods folder, start the game, and
 [go find a village](#obtaining-records-and-more).
 
 But if you're interested in some customization, read on:
@@ -87,9 +114,9 @@ to replace or add to the built-in tracks via a resource pack similar to what
 [you'd make if you were replacing one of the vanilla discs](https://www.planetminecraft.com/blog/how-to-add-costume-music-the-easy-way-1-12/),
 with the advantage that the number of discs provided by the mod is _completely dynamic_ and can be
 set or changed simply by going into your instance's mod `config` folder, opening `foxnap.yaml` in
-notepad, TextEditor, vim or any plaintext editor, and changing the number set in `n_discs`.
+any plaintext editor and changing the value of `n_discs`.
 
-From there, if you're used to vanilla disc replacement resourcepacks, the differences will be:
+From there, if you're used to vanilla disc replacement resource packs, the differences will be:
 
 - instead of `assets/minecraft`, all your files should be in `assets/foxnap`
 - the ids of the sound files you'll be replacing (in `assets/foxnap/sounds.json`) will be
@@ -112,8 +139,9 @@ setup required) resource pack generator.
 1. Download the executable from [the release page](../../releases) that
    matches your operating system and your version of the mod.
 1. Depending on your operating system and security settings, you may need
-   to explicitly make the resource pack generator executable (on \*nix systems,
-   you can do this from a terminal by running `chmod u+x /path/to/FoxNapRPG`
+   to explicitly make the resource pack generator executable (on \*nix systems.
+   You can do this from a terminal by running `chmod u+x /path/to/FoxNapRPG` or by
+   going into Properties in most file managers.
 
 You can also [build the generator from source](#building-the-resource-pack-generator-from-source).
 
@@ -131,12 +159,24 @@ and artist
 name will get automatically extracted, and any album art will be used to help generate the music
 disc texture._
 
-When you're ready, simply double-click the `FoxNapRPG` executable. A terminal window should pop
-up showing progress of the resource pack creation, and before you know it you should soon have a
+When you're ready, simply double-click the `FoxNapRPG` executable. A terminal window may pop
+up showing progress of the resource pack creation, and before you know it you should have a
 new file in your folder named `FoxNapRP.zip`, which you can then add as a resource pack to your
 game. You will then need to go into your minecraft `config` folder and edit `foxnap.yaml` to raise
-the number of `n_discs` to include the ones added by the resource pack (this number needs to be
-the number of built-in tracks plus the number of custom tracks you added).
+the number of `n_discs` to match the ones added by the resource pack.
+
+When playing on a server, it's the **server's** `n_discs` value that will dictate the number of
+tracks that are available, but it's **each player's resource pack** that determines _which_ songs
+each track corresponds with. Explicitly:
+
+- if the server has a greater number of discs specified than both what's built in (seven) and what
+  you have defined in your resource pack, some discs will show up for you with missing textures and
+  sound files
+- if you have more discs in your resource pack than are set on the server, then not all tracks will
+  be available in your game
+
+Beyond the number of discs, though, there's no reason why every player can't come online with
+a completely custom playlist.
 
 #### Advanced Options: Command-Line Options
 
@@ -189,7 +229,7 @@ that [The Maestro does not currently spawn naturally, but this feature is planne
 
 The Maestro will pay top dollar for [tonewood](https://en.wikipedia.org/wiki/Tonewood)--stripped
 blocks of rare wood types--goat horns and non-FoxNap records and sells, alongside your custom
-music discs, a wide variety of musical instruments (with textures adopted from the classic
+music discs, a wide variety of playable musical instruments (with textures adopted from the classic
 [mxTune mod](https://github.com/AeronicaMC/mxTune)).
 
 ## Contributing
@@ -226,6 +266,13 @@ You can also build the generator from source.
 
 All code in this repository is licensed under
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html).
+
+Builds of the FoxNap Resource Pack Generator (`FoxNapRPG`) include binaries of
+[ffmpeg](https://wwww.ffmpeg.org) which is licensed under
+[the GNU Lesser General Public License (LGPL) version 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html)
+or later and incorporates components licensed under
+[the GNU General Public License (GPL) version 2](http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
+or later.
 
 All assets in this repository are distributed under the
 [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/)
