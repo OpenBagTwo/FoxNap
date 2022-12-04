@@ -1,4 +1,5 @@
 # Fox Nap 🦊
+
 ![server + client mod](https://img.shields.io/badge/Server\/Client-both-purple)
 ![mod loader: fabric](https://img.shields.io/badge/Mod_Loader-fabric-dbd0b4)
 [![lint status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml)
@@ -6,21 +7,22 @@
 [![RPG build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml)
 ![supported versions](https://img.shields.io/badge/Supported_Versions-1.19,1.19.2,1.19.3-blue)
 
-
 _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music to Minecraft**_
 
-_Banner Pending_
+![foxnap-banner](_static/banner.png)
 
 <img src="https://i.imgur.com/Ol1Tcf8.png" alt="Requires Fabric" width="150"/>
 
 <!-- TOC -->
-  * [What is This?](#what-is-this)
-  * [Setup and Customization](#setup-and-customization)
+
+* [What is This?](#what-is-this)
+* [Setup and Customization](#setup-and-customization)
     * [Manual Resource Pack Creation](#manual-resource-pack-creation)
     * [Resource Pack Generator](#resource-pack-generator)
     * [Obtaining Records _and More!_](#obtaining-records-and-more)
-  * [Contributing](#contributing)
-  * [License and Acknowledgements](#license-and-acknowledgements)
+* [Contributing](#contributing)
+* [License and Acknowledgements](#license-and-acknowledgements)
+
 <!-- TOC -->
 
 ## What is This?
@@ -52,19 +54,25 @@ This mod comes pre-bundled with seven new music discs:
 
 1. ["Colors," by Tobu](https://www.youtube.com/watch?v=eyLml-zzXzw)
 2. [Camille Saint-Saëns: "Danse Macabre," performed by Kevin MacLeod](https://freemusicarchive.org/music/Kevin_MacLeod/Classical_Sampler)
+
 * Four tracks performed by [PM Music](https://pmmusic.pro)
   from [Lud and Schlatts Musical Emporium](https://www.youtube.com/channel/UCFbtXFIaAJ0fOtgyeDs8Jog/)
 
-  3. [Richard Strauss: Theme from _Also Sprach Zarathustra_](https://www.youtube.com/watch?v=9K3GQdD30F0)
-  4. [Peter Ilyich Tchaikovsky: Love Theme from _Romeo & Juliet_](https://www.youtube.com/watch?v=unvW5g_YWEk)
-  5. [Antonio Vivaldi: "Winter" from _The Four Seasons_](https://www.youtube.com/watch?v=VBSP75pr2bg)
-  6. [Richard Wagner: Flight of the Valkyries](https://www.youtube.com/watch?v=uNkRW_9pHRQ)
- 
-7. [Nikokai Rimsky-Korsakov: "Flight of the Bumblebee" from _Tsar Saltan_, performed by The US Army Band](https://commons.wikimedia.org/wiki/File:Rimsky-Korsakov_-_flight_of_the_bumblebee.oga)
+    3. [Richard Strauss: Theme from _Also Sprach
+       Zarathustra_](https://www.youtube.com/watch?v=9K3GQdD30F0)
+    4. [Peter Ilyich Tchaikovsky: Love Theme from _Romeo &
+       Juliet_](https://www.youtube.com/watch?v=unvW5g_YWEk)
+    5. [Antonio Vivaldi: "Winter" from _The Four
+       Seasons_](https://www.youtube.com/watch?v=VBSP75pr2bg)
+    6. [Richard Wagner: Flight of the Valkyries](https://www.youtube.com/watch?v=uNkRW_9pHRQ)
+
+7. [Nikokai Rimsky-Korsakov: "Flight of the Bumblebee" from _Tsar
+   Saltan_, performed by The US Army Band](https://commons.wikimedia.org/wiki/File:Rimsky-Korsakov_-_flight_of_the_bumblebee.oga)
 
 all of which are permissively licensed under the terms specified
 [here](src/main/resources/assets/foxnap/sounds/records/LICENSES.md), allowing me to redistribute
-them with this mod under the [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).
+them with this mod under
+the [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).
 
 If this built-in playlist sounds like your jam, and you have no desire to add anything else, then
 congrats! This is easy! Just download the mod to your instance's mods folder, start the game, and
@@ -75,13 +83,14 @@ But if you're interested in some customization, read on:
 ### Manual Resource Pack Creation
 
 FoxNap's item and sound registration structure was designed to make it as easy as possible for you
-to replace or add to the built-in tracks via a resource pack similar to what 
+to replace or add to the built-in tracks via a resource pack similar to what
 [you'd make if you were replacing one of the vanilla discs](https://www.planetminecraft.com/blog/how-to-add-costume-music-the-easy-way-1-12/),
 with the advantage that the number of discs provided by the mod is _completely dynamic_ and can be
 set or changed simply by going into your instance's mod `config` folder, opening `foxnap.yaml` in
 notepad, TextEditor, vim or any plaintext editor, and changing the number set in `n_discs`.
 
 From there, if you're used to vanilla disc replacement resourcepacks, the differences will be:
+
 - instead of `assets/minecraft`, all your files should be in `assets/foxnap`
 - the ids of the sound files you'll be replacing (in `assets/foxnap/sounds.json`) will be
   `foxnap:track_1`, `foxnap:track_2`, etc. all the way up to the number `n_discs`
@@ -147,12 +156,14 @@ from the folder where you saved the generator executable.
 
 The Resource Pack Generator also allows you to finely tune the resource pack generation
 behavior via a configuration file. The pack generator currently supports the following formats:
+
 - INI (.ini, .cfg, .config, .conf, .txt)
 - JSON (.json)
 - CSV (.csv, .tsv)
-where each entry specifies a single track via either its full path or its file name.
+  where each entry specifies a single track via either its full path or its file name.
 
 For each track, you can specify:
+
 - `num`: a track number (to override the tracks bundled with the mod or just to make sure the tracks
   are ordered consistently)
 - `description`: the name to give to the track (if you don't want this read from the ID3 tag)
@@ -171,9 +182,10 @@ $ ./FoxNapRPG -i /path/to/my/music -s track_specs.conf
 So now that you've registered these custom records to the game, how do you actually get them?
 Outside of commands (_e.g._ `/give @s foxnap:track_1`) and Creative Mode, the sole way to obtain
 FoxNap records is by trading with _The Maestro_, a new villager who has a Jukebox as a job site
-(note that [The Maestro does not currently spawn naturally, but this feature is planned](https://github.com/OpenBagTwo/FoxNap/issues/13)).
+(note
+that [The Maestro does not currently spawn naturally, but this feature is planned](https://github.com/OpenBagTwo/FoxNap/issues/13)).
 
-_Picture of The Maestro goes here_
+![The Maestro](_static/maestro.png)
 
 The Maestro will pay top dollar for [tonewood](https://en.wikipedia.org/wiki/Tonewood)--stripped
 blocks of rare wood types--goat horns and non-FoxNap records and sells, alongside your custom
@@ -196,15 +208,19 @@ You can also build the generator from source.
    files from your music library and that has support for encoding using `libvorbis`. Put the
    executable (or symbolic links to the executable) in the `foxnap_rpg/bin` folder.
 1. Create and activate a virtual environment using python 3.10 or above
-    1. If you have a [`conda`-based](https://docs.conda.io/en/latest/) environment and package manager installed on your
-       system, such as [mambaforge](https://github.com/conda-forge/miniforge#mambaforge), you can use the project's
+    1. If you have a [`conda`-based](https://docs.conda.io/en/latest/) environment and package
+       manager installed on your
+       system, such as [mambaforge](https://github.com/conda-forge/miniforge#mambaforge), you can
+       use the project's
        dedicated dev/build environment, creatable from the repo root via
        `mamba env create -f environment.yml` (substitute `conda` for `mamba` as needed)
 1. From the repo's root, with your virtual environment activated, run `python -m pip install .`
 1. At this point, you have two options:
     1. Use FoxNap as a python package, with `$ FoxNapRPG` available from the command line
-    1. Create a stand-alone executable using [`pyinstaller`](https://pyinstaller.org/en/stable/) (included in the `conda`
-       environment). The scripts `./rpg-build.sh` for \*nix or `.\rpg-build.bat` for Windows are available for reference.
+    1. Create a stand-alone executable using [`pyinstaller`](https://pyinstaller.org/en/stable/) (
+       included in the `conda`
+       environment). The scripts `./rpg-build.sh` for \*nix or `.\rpg-build.bat` for Windows are
+       available for reference.
 
 ## License and Acknowledgements
 
