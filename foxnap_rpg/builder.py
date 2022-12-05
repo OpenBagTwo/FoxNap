@@ -77,9 +77,9 @@ class TrackBuilder(AbstractContextManager):
     *specs : foxnap_rpg.builder.Spec
         The track specifications read in from user input or config file
     start_at : int, optional
-        The minumum track number to give. Default is 1, which will overwrite the
+        The minumum track number to auto-assign. Default is 1, which will overwrite the
         tracks included with the mod. Set higher if you want to keep some built-in
-        tracks or to avoid conflicting with another FoxNap resource pack
+        tracks or to avoid conflicting with another FoxNap resource pack.
     **defaults
         Overrides of either the default track settings or the default handler settings
 
