@@ -6,9 +6,11 @@ from typing import Iterable, TypeVar, cast
 
 import ffmpeg
 
-from . import _start_at, bin
+from . import bin
 
 T = TypeVar("T")
+
+BUILT_IN_DISC_COUNT = 7  # number of discs included with the mod
 
 
 def is_valid_music_track(file_path: str | os.PathLike) -> bool:
@@ -151,7 +153,7 @@ def validate_track_numbers(*nums: int | None, check_contiguous: bool = False) ->
 
     missing: tuple[int, ...] = tuple(
         num
-        for num in range(_start_at, max(counter.keys() or (0,)))
+        for num in range(BUILT_IN_DISC_COUNT + 1, max(counter.keys() or (0,)))
         if num not in counter.keys()
     )
     if len(missing) > wildcard_count:
