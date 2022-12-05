@@ -5,7 +5,7 @@ from contextlib import AbstractContextManager
 from pathlib import Path
 from typing import Any, NamedTuple
 
-from . import _start_at, utils
+from . import utils
 from .pack_generator import License, Track
 
 LOGGER = logging.getLogger(__name__)
@@ -76,6 +76,10 @@ class TrackBuilder(AbstractContextManager):
     ----------
     *specs : foxnap_rpg.builder.Spec
         The track specifications read in from user input or config file
+    start_at : int, optional
+        The minumum track number to give. Default is 1, which will overwrite the
+        tracks included with the mod. Set higher if you want to keep some built-in
+        tracks or to avoid conflicting with another FoxNap resource pack
     **defaults
         Overrides of either the default track settings or the default handler settings
 
@@ -111,11 +115,14 @@ class TrackBuilder(AbstractContextManager):
         ("strict_file_checking", False),
     )
 
-    def __init__(self, *specs: Spec, **defaults):
+    def __init__(self, *specs: Spec, start_at=1, **defaults):
         self.defaults = dict(TrackBuilder._DEFAULTS)
         self.defaults.update(defaults)
         self.validate_specs(*specs)
         self._specs = list(specs)
+        if start_at < 1 or int(start_at) != start_at:
+            raise TypeError("start_at must be an integer no less than 1")
+        self.start_at = start_at
 
     def validate_specs(self, *specs: Spec, check_contiguous=False) -> None:
         """Validate a set of specs
@@ -196,7 +203,7 @@ class TrackBuilder(AbstractContextManager):
         self.validate_specs(*self._specs, check_contiguous=True)
         self._unused: list[Spec] = [spec for spec in self._specs]
         self._assigned_track_numbers: list[int] = []
-        self._n_discs = _start_at - 1
+        self._n_discs = self.start_at - 1
         return self
 
     def __exit__(self, *exc):
@@ -212,25 +219,26 @@ class TrackBuilder(AbstractContextManager):
                     error = True
             if unused_message:
                 unused_message = (
-                    "The following required specs could not be matched to any files:"
-                    + unused_message
+                    "The following required specs could not be matched"
+                    " to any files:" + unused_message
                 )
                 if error:
                     raise RuntimeError(unused_message)
                 else:
                     LOGGER.debug(unused_message)
 
-            missing_track_numbers = tuple(
-                i
-                for i in range(_start_at, max(self._assigned_track_numbers or (-1,)))
-                if i not in self._assigned_track_numbers
-            )
-
-            if missing_track_numbers:
-                missing_message = (
-                    "The following track numbers were never assigned:"
-                    f" {missing_track_numbers}"
+            try:
+                utils.validate_track_numbers(
+                    *self._assigned_track_numbers, check_contiguous=True
                 )
+            except RuntimeError as validation_fail:
+                if not validation_fail.args[0].startswith(
+                    "There are more missing track numbers"
+                ):
+                    raise validation_fail
+
+                missing_message = validation_fail.args[0]
+
                 # then we've got a discontinuity
                 if self.defaults["enforce_contiguous_track_numbers"] == "ignore":
                     LOGGER.debug(missing_message)
@@ -253,7 +261,7 @@ class TrackBuilder(AbstractContextManager):
         return False
 
     def _next_track_num(self) -> int:
-        next_track_num = _start_at
+        next_track_num = self.start_at
         while (
             next_track_num in (spec.num for spec in self._unused)
             or next_track_num in self._assigned_track_numbers

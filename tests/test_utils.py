@@ -1,6 +1,7 @@
 """Tests of the validation utils"""
 import os
 import random
+import re
 from copy import deepcopy
 from itertools import product
 from pathlib import Path
@@ -10,6 +11,30 @@ import pytest
 from foxnap_rpg import utils
 
 # TODO: ffmpeg tests
+
+
+java_config_class = (
+    Path("src")
+    / "main"
+    / "java"
+    / "net"
+    / "openbagtwo"
+    / "foxnap"
+    / "config"
+    / "Config.java"
+)
+
+
+def test_built_in_disc_count_is_up_to_date():
+    with java_config_class.open() as java_file:
+        for line in java_file:
+            if match := re.match(r"(?:.*\"n_discs\", )([0-9]*)", line):
+                mod_n_discs = int(match.group(1))
+                break
+        else:
+            raise RuntimeError("Could not find disc number in Config.java")
+
+    assert mod_n_discs == utils.BUILT_IN_DISC_COUNT
 
 
 class TestSpecMatchesPath:
@@ -85,7 +110,7 @@ class TestSpecMatchesPath:
 class TestValidateTrackNumbers:
     @pytest.fixture(autouse=True)
     def lock_number_of_built_in_tracks(self, monkeypatch):
-        monkeypatch.setattr(utils, "_start_at", 4)
+        monkeypatch.setattr(utils, "BUILT_IN_DISC_COUNT", 4)
 
     def test_empty_range_is_trivially_valid(self):
         utils.validate_track_numbers(check_contiguous=True)
@@ -131,7 +156,7 @@ class TestValidateTrackNumbers:
 
     def test_raise_if_track_numbers_are_missing(self):
         with pytest.raises(
-            RuntimeError, match=r"No tracks are specified with numbers \(4, 5\)"
+            RuntimeError, match=r"No tracks are specified with numbers \(5,\)"
         ):
             utils.validate_track_numbers(6, 8, 7, check_contiguous=True)
 
@@ -141,7 +166,7 @@ class TestValidateTrackNumbers:
     ):
         expected = r"(\s|.)*".join(
             (
-                r"No tracks are specified with numbers \(4, 5, 9\)",
+                r"No tracks are specified with numbers \(5, 9, 12\)",
                 rf"only {n_wildcards}",
             )
         )
@@ -149,12 +174,14 @@ class TestValidateTrackNumbers:
         with pytest.raises(RuntimeError, match=expected):
             utils.validate_track_numbers(
                 6,
+                13,
                 *[
                     None,
                 ]
                 * n_wildcards,
                 8,
                 7,
+                11,
                 10,
                 check_contiguous=True,
             )

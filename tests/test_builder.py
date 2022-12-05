@@ -4,14 +4,15 @@ from pathlib import Path
 
 import pytest
 
-from foxnap_rpg import builder
+from foxnap_rpg import utils
 from foxnap_rpg.builder import Spec, TrackBuilder
 from foxnap_rpg.pack_generator import Track
 
 
-@pytest.fixture(autouse=True)
-def lock_number_of_built_in_tracks(monkeypatch):
-    monkeypatch.setattr(builder, "_start_at", 4)
+@pytest.fixture
+def lock_built_in_track_count(monkeypatch):
+    """Just so we don't have to rewrite tests every mod update"""
+    monkeypatch.setattr(utils, "BUILT_IN_DISC_COUNT", 4)
 
 
 class TestInstantiation:
@@ -60,6 +61,11 @@ class TestInstantiation:
     )
     def test_builder_defaults_can_be_overridden_via_kwargs(self, option):
         assert TrackBuilder(**{option: "override"}).defaults[option] == "override"
+
+    @pytest.mark.parametrize("unnatural_number", (3.14, -1, 0))
+    def test_start_at_must_be_a_natural_number(self, unnatural_number):
+        with pytest.raises(TypeError):
+            _ = TrackBuilder(start_at=unnatural_number)
 
 
 class TestValidateSpecs:
@@ -116,7 +122,7 @@ class TestAddSpec:
     def track_builder(self):
         yield TrackBuilder(Spec(Path("hello.mp3"), num=4))
 
-    def test_new_specs_areadded_to_the_spec_list(self, track_builder):
+    def test_new_specs_are_added_to_the_spec_list(self, track_builder):
         track_builder.add_spec(Spec(Path("i love you.mp3")))
         assert Path("i love you.mp3") in [
             spec.path_spec for spec in track_builder._specs
@@ -147,7 +153,7 @@ class TestAddSpec:
 
 class TestBuildingTracks:
     @pytest.fixture
-    def track_builder(self):
+    def track_builder(self, lock_built_in_track_count):
         yield TrackBuilder(
             Spec(Path("hello.mp3"), num=4, required=True, use_album_art=False),
             Spec(Path("i love you.mp3"), required=False),
@@ -178,7 +184,34 @@ class TestBuildingTracks:
 
         assert track.hue == 87
 
+    def test_track_builder_auto_numbering_starts_at_one(self):
+        with TrackBuilder() as track_builder:
+            track_one = track_builder[Path.home() / "Music" / "first_track.mp3"]
+            track_two = track_builder[Path.home() / "Music" / "second_track.mp3"]
+            track_three = track_builder[Path.home() / "Music" / "third_track.mp3"]
+
+        assert (
+            track_one.num,
+            track_two.num,
+            track_three.num,
+            track_builder.n_discs,
+        ) == (1, 2, 3, 3)
+
+    def test_track_builder_can_start_numbering_higher(self, lock_built_in_track_count):
+        with TrackBuilder(start_at=4) as track_builder:
+            track_one = track_builder[Path.home() / "Music" / "first_track.mp3"]
+            track_two = track_builder[Path.home() / "Music" / "second_track.mp3"]
+            track_three = track_builder[Path.home() / "Music" / "third_track.mp3"]
+
+        assert (
+            track_one.num,
+            track_two.num,
+            track_three.num,
+            track_builder.n_discs,
+        ) == (4, 5, 6, 6)
+
     def test_track_builder_auto_numbering_skips_reserved_numbers(self, track_builder):
+        track_builder.start_at = 4
         with track_builder:
             track = track_builder[Path.home() / "Music" / "i love you.mp3"]
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
@@ -201,17 +234,18 @@ class TestBuildingTracks:
 
         with pytest.raises(RuntimeError, match=r"(world.aac).*(required)"):
             with track_builder:
-                track_5 = track_builder[Path.home() / "Music" / "i love you.mp3"]
+                track_1 = track_builder[Path.home() / "Music" / "i love you.mp3"]
                 track_4 = track_builder[Path.home() / "Music" / "hello.mp3"]
 
         # to check explicitly that the raise is on exit
-        assert (track_4.num, track_5.num, track_builder.n_discs) == (4, 5, 5)
+        assert (track_4.num, track_1.num, track_builder.n_discs) == (4, 1, 4)
 
     def test_track_builder_checks_for_skipped_track_numbers_on_exit(
-        self, track_builder
+        self, track_builder, lock_built_in_track_count
     ):
         # explicitly not required
         track_builder.add_spec(Spec(Path("Music/world.aac"), num=5))
+        track_builder.start_at = 4
 
         with pytest.raises(RuntimeError, match="5"):
             with track_builder:
@@ -221,13 +255,27 @@ class TestBuildingTracks:
         # to check explicitly that the raise is on exit
         assert (track.num, track_builder.n_discs) == (6, 6)
 
+    def test_track_builder_doesnt_consider_built_in_tracks_to_be_missing(
+        self, track_builder, lock_built_in_track_count
+    ):
+        # explicitly not required
+        track_builder.add_spec(Spec(Path("Music/world.aac"), num=2))
+
+        with track_builder:
+            track_1 = track_builder[Path.home() / "Music" / "i love you.mp3"]
+            track_4 = track_builder[Path.home() / "Music" / "hello.mp3"]
+
+        # to check explicitly that the raise is on exit
+        assert (track_1.num, track_4.num, track_builder.n_discs) == (1, 4, 4)
+
     def test_skipped_track_numbers_can_be_set_to_warn_instead(
-        self, track_builder, caplog
+        self, track_builder, caplog, lock_built_in_track_count
     ):
         caplog.set_level(logging.WARNING)
 
         track_builder.add_spec(Spec(Path("Music/world.aac"), num=5))
         track_builder.defaults["enforce_contiguous_track_numbers"] = "warn"
+        track_builder.start_at = 4
 
         with track_builder:
             track = track_builder[Path.home() / "Music" / "i love you.mp3"]
@@ -238,11 +286,14 @@ class TestBuildingTracks:
         assert len(caplog.record_tuples) == 1
         assert "5" in caplog.record_tuples[0][2]
 
-    def test_skipped_track_numbers_can_be_ignored_instead(self, track_builder, caplog):
+    def test_skipped_track_numbers_can_be_ignored_instead(
+        self, track_builder, caplog, lock_built_in_track_count
+    ):
         caplog.set_level(logging.WARNING)
 
         track_builder.add_spec(Spec(Path("Music/world.aac"), num=5))
         track_builder.defaults["enforce_contiguous_track_numbers"] = "ignore"
+        track_builder.start_at = 4
 
         with track_builder:
             track = track_builder[Path.home() / "Music" / "i love you.mp3"]
@@ -253,7 +304,7 @@ class TestBuildingTracks:
         assert len(caplog.record_tuples) == 0
 
     def test_unspecified_input_files_get_track_builder_default_values(
-        self, track_builder, caplog
+        self, track_builder, caplog, lock_built_in_track_count
     ):
         caplog.set_level(logging.DEBUG)
         track_builder.defaults["hue"] = 87
@@ -262,13 +313,15 @@ class TestBuildingTracks:
             track = track_builder[Path.home() / "Music" / "what a wonderful world.m4a"]
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
-        assert (track.num, track.use_album_art, track.hue) == (5, True, 87)
-        assert track_builder.n_discs == 5
+        assert (track.num, track.use_album_art, track.hue) == (1, True, 87)
+        assert track_builder.n_discs == 4
 
         assert len(caplog.record_tuples) >= 1
         assert any(("default spec" in record[2] for record in caplog.record_tuples))
 
-    def test_unspecified_input_files_can_be_set_to_warn(self, track_builder, caplog):
+    def test_unspecified_input_files_can_be_set_to_warn(
+        self, track_builder, caplog, lock_built_in_track_count
+    ):
         caplog.set_level(logging.WARNING)
         track_builder.defaults["hue"] = 87
         track_builder.defaults["unspecified_file_handling"] = "warn"
@@ -277,8 +330,8 @@ class TestBuildingTracks:
             track = track_builder[Path.home() / "Music" / "what a wonderful world.m4a"]
             _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
-        assert (track.num, track.use_album_art, track.hue) == (5, True, 87)
-        assert track_builder.n_discs == 5
+        assert (track.num, track.use_album_art, track.hue) == (1, True, 87)
+        assert track_builder.n_discs == 4
 
         assert len(caplog.record_tuples) == 1
         assert "default spec" in caplog.record_tuples[0][2]
@@ -302,8 +355,8 @@ class TestBuildingTracks:
             tracks.append(track_builder[Path.home() / "Music" / "shalom.mp3"])
 
         assert (track_builder.n_discs, [track.num for track in tracks]) == (
-            7,
-            [4, 5, 6, 7],
+            4,
+            [4, 1, 2, 3],
         )
 
     def test_track_builder_outside_context_raises_helpful_error(self, track_builder):
@@ -315,13 +368,13 @@ class TestBuildingTracks:
             _ = track_builder.n_discs
 
     def test_track_builders_can_be_reused(self, track_builder):
-        track_fives = []
+        track_ones = []
         for _ in range(100):
             with track_builder:
-                track_fives.append(
+                track_ones.append(
                     track_builder[Path.home() / "Music" / "i love you.mp3"]
                 )
                 _ = track_builder[Path.home() / "Music" / "hello.mp3"]
 
-        assert all((track.num == 5 for track in track_fives))
-        assert track_builder.n_discs == 5
+        assert all((track.num == 1 for track in track_ones))
+        assert track_builder.n_discs == 4
