@@ -11,7 +11,7 @@ from .builder import Spec, TrackBuilder
 from .config import read_specs_from_config_file
 from .pack_generator import LOGGER as PACKGEN_LOGGER
 from .pack_generator import Track, generate_resource_pack
-from .utils import is_valid_music_track
+from .utils import BUILT_IN_DISC_COUNT, is_valid_music_track
 
 LOGGER = logging.getLogger(__name__)
 
@@ -75,7 +75,6 @@ def parse_args(
     parser.add_argument(
         "-o",
         "--output",
-        dest="output",
         action="store",
         default=_get_cwd() / "FoxNapRP.zip",
         type=Path,
@@ -86,9 +85,23 @@ def parse_args(
     )
 
     parser.add_argument(
+        "-n",
+        "--start-at",
+        action="store",
+        default=1,
+        type=int,
+        help=(
+            "The minumum track number to auto-assign. Default is 1, which will overwrite"
+            f" the tracks included with the mod. Set to {BUILT_IN_DISC_COUNT}"
+            " if you want to keep the music bundled with the mod or to a different"
+            " number to avoid conflicting with another FoxNap resource pack (in which"
+            " case you'll also want to use -g."
+        ),
+    )
+
+    parser.add_argument(
         "-c",
         "--config-dir",
-        dest="config_dir",
         action="store",
         default=_get_cwd(),
         type=Path,
@@ -109,6 +122,7 @@ def parse_args(
     )
 
     parser.add_argument(
+        "-m",
         "--ignore-missing",
         dest="default_required",
         action="store_false",
@@ -118,6 +132,7 @@ def parse_args(
     )
 
     parser.add_argument(
+        "-u",
         "--unspecified-file-handling",
         default="use-defaults",
         type=str,
@@ -132,6 +147,7 @@ def parse_args(
     )
 
     parser.add_argument(
+        "-g",
         "--allow-track-number-gaps",
         dest="enforce_contiguous",
         action="store_false",
@@ -159,6 +175,7 @@ def parse_args(
 
     args = parser.parse_args(argv[1:])
     builder_kwargs = {
+        "start_at": args.start_at,
         "verbosity": args.verbosity or 20,
         "required": args.default_required,
         "unspecified_file_handling": args.unspecified_file_handling,
