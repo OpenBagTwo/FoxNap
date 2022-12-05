@@ -77,7 +77,7 @@ jobs:
           python -c "from zipfile import ZipFile; zip = ZipFile('holst-the-planets.zip'); zip.extractall('build/dist')"
       - name: Run Integration Tests
         run: |
-          python run_integration_tests.py build/dist/FoxNapRPG 14
+          python run_integration_tests.py build/dist/FoxNapRPG 7
       - name: capture build artifacts
         uses: actions/upload-artifact@v2
         if: always()
