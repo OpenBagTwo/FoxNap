@@ -1,5 +1,7 @@
 package net.openbagtwo.foxnap.instruments;
 
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
@@ -60,7 +62,9 @@ public class InstrumentRegistry {
   public static List<SecretlyJustAGoatHorn> init() {
     ArrayList<SecretlyJustAGoatHorn> instruments = new ArrayList<>();
     for (String instrument : INSTRUMENTS.keySet()) {
-      instruments.add(registerInstrument(instrument));
+      SecretlyJustAGoatHorn tooter = registerInstrument(instrument);
+      ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(tooter));
+      instruments.add(tooter);
       FoxNap.LOGGER.debug("Registered " + instrument);
     }
     return instruments;
