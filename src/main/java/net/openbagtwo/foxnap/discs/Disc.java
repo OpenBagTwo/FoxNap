@@ -4,7 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.item.MusicDiscItem;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Rarity;
@@ -29,7 +28,7 @@ public class Disc extends MusicDiscItem {
    * @param trackLength      The length of the track in seconds. This value is currently only used
    *                         by Allays (presumably to determine when to stop dancing and duping?).
    */
-  public Disc(int comparatorOutput, SoundEvent sound, int trackLength) {
+  public Disc(int comparatorOutput, Track sound, int trackLength) {
     super(comparatorOutput, sound, generateSettings(), trackLength);
   }
 

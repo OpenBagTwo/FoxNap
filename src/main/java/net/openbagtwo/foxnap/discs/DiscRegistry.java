@@ -2,6 +2,8 @@ package net.openbagtwo.foxnap.discs;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
@@ -26,17 +28,10 @@ public class DiscRegistry {
   public static Disc registerDisc(String trackName, int comparatorOutput, int trackLength) {
     Disc disc = Registry.register(Registries.ITEM, new Identifier(FoxNap.MOD_ID, trackName),
         new Disc(comparatorOutput, registerTrack(trackName), trackLength));
+
     FoxNap.LOGGER.debug(
         "Registered " + trackName + " with comparator signal " + disc.getComparatorOutput());
     return disc;
-  }
-
-  public static void registerPlaceholderDisc(String trackName) {
-    Track track = registerTrack(trackName);
-    Disc disc = Registry.register(Registries.ITEM, new Identifier(FoxNap.MOD_ID, trackName),
-        new Disc(0, track, 0));
-    disc.isPlaceholder = true;
-    track.isPlaceholder = true;
   }
 
   private static Track registerTrack(String trackName) {
@@ -55,7 +50,9 @@ public class DiscRegistry {
   public static List<MusicDiscItem> init(int numberOfDiscs) {
     ArrayList<MusicDiscItem> discs = new ArrayList<>();
     for (int i = 1; i <= numberOfDiscs; i++) {
-      discs.add(registerDisc(String.format("track_%d", i), (i - 1) % 15 + 1, 60));
+      Disc disc = registerDisc(String.format("track_%d", i), (i - 1) % 15 + 1, 60);
+      discs.add(disc);
+      ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(disc));
     }
     return discs;
   }
@@ -72,7 +69,13 @@ public class DiscRegistry {
     registerTrack("placeholder");  // really tempting to make placeholder a placeholder
     int placeholderCount = 0;
     for (int i = numberOfDiscs + 1; i <= maxNumberOfDiscs; i++) {
-      registerPlaceholderDisc(String.format("track_%d", i));
+      Disc disc = registerDisc(
+          String.format("track_%d", i),
+          0,
+          0
+      );
+      disc.isPlaceholder = true;
+      ((Track) disc.getSound()).isPlaceholder = true;
       placeholderCount++;
     }
     FoxNap.LOGGER.debug(String.format("Registered %d placeholder discs", placeholderCount));
