@@ -29,15 +29,23 @@ public class DiscRegistry {
         new Identifier(FoxNap.MOD_ID, trackName),
         new Disc(comparatorOutput, registerTrack(trackName), trackLength)
     );
-    FoxNap.LOGGER.info(
+    FoxNap.LOGGER.debug(
         "Registered " + trackName
             + " with comparator signal " + disc.getComparatorOutput()
     );
     return disc;
   }
 
-  private static SoundEvent registerTrack(String track_name) {
-    Identifier track_id = new Identifier(FoxNap.MOD_ID, track_name);
+  public static void registerPlaceholderDisc(String trackName) {
+    Registry.register(
+        Registry.ITEM,
+        new Identifier(FoxNap.MOD_ID, trackName),
+        new Disc(0, registerTrack(trackName), 0)
+    );
+  }
+
+  private static SoundEvent registerTrack(String trackName) {
+    Identifier track_id = new Identifier(FoxNap.MOD_ID, trackName);
     return Registry.register(Registry.SOUND_EVENT, track_id, new SoundEvent(track_id));
   }
 
@@ -46,12 +54,12 @@ public class DiscRegistry {
    * with a sound event name track_i and emitting a comparator signal of strength i), starting at i
    * = 1
    *
-   * @param number_of_discs The number of discs to generate and register
+   * @param numberOfDiscs The number of discs to generate and register
    * @return A list of fully instantiated and registered music discs
    */
-  public static List<MusicDiscItem> init(int number_of_discs) {
+  public static List<MusicDiscItem> init(int numberOfDiscs) {
     ArrayList<MusicDiscItem> discs = new ArrayList<>();
-    for (int i = 1; i <= number_of_discs; i++) {
+    for (int i = 1; i <= numberOfDiscs; i++) {
       discs.add(
           registerDisc(
               String.format("track_%d", i),
@@ -61,5 +69,24 @@ public class DiscRegistry {
       );
     }
     return discs;
+  }
+
+  /**
+   * In addition to the procedurally-generated set of usable music discs, also generate extra
+   * dummy/placeholder discs to prevent client/server conflicts
+   *
+   * @param numberOfDiscs    The number of discs that will actually be available for use
+   * @param maxNumberOfDiscs The total number of discs to register
+   * @return The list of discs that should actually be available for use
+   */
+  public static List<MusicDiscItem> init(int numberOfDiscs, int maxNumberOfDiscs) {
+    int placeholderCount = 0;
+    for (int i = numberOfDiscs + 1; i <= maxNumberOfDiscs; i++) {
+      registerPlaceholderDisc(String.format("track_%d", i));
+      placeholderCount++;
+    }
+    FoxNap.LOGGER.debug(String.format("Registered %d placeholder discs", placeholderCount));
+
+    return init(numberOfDiscs);
   }
 }
