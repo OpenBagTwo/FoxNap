@@ -76,6 +76,12 @@ remapJar {
     inputFile = tasks.shadowJar.archiveFile
 }
 
+jgitver {
+    useDirty = true
+    useGitCommitID = true
+    gitCommitIDLength = 8
+}
+
 // configure the maven publication
 publishing {
     publications {
