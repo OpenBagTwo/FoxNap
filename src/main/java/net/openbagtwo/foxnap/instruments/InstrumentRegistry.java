@@ -60,7 +60,7 @@ public class InstrumentRegistry {
     ArrayList<SecretlyJustAGoatHorn> instruments = new ArrayList<>();
     for (String instrument : INSTRUMENTS.keySet()) {
       instruments.add(registerInstrument(instrument));
-      FoxNap.LOGGER.info("Registered " + instrument);
+      FoxNap.LOGGER.debug("Registered " + instrument);
     }
     return instruments;
 
