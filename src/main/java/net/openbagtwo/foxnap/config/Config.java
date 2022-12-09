@@ -21,11 +21,24 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class Config {
 
+  /**
+   * Path to the config file
+   */
   private static final Path config_path = FabricLoader.getInstance().getConfigDir()
       .resolve(MOD_ID + ".yaml").toAbsolutePath();
 
+  /**
+   * (Most) default settings
+   */
   public static final ImmutableMap<String, Object> DEFAULTS = ImmutableMap.of(
       "n_discs", 7
+  );
+
+  /**
+   * "Secret" default settings that shouldn't be written to the auto-generated config file
+   */
+  public static final ImmutableMap<String, Object> HIDDEN_DEFAULTS = ImmutableMap.of(
+      "max_discs", 64
   );
 
   private static final DumperOptions configFormat = new DumperOptions() {{
@@ -59,7 +72,9 @@ public class Config {
    * @return map of str key to the configuration value
    */
   public static Map<String, Object> readModSettings() {
-    HashMap<String, Object> settings = new HashMap<>(DEFAULTS);
+    HashMap<String, Object> settings = new HashMap<>(HIDDEN_DEFAULTS);
+    settings.putAll(DEFAULTS);
+
     LOGGER.info("Reading " + MOD_NAME + " configuration from " + config_path);
     FileInputStream configReader;
     try {
