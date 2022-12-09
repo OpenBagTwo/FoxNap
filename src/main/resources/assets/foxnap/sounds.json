@@ -1,4 +1,10 @@
 {
+  "placeholder": {
+    "category": "record",
+    "sounds": [
+      "foxnap:records/silence"
+    ]
+  },
   "track_1": {
     "category": "record",
     "sounds": [
