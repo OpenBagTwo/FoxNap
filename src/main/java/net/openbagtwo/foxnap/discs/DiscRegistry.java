@@ -27,7 +27,7 @@ public class DiscRegistry {
     Disc disc = Registry.register(
         Registry.ITEM,
         new Identifier(FoxNap.MOD_ID, trackName),
-        new Disc(comparatorOutput, registerTrack(trackName), trackLength)
+        new Disc(comparatorOutput, registerTrack(trackName), trackLength, true)
     );
     FoxNap.LOGGER.debug(
         "Registered " + trackName
@@ -40,7 +40,7 @@ public class DiscRegistry {
     Registry.register(
         Registry.ITEM,
         new Identifier(FoxNap.MOD_ID, trackName),
-        new Disc(0, registerTrack(trackName), 0)
+        new Disc(0, registerTrack(trackName), 0, false)
     );
   }
 
