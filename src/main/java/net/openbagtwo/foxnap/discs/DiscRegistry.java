@@ -56,7 +56,7 @@ public class DiscRegistry {
           registerDisc(
               String.format("track_%d", i),
               (i - 1) % 15 + 1,
-              5 * 60
+              60
           )
       );
     }
