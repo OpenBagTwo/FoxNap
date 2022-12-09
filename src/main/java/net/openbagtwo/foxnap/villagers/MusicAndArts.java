@@ -176,18 +176,29 @@ public class MusicAndArts implements TradeOffers.Factory {
   }
 
   /**
-   * Create a trade factory for buying mod-custom music discs from the villager, which is intended
-   * as the only way for these discs to be obtainable outside of commands and the creative
-   * inventory. The intention is for these to be exclusively max-level trades.
+   * Create a trade factory for buying mod-custom music discs from the villager. These are intended
+   * to be max-level trades exclusively. Use this method (supplying a list of discs) if you want the
+   * villager's two max-level trade slots to pull from separate disc pools or if you want each
+   * Conductor to only sell one disc (you sadist)
    *
    * @param discs The discs a villager might sell
-   * @return Trade factory that will enable the villager to sell an instrument at a base rate of 32
-   * emeralds per instrument
+   * @return Trade factory that will enable the villager to sell a music disc at a base rate of 32
+   * emeralds per disc
    */
   public static TradeOffers.Factory sellMusicDisc(List<MusicDiscItem> discs) {
     return new SellOneItemFromPoolFactory(discs, 32, 3, 30);
   }
 
+  /**
+   * Create a trade factory for buying mod-custom music discs from the villager. These are intended
+   * to be max-level trades exclusively. Creating a TradeOffers.Factory by using this method
+   * (providing a single disc at a time) and looping over all available discs ensures that the
+   * Conductor will offer two randomly selected records (without replacement).
+   *
+   * @param disc A disc a villager might sell
+   * @return Trade factory that will enable the villager to sell a music disc at a base rate of 32
+   * emeralds per disc
+   */
   public static TradeOffers.Factory sellMusicDisc(MusicDiscItem disc) {
     return new SellItemFactory(disc, 32, 1, 3, 30);
   }
