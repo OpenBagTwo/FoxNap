@@ -40,7 +40,12 @@ public class DiscRegistry {
     Registry.register(
         Registry.ITEM,
         new Identifier(FoxNap.MOD_ID, trackName),
-        new Disc(0, registerTrack(trackName), 0, false)
+        new Disc(
+            0,
+            registerTrack("placeholder"),
+            0,
+            false
+        )
     );
   }
 
