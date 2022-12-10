@@ -18,6 +18,9 @@
   "entrypoints": {
     "main": [
       "net.openbagtwo.foxnap.FoxNap"
+    ],
+    "client": [
+      "net.openbagtwo.foxnap.FoxNapClient"
     ]
   },
   "depends": {
