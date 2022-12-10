@@ -1,15 +1,24 @@
 package net.openbagtwo.foxnap.discs;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.item.MusicDiscItem;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Rarity;
 
 /**
  * A custom music disc created by this mod
  */
 public class Disc extends MusicDiscItem {
+
+  /**
+   * Simple toggle to control client-side overrides
+   */
+  public boolean isPlaceholder = false;
 
   /**
    * Create a new music disc
@@ -23,6 +32,26 @@ public class Disc extends MusicDiscItem {
    */
   public Disc(int comparatorOutput, SoundEvent sound, int trackLength, boolean creativeInventory) {
     super(comparatorOutput, sound, generateSettings(creativeInventory), trackLength);
+  }
+
+  @Override
+  @Environment(EnvType.CLIENT)
+  public Text getName() {
+    if (isPlaceholder) {
+      // TODO: make translation-friendly
+      return Text.of("Music Disc");
+    }
+    return super.getName();
+  }
+
+  @Override
+  @Environment(EnvType.CLIENT)
+  public MutableText getDescription() {
+    if (isPlaceholder) {
+      // TODO: make translation-friendly
+      return Text.literal("Joe Box - 4.33");
+    }
+    return super.getDescription();
   }
 
   private static Item.Settings generateSettings(boolean creativeInventory) {
