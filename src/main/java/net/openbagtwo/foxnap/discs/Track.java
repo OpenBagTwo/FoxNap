@@ -1,0 +1,40 @@
+package net.openbagtwo.foxnap.discs;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.openbagtwo.foxnap.FoxNap;
+
+/**
+ * A sound event played by a custom music disc.
+ */
+public class Track extends SoundEvent {
+
+  /**
+   * Simple toggle to control client-side overrides
+   */
+  public boolean isPlaceholder = false;
+
+  public Track(Identifier id) {
+    super(id);
+  }
+
+  @Override
+  @Environment(EnvType.CLIENT)
+  public Identifier getId() {
+    if (isPlaceholder){
+      return getPlaceholderTrackId();
+    }
+    return super.getId();
+  }
+
+  public static Identifier getPlaceholderTrackId(){
+    return new Identifier(FoxNap.MOD_ID, "placeholder");
+  }
+
+  public static SoundEvent getPlaceholderTrack(){
+    return Registry.SOUND_EVENT.get(getPlaceholderTrackId());
+  }
+}
