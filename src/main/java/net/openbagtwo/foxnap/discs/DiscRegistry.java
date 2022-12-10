@@ -3,7 +3,6 @@ package net.openbagtwo.foxnap.discs;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.item.MusicDiscItem;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.openbagtwo.foxnap.FoxNap;
@@ -24,38 +23,24 @@ public class DiscRegistry {
    * @return the fully instantiated and registered music disc
    */
   public static Disc registerDisc(String trackName, int comparatorOutput, int trackLength) {
-    Disc disc = Registry.register(
-        Registry.ITEM,
-        new Identifier(FoxNap.MOD_ID, trackName),
-        new Disc(comparatorOutput, registerTrack(trackName), trackLength, true)
-    );
+    Disc disc = Registry.register(Registry.ITEM, new Identifier(FoxNap.MOD_ID, trackName),
+        new Disc(comparatorOutput, registerTrack(trackName), trackLength, true));
     FoxNap.LOGGER.debug(
-        "Registered " + trackName
-            + " with comparator signal " + disc.getComparatorOutput()
-    );
+        "Registered " + trackName + " with comparator signal " + disc.getComparatorOutput());
     return disc;
   }
 
-  public static void registerPlaceholderDisc(String trackName, SoundEvent placeholderTrack) {
-    Disc disc = new Disc(
-        0,
-        placeholderTrack,
-        0,
-        false
-    );
-
-    Registry.register(
-        Registry.ITEM,
-        new Identifier(FoxNap.MOD_ID, trackName),
-        disc
-    );
-
+  public static void registerPlaceholderDisc(String trackName) {
+    Track track = registerTrack(trackName);
+    Disc disc = Registry.register(Registry.ITEM, new Identifier(FoxNap.MOD_ID, trackName),
+        new Disc(0, track, 0, false));
     disc.isPlaceholder = true;
+    track.isPlaceholder = true;
   }
 
-  private static SoundEvent registerTrack(String trackName) {
+  private static Track registerTrack(String trackName) {
     Identifier track_id = new Identifier(FoxNap.MOD_ID, trackName);
-    return Registry.register(Registry.SOUND_EVENT, track_id, new SoundEvent(track_id));
+    return Registry.register(Registry.SOUND_EVENT, track_id, new Track(track_id));
   }
 
   /**
@@ -69,13 +54,7 @@ public class DiscRegistry {
   public static List<MusicDiscItem> init(int numberOfDiscs) {
     ArrayList<MusicDiscItem> discs = new ArrayList<>();
     for (int i = 1; i <= numberOfDiscs; i++) {
-      discs.add(
-          registerDisc(
-              String.format("track_%d", i),
-              (i - 1) % 15 + 1,
-              60
-          )
-      );
+      discs.add(registerDisc(String.format("track_%d", i), (i - 1) % 15 + 1, 60));
     }
     return discs;
   }
@@ -89,10 +68,10 @@ public class DiscRegistry {
    * @return The list of discs that should actually be available for use
    */
   public static List<MusicDiscItem> init(int numberOfDiscs, int maxNumberOfDiscs) {
-    SoundEvent placeholderTrack = registerTrack("placeholder");
+    registerTrack("placeholder");  // really tempting to make placeholder a placeholder
     int placeholderCount = 0;
     for (int i = numberOfDiscs + 1; i <= maxNumberOfDiscs; i++) {
-      registerPlaceholderDisc(String.format("track_%d", i), placeholderTrack);
+      registerPlaceholderDisc(String.format("track_%d", i));
       placeholderCount++;
     }
     FoxNap.LOGGER.debug(String.format("Registered %d placeholder discs", placeholderCount));
