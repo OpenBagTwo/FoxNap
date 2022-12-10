@@ -36,17 +36,21 @@ public class DiscRegistry {
     return disc;
   }
 
-  public static void registerPlaceholderDisc(String trackName) {
+  public static void registerPlaceholderDisc(String trackName, SoundEvent placeholderTrack) {
+    Disc disc = new Disc(
+        0,
+        placeholderTrack,
+        0,
+        false
+    );
+
     Registry.register(
         Registry.ITEM,
         new Identifier(FoxNap.MOD_ID, trackName),
-        new Disc(
-            0,
-            registerTrack("placeholder"),
-            0,
-            false
-        )
+        disc
     );
+
+    disc.isPlaceholder = true;
   }
 
   private static SoundEvent registerTrack(String trackName) {
@@ -85,9 +89,10 @@ public class DiscRegistry {
    * @return The list of discs that should actually be available for use
    */
   public static List<MusicDiscItem> init(int numberOfDiscs, int maxNumberOfDiscs) {
+    SoundEvent placeholderTrack = registerTrack("placeholder");
     int placeholderCount = 0;
     for (int i = numberOfDiscs + 1; i <= maxNumberOfDiscs; i++) {
-      registerPlaceholderDisc(String.format("track_%d", i));
+      registerPlaceholderDisc(String.format("track_%d", i), placeholderTrack);
       placeholderCount++;
     }
     FoxNap.LOGGER.debug(String.format("Registered %d placeholder discs", placeholderCount));
