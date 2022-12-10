@@ -8,7 +8,10 @@ import net.minecraft.item.MusicDiscItem;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
+import net.minecraft.util.registry.Registry;
+import net.openbagtwo.foxnap.FoxNap;
 
 /**
  * A custom music disc created by this mod
@@ -52,6 +55,15 @@ public class Disc extends MusicDiscItem {
       return Text.literal("Joe Box - 4.33");
     }
     return super.getDescription();
+  }
+
+  @Override
+  @Environment(EnvType.CLIENT)
+  public SoundEvent getSound() {
+    if (isPlaceholder) {
+      return Registry.SOUND_EVENT.get(new Identifier(FoxNap.MOD_ID, "placeholder"));
+    }
+    return super.getSound();
   }
 
   private static Item.Settings generateSettings(boolean creativeInventory) {
