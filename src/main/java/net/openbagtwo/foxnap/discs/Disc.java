@@ -39,12 +39,14 @@ public class Disc extends MusicDiscItem {
 
   @Override
   @Environment(EnvType.CLIENT)
-  public Text getName() {
+  public String getTranslationKey() {
     if (isPlaceholder) {
       // TODO: make translation-friendly
-      return Text.of("Music Disc");
+      return "item." + FoxNap.MOD_ID + ".placeholder_disc";
     }
-    return super.getName();
+// now here's an idea:
+//    return "item." + FoxNap.MOD_ID + ".music_disc"
+    return super.getTranslationKey();
   }
 
   @Override
