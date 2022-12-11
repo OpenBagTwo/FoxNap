@@ -85,4 +85,4 @@ jobs:
         if: always()
         with:
           name: ResourcepackGenerator-${{ runner.os }}
-          path: build/dist/\
+          path: build/dist/
