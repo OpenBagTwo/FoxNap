@@ -72,9 +72,9 @@ class TestConfigParsing:
         # a little bit of alternative field name testing
         for spec in spec_list:
             spec_dict = spec._asdict()
-            spec_dict["filename"] = spec_dict.pop("path_spec")
+            spec_dict["Filename"] = spec_dict.pop("path_spec")
             if "license_type" in spec_dict:
-                spec_dict["usage"] = spec_dict.pop("license_type")
+                spec_dict["Usage Rights"] = spec_dict.pop("license_type")
             dict_list.append(spec_dict)
 
         with (tmp_path / "config.json").open("w") as config_file:
