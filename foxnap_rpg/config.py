@@ -84,19 +84,19 @@ def _parse_csv(config_path: Path) -> list[dict[str, Any]]:
 def _convert_dict_to_spec(as_dict: dict[str, Any]) -> Spec:
     spec_fields = {field_name: None for field_name in Spec._fields}
 
-    as_dict = {k: v for k, v in as_dict.items() if _check_none(v) is not None}
+    # TODO: error if k.lower() results in duplicate keys
+    as_dict = {k.lower(): v for k, v in as_dict.items() if _check_none(v) is not None}
 
     def normalize(spec_field: str, *possible_key_names: str):
         for key_name in (spec_field, *possible_key_names):
             for key in {
                 key_name,
-                key_name.upper(),
                 key_name.replace("_", "-"),
                 key_name.replace("_", " "),
                 key_name.replace("_", ""),
             }:
                 if key in as_dict:
-                    spec_fields[spec_field] = as_dict[key_name]
+                    spec_fields[spec_field] = as_dict[key]
                     break
             else:
                 continue
@@ -121,7 +121,8 @@ def _convert_dict_to_spec(as_dict: dict[str, Any]) -> Spec:
             spec_fields["license_type"] = License[spec_fields["license_type"].upper()]
         except KeyError:
             raise ValueError(
-                f"entry has invalid value for license_type: '{spec_fields['license_type']}'"
+                "entry has invalid value for license_type:"
+                " '{spec_fields['license_type']}'"
             )
 
     normalize("required", "is_required")
