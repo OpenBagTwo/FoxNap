@@ -352,6 +352,7 @@ def generate_sound_registry(*track_numbers: int) -> dict:
     for track in track_numbers:
         sounds[f"track_{track}"] = {
             "category": "record",
+            "replace": True,
             "sounds": [f"foxnap:track_{track}"],
         }
     return sounds
