@@ -7,7 +7,7 @@ COLORED_VINYL_TEMPLATE = files("foxnap_rpg.assets") / "template_colored_vinyl.pn
 
 MCMETA: str = r"""{
   "pack": {
-    "pack_format": 10,
+    "pack_format": 12,
     "description": [
       {
         "text": "%%title%%",
