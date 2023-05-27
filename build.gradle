@@ -1,12 +1,12 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
     id "fr.brouillard.oss.gradle.jgitver" version "0.9.1"
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_18
+targetCompatibility = JavaVersion.VERSION_18
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
