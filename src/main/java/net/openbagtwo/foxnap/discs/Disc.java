@@ -25,8 +25,7 @@ public class Disc extends MusicDiscItem {
    * @param comparatorOutput the output signal a comparator should read from a jukebox with this
    *                         disc loaded
    * @param sound            the sound (track) a jukebox with this disc loaded should play
-   * @param trackLength      The length of the track in seconds. This value is currently only used
-   *                         by Allays (presumably to determine when to stop dancing and duping?).
+   * @param trackLength      The length of the track in seconds
    */
   public Disc(int comparatorOutput, Track sound, int trackLength) {
     super(comparatorOutput, sound, generateSettings(), trackLength);
