@@ -20,7 +20,7 @@ public class FoxNapClient implements ClientModInitializer {
         manager -> (resourceId, context) -> {
           for (
               int i = config.getNumDiscs();
-              i < config.getNumDiscs();
+              i < config.getMaximumNumberOfDiscs();
               i++
           ) {
             Identifier matchMe = new Identifier(MOD_ID, String.format("item/track_%d", i + 1));
