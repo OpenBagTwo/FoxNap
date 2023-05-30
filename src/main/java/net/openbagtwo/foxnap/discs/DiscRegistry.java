@@ -54,7 +54,7 @@ public class DiscRegistry {
       Disc disc = registerDisc(
           String.format("track_%d", i),
           (i - 1) % 15 + 1,
-          trackLengths.get(i)
+          trackLengths.get(i - 1)
       );
       discs.add(disc);
       ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(disc));
