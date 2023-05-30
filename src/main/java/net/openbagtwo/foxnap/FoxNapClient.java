@@ -4,7 +4,6 @@ import static net.openbagtwo.foxnap.FoxNap.LOGGER;
 import static net.openbagtwo.foxnap.FoxNap.MOD_ID;
 import static net.openbagtwo.foxnap.FoxNap.MOD_NAME;
 
-import java.util.Map;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.minecraft.util.Identifier;
@@ -15,16 +14,16 @@ public class FoxNapClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     Identifier placeholder = new Identifier(MOD_ID, "item/placeholder");
-    Map<String, Object> settings = Config.readModSettings();
+    Config config = Config.loadConfiguration();
 
     ModelLoadingRegistry.INSTANCE.registerResourceProvider(
         manager -> (resourceId, context) -> {
           for (
-              int i = (int) settings.get("n_discs") + 1;
-              i <= (int) settings.get("max_discs");
+              int i = config.getNumDiscs();
+              i < config.getNumDiscs();
               i++
           ) {
-            Identifier matchMe = new Identifier(MOD_ID, String.format("item/track_%d", i));
+            Identifier matchMe = new Identifier(MOD_ID, String.format("item/track_%d", i + 1));
             if (resourceId.equals(matchMe)) {
               return context.loadModel(placeholder);
             }
