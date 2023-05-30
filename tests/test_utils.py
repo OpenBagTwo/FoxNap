@@ -28,7 +28,7 @@ java_config_class = (
 def test_built_in_disc_count_is_up_to_date():
     with java_config_class.open() as java_file:
         for line in java_file:
-            if match := re.match(r"(?:.*\"n_discs\", )([0-9]*)", line):
+            if match := re.match(r"(?:.*DEFAULT_N_DISCS = )([0-9]*)", line):
                 mod_n_discs = int(match.group(1))
                 break
         else:
