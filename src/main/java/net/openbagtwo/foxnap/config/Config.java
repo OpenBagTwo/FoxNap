@@ -154,13 +154,14 @@ public class Config {
           DEFAULT_TRACK_LENGTH).toString());
       int maxNumDiscs = Integer.parseInt(
           settings.getOrDefault("max_discs", DEFAULT_MAX_DISCS).toString());
+
       ArrayList<Integer> trackLengths = new ArrayList<>();
       for (int i = 0; i < maxNumDiscs; i++) {
         trackLengths.add(defaultTrackLength);
       }
 
       if (settings.containsKey("track_lengths")) {
-        Object trackSpecs = settings.get("max_discs");
+        Object trackSpecs = settings.get("track_lengths");
         if (trackSpecs instanceof Map trackMap) {
           for (Object key : trackMap.keySet()) {
             trackLengths.set(
@@ -172,6 +173,8 @@ public class Config {
           for (int i = 0; i < trackList.size(); i++) {
             trackLengths.set(i, Integer.parseInt(trackList.get(i).toString()));
           }
+        } else {
+          throw new ConfigException("Track list is invalid");
         }
       }
       Config config = new Config();
@@ -188,6 +191,10 @@ public class Config {
 
     ConfigException(String message, Exception e) {
       super(message, e);
+    }
+
+    ConfigException(String message) {
+      super(message);
     }
   }
 
