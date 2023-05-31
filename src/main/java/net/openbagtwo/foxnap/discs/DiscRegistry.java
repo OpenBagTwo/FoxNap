@@ -79,7 +79,7 @@ public class DiscRegistry {
       Disc disc = registerDisc(
           String.format("track_%d", i),
           0,
-          trackLengths.get(i)
+          trackLengths.get(i - 1)
       );
       disc.isPlaceholder = true;
       ((Track) disc.getSound()).isPlaceholder = true;
