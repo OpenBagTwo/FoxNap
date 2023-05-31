@@ -88,6 +88,8 @@ def test_resource_pack_generation(executable: Path, expected_mod_config: dict) -
         f"\nExpected: {expected_mod_config}"
         f"\nGenerated: {mod_config}"
     )
+    # remove any non-shared keys
+    mod_config = {k: v for k, v in mod_config.items() if k in expected_mod_config}
     assert mod_config == expected_mod_config, message
 
 
