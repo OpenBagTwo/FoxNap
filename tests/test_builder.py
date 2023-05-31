@@ -15,6 +15,14 @@ def lock_built_in_track_count(monkeypatch):
     monkeypatch.setattr(utils, "BUILT_IN_DISC_COUNT", 4)
 
 
+@pytest.fixture(autouse=True)
+def mock_track_duration_extraction(monkeypatch):
+    def mock_ffprobe(*args, **kwargs) -> int:
+        return 42
+
+    monkeypatch.setattr(utils, "extract_track_duration", mock_ffprobe)
+
+
 class TestInstantiation:
     def test_no_args_or_kwargs_are_required_to_init_a_builder(self):
         _ = TrackBuilder()

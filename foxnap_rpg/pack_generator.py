@@ -47,6 +47,8 @@ class Track(NamedTuple):
     num : int
         the number of the track (need not be sequential, can overwrite  one of the
         default tracks)
+    duration : int
+        The duration of the track in seconds (rounded up)
     path : pathlike
         the path to the music track
     hue : bool or float, optional
@@ -67,6 +69,7 @@ class Track(NamedTuple):
     """
 
     num: int
+    duration: int
     path: os.PathLike | str
     hue: bool | float = True
     description: str | None = None
@@ -85,7 +88,7 @@ def generate_resource_pack(
     license_file: os.PathLike | str | None = None,
     title_color: str = "gold",
     license_color: str | None = None,
-) -> None:
+) -> dict[int, int]:
     """Generate a FoxNap resource pack!
 
     Parameters
@@ -115,7 +118,9 @@ def generate_resource_pack(
 
     Returns
     -------
-    None
+    dict of int to int
+        The durations of each track, with the keys being the numbers of each track
+        (remembering that the first track is Track 1)
 
     Raises
     ------
@@ -206,9 +211,11 @@ def generate_resource_pack(
         sounds = foxnap_root / "sounds"
         sounds.mkdir(exist_ok=True)
         LOGGER.info("Beginning music track conversion")
+        duration_map: dict[int, int] = {}
         for track in tracks:
             LOGGER.info(f"Converting {track}")
             convert_music_to_ogg(track.path, sounds / f"track_{track.num}.ogg")
+            duration_map[track.num] = track.duration
         LOGGER.info("Music track conversion complete")
 
         LOGGER.info("Writing sound registry")
@@ -267,6 +274,7 @@ def generate_resource_pack(
             f" {Path(output_path_as_str).with_suffix('.zip').absolute()}"
         )
         shutil.make_archive(output_path_as_str, "zip", root)
+    return duration_map
 
 
 def generate_mcmeta(
