@@ -24,7 +24,7 @@ public class FoxNap implements ModInitializer {
     LOGGER.info("Registering " + MOD_NAME);
     List<SecretlyJustAGoatHorn> instruments = InstrumentRegistry.init();
     List<MusicDiscItem> custom_discs = DiscRegistry.init(
-        config.getMaximumNumberOfDiscs(),
+        config.getNumDiscs(),
         config.getTrackLengths()
     );
     Conductor.init(instruments, custom_discs);
