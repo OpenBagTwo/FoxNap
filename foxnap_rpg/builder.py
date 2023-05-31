@@ -185,11 +185,14 @@ class TrackBuilder(AbstractContextManager):
         track_file: os.PathLike | str,
         spec: Spec,
     ) -> Track:
+        duration = utils.extract_track_duration(track_file)
         track_num = spec.num or self._next_track_num()
         self._assigned_track_numbers.append(track_num)
         self._n_discs = max(self._n_discs, track_num)  # type: ignore[has-type]
+
         return Track(
             track_num,
+            duration,
             track_file,
             hue=spec.hue if spec.hue is not None else self.defaults["hue"],
             description=spec.description,

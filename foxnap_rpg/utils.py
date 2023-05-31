@@ -1,4 +1,5 @@
 """Assorted helper functions"""
+import math
 import os
 from collections import Counter
 from pathlib import Path
@@ -37,6 +38,34 @@ def is_valid_music_track(file_path: str | os.PathLike) -> bool:
             return True
 
     return False
+
+
+def extract_track_duration(track_path: os.PathLike | str) -> int:
+    """Extract the duration of the track from metadata
+
+    Parameters
+    ----------
+    track_path: pathlike
+        path to the track
+
+    Returns
+    -------
+    int
+        The length of the track in seconds (rounded up).
+
+    Raises
+    ------
+    ValueError
+        If for some reason the track's duration cannot be parsed from the
+        metadata/
+    """
+    metadata = ffmpeg.probe(os.fspath(track_path), cmd=bin.ffprobe)
+    try:
+        return math.ceil(float(metadata["format"]["duration"]))
+    except (KeyError, TypeError, ValueError) as parse_fail:
+        raise ValueError(
+            "Could not extract duration from track metadata:" f"\n  {parse_fail}"
+        )
 
 
 def spec_matches_path(
