@@ -1,12 +1,12 @@
 # Test the resourcepack generator, then build it to
 # produce executables (and a resource pack) for testing (or manual publishing)
 name: build_rpg
-on:  # run on any push to the primary branch
-     # or force building by opening a PR to anywhere
+on: # run on any push to the primary branch
+  # or force building by opening a PR to anywhere
   pull_request:
   push:
     branches:
-      - 1.19.2
+      - 1.20
 
 jobs:
   test_and_build_rpg:
