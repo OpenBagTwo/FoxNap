@@ -12,7 +12,7 @@
     "sources": "https://github.com/OpenBagTwo/FoxNap",
     "issues": "https://github.com/OpenBagTwo/FoxNap/issues"
   },
-  "license": "GPLV3",
+  "license": "GPL-3.0-only",
   "icon": "assets/foxnap/icon.png",
   "environment": "*",
   "entrypoints": {
