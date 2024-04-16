@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "net.openbagtwo.foxnap.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "JukeboxBlockEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
