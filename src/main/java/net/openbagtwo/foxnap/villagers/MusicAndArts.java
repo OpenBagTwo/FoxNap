@@ -14,6 +14,7 @@ import net.minecraft.item.MusicDiscItem;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
+import net.minecraft.village.TradedItem;
 import net.openbagtwo.foxnap.instruments.SecretlyJustAGoatHorn;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,11 +59,11 @@ public class MusicAndArts implements TradeOffers.Factory {
     }
     Item selectedItem = this.itemPool.get(random.nextInt(this.itemPool.size()));
     if (isBuy) {
-      return new TradeOffer(new ItemStack(selectedItem.asItem(), this.price),
-          new ItemStack(Items.EMERALD, 1), this.maxUses, this.xp, 0.05F);
+      return new TradeOffer(new TradedItem(selectedItem), new ItemStack(Items.EMERALD, 1),
+          this.maxUses, this.xp, 0.05F);
     } else {
-      return new TradeOffer(new ItemStack(Items.EMERALD, this.price),
-          new ItemStack(selectedItem.asItem(), 1), this.maxUses, this.xp, 0.05F);
+      return new TradeOffer(new TradedItem(Items.EMERALD), new ItemStack(selectedItem.asItem(), 1),
+          this.maxUses, this.xp, 0.05F);
     }
   }
 
