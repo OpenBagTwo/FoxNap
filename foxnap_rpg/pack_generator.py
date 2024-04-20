@@ -338,7 +338,7 @@ def convert_music_to_ogg(
     LOGGER.debug(
         f"Converting using the following command: {' '.join(converter.compile())}"
     )
-    converter.run(cmd=bin.ffmpeg, quiet=True)
+    converter.run(cmd=bin.ffmpeg, capture_stdout=True)
 
 
 def generate_sound_registry(*track_numbers: int) -> dict:
@@ -441,13 +441,24 @@ def extract_album_art(track: os.PathLike | str) -> Image.Image | None:
         track didn't have any album art embedded
     """
     track_path = os.fspath(track)
-    metadata = ffmpeg.probe(track_path, cmd=bin.ffprobe)
+    try:
+        metadata = ffmpeg.probe(track_path, cmd=bin.ffprobe)
+    except ffmpeg.Error as could_not_probe:
+        LOGGER.warning(f"Could not probe track {track_path}:" f"\n\t{could_not_probe}")
+        return None
     if "video" not in (stream["codec_type"] for stream in metadata["streams"]):
         return None
     with NamedTemporaryFile(mode="w+b", suffix=".png") as cover:
-        ffmpeg.input(track_path).video.output(
-            os.fspath(cover.name)
-        ).overwrite_output().run(bin.ffmpeg, quiet=True)
+        try:
+            ffmpeg.input(track_path).video.output(
+                os.fspath(cover.name)
+            ).overwrite_output().run(bin.ffmpeg, capture_stdout=True)
+        except ffmpeg.Error as extraction_fail:
+            LOGGER.warning(
+                f"Could not extract album art from {track_path}:"
+                f"\n\t{extraction_fail}"
+            )
+            return None
 
         # move it to in-memory buffer so tempfile can be deleted
         album_art = Image.open(cover.name)
