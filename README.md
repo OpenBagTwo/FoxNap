@@ -5,7 +5,7 @@
 [![lint status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml)
 [![mod build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_mod.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_mod.yml)
 [![RPG build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml)
-![supported versions](https://img.shields.io/badge/Supported_Versions-1.19,1.19.1,1.19.2,1.19.3,1.19.4,1.20-blue)
+![supported versions](https://img.shields.io/badge/Supported_Versions-1.19--1.20.5-blue)
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/foxnap)](https://modrinth.com/mod/foxnap)
 
 _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music to Minecraft**_
