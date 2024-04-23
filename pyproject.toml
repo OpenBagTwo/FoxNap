@@ -6,12 +6,13 @@ build-backend = "setuptools.build_meta"
 name = "foxnap_rpg"
 description = "Resource pack generator for the FoxNap mod"
 authors = [
-  { name = "Gili \"OpenBagTwo\" Barlev" },
+    { name = "Gili \"OpenBagTwo\" Barlev" },
 ]
 readme = "README.md"
-license = { file="LICENSE" }
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dynamic = ["version"]
+dependencies = ["pillow", "ffmpeg-python"]
 
 [project.urls]
 "Homepage" = "https://github.com/OpenBagTwo/FoxNap/"
