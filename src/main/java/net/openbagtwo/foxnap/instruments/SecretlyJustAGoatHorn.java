@@ -5,6 +5,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GoatHornItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
@@ -24,7 +25,7 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
 
   public SecretlyJustAGoatHorn(SoundEvent soundEvent, int cooldown) {
     super(
-        new Item.Settings().rarity(Rarity.UNCOMMON).maxCount(1),
+        new Item.Settings().rarity(Rarity.UNCOMMON).maxCount(1).group(ItemGroup.TOOLS),
         null
     );
     this.soundEvent = soundEvent;

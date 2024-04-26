@@ -1,5 +1,6 @@
 package net.openbagtwo.foxnap;
 
+import java.util.Map;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.item.MusicDiscItem;
 import net.openbagtwo.foxnap.config.Config;
@@ -25,7 +26,7 @@ public class FoxNap implements ModInitializer {
     List<SecretlyJustAGoatHorn> instruments = InstrumentRegistry.init();
     List<MusicDiscItem> custom_discs = DiscRegistry.init(
         config.getNumDiscs(),
-        config.getTrackLengths()
+        config.getMaximumNumberOfDiscs()
     );
     if (config.getMaestroEnabled()) {
       Conductor.init(instruments, custom_discs);

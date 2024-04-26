@@ -1,11 +1,8 @@
 package net.openbagtwo.foxnap.instruments;
 
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.openbagtwo.foxnap.FoxNap;
 
 import java.util.ArrayList;
@@ -41,7 +38,7 @@ public class InstrumentRegistry {
    */
   public static SecretlyJustAGoatHorn registerInstrument(String instrumentName) {
     return Registry.register(
-        Registries.ITEM,
+        Registry.ITEM,
         new Identifier(FoxNap.MOD_ID, instrumentName),
         new SecretlyJustAGoatHorn(
             registerInstrumentSound(instrumentName),
@@ -51,7 +48,7 @@ public class InstrumentRegistry {
 
   public static SoundEvent registerInstrumentSound(String instrumentName) {
     Identifier playSoundId = new Identifier(FoxNap.MOD_ID, instrumentName);
-    return Registry.register(Registries.SOUND_EVENT, playSoundId, SoundEvent.of(playSoundId));
+    return Registry.register(Registry.SOUND_EVENT, playSoundId, new SoundEvent(playSoundId));
   }
 
   /**
@@ -62,9 +59,7 @@ public class InstrumentRegistry {
   public static List<SecretlyJustAGoatHorn> init() {
     ArrayList<SecretlyJustAGoatHorn> instruments = new ArrayList<>();
     for (String instrument : INSTRUMENTS.keySet()) {
-      SecretlyJustAGoatHorn tooter = registerInstrument(instrument);
-      ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(tooter));
-      instruments.add(tooter);
+      instruments.add(registerInstrument(instrument));
       FoxNap.LOGGER.debug("Registered " + instrument);
     }
     return instruments;

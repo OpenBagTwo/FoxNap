@@ -3,7 +3,9 @@ package net.openbagtwo.foxnap.discs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.MusicDiscItem;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Rarity;
@@ -22,13 +24,14 @@ public class Disc extends MusicDiscItem {
   /**
    * Create a new music disc
    *
-   * @param comparatorOutput the output signal a comparator should read from a jukebox with this
-   *                         disc loaded
-   * @param sound            the sound (track) a jukebox with this disc loaded should play
-   * @param trackLength      The length of the track in seconds
+   * @param comparatorOutput  the output signal a comparator should read from a jukebox with this
+   *                          disc loaded
+   * @param sound             the sound (track) a jukebox with this disc loaded should play
+   * @param trackLength       This parameter is ignored prior to 1.19.1
+   * @param creativeInventory whether the disc should appear in the creative inventory
    */
-  public Disc(int comparatorOutput, Track sound, int trackLength) {
-    super(comparatorOutput, sound, generateSettings(), trackLength);
+  public Disc(int comparatorOutput, SoundEvent sound, int trackLength, boolean creativeInventory) {
+    super(comparatorOutput, sound, generateSettings(creativeInventory));
   }
 
   @Override
@@ -53,7 +56,11 @@ public class Disc extends MusicDiscItem {
     return super.getDescription();
   }
 
-  private static Item.Settings generateSettings() {
-    return new Item.Settings().rarity(Rarity.RARE).maxCount(1);
+  private static Item.Settings generateSettings(boolean creativeInventory) {
+    Item.Settings settings = new Item.Settings().rarity(Rarity.RARE).maxCount(1);
+    if (creativeInventory) {
+      settings = settings.group(ItemGroup.MISC);
+    }
+    return settings;
   }
 }
