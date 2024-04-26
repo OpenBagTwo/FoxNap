@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      - name: Attempt to use cached ffmpeg binaries
+      - name: Cache ffmpeg binaries
         id: cache-ffmpeg
         uses: actions/cache@v3
         env:
@@ -88,10 +88,21 @@ jobs:
           pip install .
           cd build  # to avoid relative importing
           pyinstaller launcher.py --console --onefile -n FoxNapRPG --collect-all foxnap_rpg
-      - name: Download music files
+      - name: Cache integration test music
+        id: cache-music
+        uses: actions/cache@v3
+        env:
+          cache-name: music-cache
+        with:
+          path: music/
+          key: ${{ env.cache-name }}
+      - name: Download music for integration test
+        if: ${{ steps.cache-music.outputs.cache-hit != 'true' }}
         run: |
-          curl -JL "https://archive.org/compress/gustav-holst-the-planets-op.-32/formats=VBR%20MP3&file=/gustav-holst-the-planets-op.-32.zip" --output holst-the-planets.zip
-          python -c "from zipfile import ZipFile; zip = ZipFile('holst-the-planets.zip'); zip.extractall('build/dist')"
+          curl --create-dirs -JL "https://archive.org/compress/gustav-holst-the-planets-op.-32/formats=VBR%20MP3&file=/gustav-holst-the-planets-op.-32.zip" --output music/holst-the-planets.zip
+      - name: Extract integration test music
+        run: |
+          python -c "from zipfile import ZipFile; zip = ZipFile('music/holst-the-planets.zip'); zip.extractall('build/dist')"
       - name: Run Integration Tests
         run: |
           python run_integration_tests.py build/dist/FoxNapRPG 7
