@@ -29,9 +29,6 @@
     "minecraft": ">1.19.4 <1.20.3",
     "java": ">=17"
   },
-  "suggests": {
-    "sbm-jukebox": "*"
-  },
   "accessWidener": "foxnap.accesswidener",
   "mixins": [
     "records.mixins.json"
