@@ -232,6 +232,16 @@ blocks of rare wood types--goat horns and non-FoxNap records and sells, alongsid
 music discs, a wide variety of playable musical instruments (with textures adopted from the classic
 [mxTune mod](https://github.com/AeronicaMC/mxTune)).
 
+#### Disabling The Maestro
+
+If you'd prefer _not_ to add The Maestro to your game (and would like to obtain your music discs
+in some other way, such as a datapack), you can disable this part of the mod by editing your
+[`foxnap.yaml` config file](#generating-resource-packs) and adding the following line:
+
+```yaml
+enable_maestro: false
+```
+
 ## Contributing
 
 Find a bug? Have a suggestion or a question? Want to contribute a new feature or enhancement?
