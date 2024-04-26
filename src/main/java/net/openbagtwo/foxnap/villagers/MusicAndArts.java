@@ -4,17 +4,16 @@ import static java.lang.Math.max;
 import static net.openbagtwo.foxnap.FoxNap.LOGGER;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
-import net.minecraft.village.TradedItem;
+import net.minecraft.village.TradeOffers.BuyForOneEmeraldFactory;
+import net.minecraft.village.TradeOffers.SellItemFactory;
 import net.openbagtwo.foxnap.instruments.SecretlyJustAGoatHorn;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,17 +53,16 @@ public class MusicAndArts implements TradeOffers.Factory {
   @Nullable
   @Override
   public TradeOffer create(Entity entity, Random random) {
-    if (this.price == 0 || this.itemPool.isEmpty()) {
+    if (this.price == 0 || this.itemPool.size() == 0) {
       return null;
     }
     Item selectedItem = this.itemPool.get(random.nextInt(this.itemPool.size()));
     if (isBuy) {
-      return new TradeOffer(new TradedItem(selectedItem, this.price), new ItemStack(Items.EMERALD),
-          this.maxUses, this.xp, 0.05F);
+      return new BuyForOneEmeraldFactory(selectedItem, this.price, this.maxUses, this.xp).create(
+          entity, random);
     } else {
-      return new TradeOffer(new TradedItem(Items.EMERALD, this.price),
-          new ItemStack(selectedItem.asItem()),
-          this.maxUses, this.xp, 0.05F);
+      return new SellItemFactory(selectedItem, this.price, 1, this.maxUses, this.xp).create(entity,
+          random);
     }
   }
 
@@ -132,8 +130,8 @@ public class MusicAndArts implements TradeOffers.Factory {
   /**
    * Factory to enable a villager to buy noteblocks at a base rate of 2 blocks / 1 emerald
    */
-  public static final TradeOffers.Factory BUY_NOTEBLOCK = new BuyItemFromPoolForOneEmeraldFactory(
-      Collections.singletonList(Items.NOTE_BLOCK),
+  public static final TradeOffers.Factory BUY_NOTEBLOCK = new TradeOffers.BuyForOneEmeraldFactory(
+      Items.NOTE_BLOCK,
       2,
       12,
       15);
@@ -141,8 +139,8 @@ public class MusicAndArts implements TradeOffers.Factory {
    * Factory to enable a villager to buy a goat horn (like, a real goat horn, not an instrument from
    * this mod) at a rate of 1 horn / 1 emerald
    */
-  public static final TradeOffers.Factory BUY_SHOFAR = new BuyItemFromPoolForOneEmeraldFactory(
-      Collections.singletonList(Items.GOAT_HORN),
+  public static final TradeOffers.Factory BUY_SHOFAR = new BuyForOneEmeraldFactory(
+      Items.GOAT_HORN,
       1,
       8,
       20
@@ -163,7 +161,7 @@ public class MusicAndArts implements TradeOffers.Factory {
 
   /**
    * Create a trade factory for buying instruments from a villager (this is intended to be the only
-   * way to obtain instruments outside of commands). Like with librarians and enchanted books, the
+   * way to obtain instruments outside of commands. Like with librarians and enchanted books, the
    * idea is that the villager will offer multiple trades of this type across multiple levels. This
    * is, after all, the main reason why this villager exists.
    *
@@ -202,7 +200,7 @@ public class MusicAndArts implements TradeOffers.Factory {
    * emeralds per disc
    */
   public static TradeOffers.Factory sellMusicDisc(MusicDiscItem disc) {
-    return new SellOneItemFromPoolFactory(Collections.singletonList(disc), 32, 3, 30);
+    return new SellItemFactory(disc, 32, 1, 3, 30);
   }
 
 }
