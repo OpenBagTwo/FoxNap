@@ -14,10 +14,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.MusicDiscItem;
-import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.VillagerProfession;
 import net.openbagtwo.foxnap.FoxNap;
@@ -32,6 +32,7 @@ public class Conductor {
 
   public static final SoundEvent CONDUCTOR_WORK_SOUND = InstrumentRegistry.registerInstrumentSound(
       "condutor_baton");
+  public static final VillagerProfession CONDUCTOR = makeConductor();
 
   private static VillagerProfession makeConductor() {
 
@@ -43,7 +44,7 @@ public class Conductor {
 
     return VillagerProfession.register(
         (new Identifier(MOD_ID, "conductor")).toString(),
-        RegistryKey.of(Registries.POINT_OF_INTEREST_TYPE.getKey(), poi_id),
+        RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE_KEY, poi_id),
         CONDUCTOR_WORK_SOUND
     );
   }
@@ -126,10 +127,8 @@ public class Conductor {
       }
     }
 
-    VillagerProfession conductor = makeConductor();
-
     TradeOffers.PROFESSION_TO_LEVELED_TRADE.put(
-        conductor, TradeOffers.copyToFastUtilMap(ImmutableMap.of(
+        CONDUCTOR, TradeOffers.copyToFastUtilMap(ImmutableMap.of(
                 1, level1Trades.toArray(new TradeOffers.Factory[1]),
                 2, level2Trades.toArray(new TradeOffers.Factory[1]),
                 3, level3Trades.toArray(new TradeOffers.Factory[1]),

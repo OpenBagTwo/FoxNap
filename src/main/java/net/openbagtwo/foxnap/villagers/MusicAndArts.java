@@ -111,7 +111,7 @@ public class MusicAndArts implements TradeOffers.Factory {
   }
 
   /**
-   * Tonewoods, as the name implies, are woods that are highly sought after for use in making
+   * Tonewoods, as the name implplies, are woods that are highly sought after for use in making
    * musical instruments, due to their specific acoustic properties.
    */
   public static final List<Item> TONEWOODS = Arrays.asList(
