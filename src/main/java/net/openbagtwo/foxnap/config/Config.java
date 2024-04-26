@@ -41,6 +41,11 @@ public class Config {
   private List<Integer> trackLengths;
 
   /**
+   * Whether to enable the Maestro
+   */
+  private boolean enableMaestro;
+
+  /**
    * Get the number of discs that the client has registered
    */
   public int getNumDiscs() {
@@ -62,11 +67,19 @@ public class Config {
   }
 
   /**
+   * Determine whether the Maestro should be enabled
+   */
+  public boolean getMaestroEnabled() {
+    return this.enableMaestro;
+  }
+
+  /**
    * Default values (that aren't directly accessed by the mod)
    */
   private static final int DEFAULT_N_DISCS = 7;
   private static final int DEFAULT_MAX_DISCS = 64;
   private static final int DEFAULT_TRACK_LENGTH = 600;  // technically default default track length
+  private static final boolean DEFAULT_MAESTRO_ENABLED = true;
 
   /**
    * Load the mod configuration, however you have to
@@ -109,6 +122,7 @@ public class Config {
     for (int i = 0; i < DEFAULT_MAX_DISCS; i++) {
       config.trackLengths.add(DEFAULT_TRACK_LENGTH);
     }
+    config.enableMaestro = true;
     return config;
   }
 
@@ -153,7 +167,11 @@ public class Config {
       int defaultTrackLength = Integer.parseInt(settings.getOrDefault("default_track_length",
           DEFAULT_TRACK_LENGTH).toString());
       int maxNumDiscs = Integer.parseInt(
-          settings.getOrDefault("max_discs", DEFAULT_MAX_DISCS).toString());
+          settings.getOrDefault("max_discs", DEFAULT_MAX_DISCS).toString()
+      );
+      boolean enableMaestro = Boolean.parseBoolean(
+          settings.getOrDefault("enable_maestro", DEFAULT_MAESTRO_ENABLED).toString()
+      );
 
       ArrayList<Integer> trackLengths = new ArrayList<>();
       for (int i = 0; i < maxNumDiscs; i++) {
@@ -180,6 +198,7 @@ public class Config {
       Config config = new Config();
       config.numDiscs = numDiscs;
       config.trackLengths = trackLengths;
+      config.enableMaestro = enableMaestro;
       return config;
 
     } catch (Exception e) {

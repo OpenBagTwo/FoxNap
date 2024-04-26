@@ -32,7 +32,6 @@ public class Conductor {
 
   public static final SoundEvent CONDUCTOR_WORK_SOUND = InstrumentRegistry.registerInstrumentSound(
       "condutor_baton");
-  public static final VillagerProfession CONDUCTOR = makeConductor();
 
   private static VillagerProfession makeConductor() {
 
@@ -127,8 +126,10 @@ public class Conductor {
       }
     }
 
+    VillagerProfession conductor = makeConductor();
+
     TradeOffers.PROFESSION_TO_LEVELED_TRADE.put(
-        CONDUCTOR, TradeOffers.copyToFastUtilMap(ImmutableMap.of(
+        conductor, TradeOffers.copyToFastUtilMap(ImmutableMap.of(
                 1, level1Trades.toArray(new TradeOffers.Factory[1]),
                 2, level2Trades.toArray(new TradeOffers.Factory[1]),
                 3, level3Trades.toArray(new TradeOffers.Factory[1]),

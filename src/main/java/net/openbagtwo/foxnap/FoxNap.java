@@ -27,7 +27,9 @@ public class FoxNap implements ModInitializer {
         config.getNumDiscs(),
         config.getTrackLengths()
     );
-    Conductor.init(instruments, custom_discs);
+    if (config.getMaestroEnabled()) {
+      Conductor.init(instruments, custom_discs);
+    }
     LOGGER.info(MOD_NAME + " Initialization Complete");
   }
 }
