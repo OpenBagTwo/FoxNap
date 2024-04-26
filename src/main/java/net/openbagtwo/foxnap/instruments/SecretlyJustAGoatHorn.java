@@ -1,11 +1,12 @@
 package net.openbagtwo.foxnap.instruments;
 
 import java.util.List;
-import net.minecraft.client.item.TooltipType;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GoatHornItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
@@ -14,6 +15,7 @@ import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
 public class SecretlyJustAGoatHorn extends GoatHornItem {
 
@@ -30,12 +32,7 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
   }
 
   @Override
-  public void appendTooltip(
-      ItemStack stack,
-      Item.TooltipContext context,
-      List<Text> tooltip,
-      TooltipType type
-  ) {
+  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
   }
 
   @Override
@@ -47,6 +44,9 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
              - implement two-item instruments (e.g. violin + bow)
          */
     ItemStack itemStack = user.getStackInHand(hand);
+
+    NbtCompound nbtCompound = itemStack.getOrCreateNbt();
+    nbtCompound.putString("instrument", "minecraft:ponder_goat_horn");
 
     user.setCurrentHand(hand);
 

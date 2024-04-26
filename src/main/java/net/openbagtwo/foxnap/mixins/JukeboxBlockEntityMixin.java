@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -15,7 +16,7 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class JukeboxBlockEntityMixin {
 
   @Shadow
-  ItemStack recordStack;
+  DefaultedList<ItemStack> inventory;
 
   @Shadow
   abstract void updateState(@Nullable Entity entity, boolean hasRecord);
@@ -40,15 +41,13 @@ public abstract class JukeboxBlockEntityMixin {
    * @reason Force all mod music discs to interact with a jukebox
    */
   @Overwrite
-  public void setStack(ItemStack stack) {
+  public void setStack(int slot, ItemStack stack) {
     JukeboxBlockEntity this_jukebox = (JukeboxBlockEntity) (Object) this;
 
     if (isMusicDisc(stack) && this_jukebox.getWorld() != null) {
-      this.recordStack = stack;
+      this.inventory.set(slot, stack);
       this.updateState(null, true);
       this_jukebox.startPlaying();
-    } else if (stack.isEmpty()) {
-      this_jukebox.decreaseStack(1);
     }
   }
 }
