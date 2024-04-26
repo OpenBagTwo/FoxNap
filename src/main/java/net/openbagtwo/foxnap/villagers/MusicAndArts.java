@@ -59,7 +59,7 @@ public class MusicAndArts implements TradeOffers.Factory {
     }
     Item selectedItem = this.itemPool.get(random.nextInt(this.itemPool.size()));
     if (isBuy) {
-      return new TradeOffer(new TradedItem(selectedItem), new ItemStack(Items.EMERALD, this.price),
+      return new TradeOffer(new TradedItem(selectedItem, this.price), new ItemStack(Items.EMERALD),
           this.maxUses, this.xp, 0.05F);
     } else {
       return new TradeOffer(new TradedItem(Items.EMERALD, this.price),
