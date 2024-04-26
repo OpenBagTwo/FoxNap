@@ -26,8 +26,8 @@
   "depends": {
     "fabricloader": ">=0.15.0",
     "fabric": "*",
-    "minecraft": ">1.20.4",
-    "java": ">=21"
+    "minecraft": ">1.20.2 <=1.20.4",
+    "java": ">=17"
   },
   "accessWidener": "foxnap.accesswidener",
   "mixins": [
