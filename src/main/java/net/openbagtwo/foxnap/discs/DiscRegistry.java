@@ -44,18 +44,13 @@ public class DiscRegistry {
    * with a sound event name track_i and emitting a comparator signal of strength i), starting at i
    * = 1
    *
-   * @param trackLengths The length (in seconds) of the tracks that will be made available on the
-   *                     use on the server (read: for the Maestro).
+   * @param numberOfDiscs The number of discs to generate and register
    * @return A list of fully instantiated and registered music discs
    */
-  public static List<MusicDiscItem> init(List<Integer> trackLengths) {
+  public static List<MusicDiscItem> init(int numberOfDiscs) {
     ArrayList<MusicDiscItem> discs = new ArrayList<>();
-    for (int i = 1; i <= trackLengths.size(); i++) {
-      Disc disc = registerDisc(
-          String.format("track_%d", i),
-          (i - 1) % 15 + 1,
-          trackLengths.get(i - 1)
-      );
+    for (int i = 1; i <= numberOfDiscs; i++) {
+      Disc disc = registerDisc(String.format("track_%d", i), (i - 1) % 15 + 1, 60);
       discs.add(disc);
       ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(disc));
     }
@@ -66,20 +61,18 @@ public class DiscRegistry {
    * In addition to the procedurally-generated set of usable music discs, also generate extra
    * dummy/placeholder discs to prevent client/server conflicts
    *
-   * @param numberOfDiscs The number of discs that will actually be available for use
-   * @param trackLengths  The length (in seconds) of the tracks that need to be registered
-   *                      server-side (the size of this array de facto sets the maximum number of
-   *                      discs)
+   * @param numberOfDiscs    The number of discs that will actually be available for use
+   * @param maxNumberOfDiscs The total number of discs to register
    * @return The list of discs that should actually be available for use
    */
-  public static List<MusicDiscItem> init(int numberOfDiscs, List<Integer> trackLengths) {
+  public static List<MusicDiscItem> init(int numberOfDiscs, int maxNumberOfDiscs) {
     registerTrack("placeholder");  // really tempting to make placeholder a placeholder
     int placeholderCount = 0;
-    for (int i = numberOfDiscs + 1; i <= trackLengths.size(); i++) {
+    for (int i = numberOfDiscs + 1; i <= maxNumberOfDiscs; i++) {
       Disc disc = registerDisc(
           String.format("track_%d", i),
           0,
-          trackLengths.get(i - 1)
+          0
       );
       disc.isPlaceholder = true;
       ((Track) disc.getSound()).isPlaceholder = true;
@@ -87,6 +80,6 @@ public class DiscRegistry {
     }
     FoxNap.LOGGER.debug(String.format("Registered %d placeholder discs", placeholderCount));
 
-    return init(trackLengths.subList(0, Math.min(numberOfDiscs, trackLengths.size())));
+    return init(numberOfDiscs);
   }
 }
