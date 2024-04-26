@@ -1,7 +1,7 @@
 package net.openbagtwo.foxnap.instruments;
 
 import java.util.List;
-import net.minecraft.client.item.TooltipType;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GoatHornItem;
 import net.minecraft.item.Item;
@@ -14,6 +14,7 @@ import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
 public class SecretlyJustAGoatHorn extends GoatHornItem {
 
@@ -32,10 +33,9 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
   @Override
   public void appendTooltip(
       ItemStack stack,
-      Item.TooltipContext context,
+      @Nullable World world,
       List<Text> tooltip,
-      TooltipType type
-  ) {
+      TooltipContext context) {
   }
 
   @Override
