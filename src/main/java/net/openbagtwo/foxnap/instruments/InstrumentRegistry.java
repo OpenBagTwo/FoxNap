@@ -42,7 +42,7 @@ public class InstrumentRegistry {
   public static SecretlyJustAGoatHorn registerInstrument(String instrumentName) {
     return Registry.register(
         Registries.ITEM,
-        new Identifier(FoxNap.MOD_ID, instrumentName),
+        Identifier.of(FoxNap.MOD_ID, instrumentName),
         new SecretlyJustAGoatHorn(
             registerInstrumentSound(instrumentName),
             20 * INSTRUMENTS.get(instrumentName))
@@ -50,7 +50,7 @@ public class InstrumentRegistry {
   }
 
   public static SoundEvent registerInstrumentSound(String instrumentName) {
-    Identifier playSoundId = new Identifier(FoxNap.MOD_ID, instrumentName);
+    Identifier playSoundId = Identifier.of(FoxNap.MOD_ID, instrumentName);
     return Registry.register(Registries.SOUND_EVENT, playSoundId, SoundEvent.of(playSoundId));
   }
 

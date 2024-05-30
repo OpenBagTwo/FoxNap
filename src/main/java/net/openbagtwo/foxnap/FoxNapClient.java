@@ -13,7 +13,7 @@ public class FoxNapClient implements ClientModInitializer {
 
   @Override
   public void onInitializeClient() {
-    Identifier placeholder = new Identifier(MOD_ID, "item/placeholder");
+    Identifier placeholder = Identifier.of(MOD_ID, "item/placeholder");
     Config config = Config.loadConfiguration();
 
     ModelLoadingRegistry.INSTANCE.registerResourceProvider(

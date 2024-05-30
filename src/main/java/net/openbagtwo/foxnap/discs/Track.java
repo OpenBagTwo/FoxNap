@@ -31,7 +31,7 @@ public class Track extends SoundEvent {
   }
 
   public static Identifier getPlaceholderTrackId() {
-    return new Identifier(FoxNap.MOD_ID, "placeholder");
+    return Identifier.of(FoxNap.MOD_ID, "placeholder");
   }
 
   public static SoundEvent getPlaceholderTrack() {

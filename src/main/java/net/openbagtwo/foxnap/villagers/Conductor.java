@@ -35,14 +35,14 @@ public class Conductor {
 
   private static VillagerProfession makeConductor() {
 
-    Identifier poi_id = new Identifier(MOD_ID, "conductor_poi");
+    Identifier poi_id = Identifier.of(MOD_ID, "conductor_poi");
     PointOfInterestHelper.register(poi_id, 1, 1,
         // hoping this is in chunks?
         ImmutableSet.copyOf(Blocks.JUKEBOX.getStateManager().getStates())
     );
 
     return VillagerProfession.register(
-        (new Identifier(MOD_ID, "conductor")).toString(),
+        (Identifier.of(MOD_ID, "conductor")).toString(),
         RegistryKey.of(Registries.POINT_OF_INTEREST_TYPE.getKey(), poi_id),
         CONDUCTOR_WORK_SOUND
     );
