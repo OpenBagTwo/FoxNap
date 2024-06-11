@@ -10,6 +10,8 @@ from typing import Any
 from . import __version__
 from .builder import Spec, TrackBuilder
 from .config import read_specs_from_config_file
+from .data_generator import LOGGER as DATAGEN_LOGGER
+from .data_generator import generate_datapack
 from .pack_generator import LOGGER as PACKGEN_LOGGER
 from .pack_generator import Track, generate_resource_pack
 from .utils import BUILT_IN_DISC_COUNT, is_valid_music_track
@@ -30,7 +32,7 @@ def _get_cwd() -> Path:
 
 def parse_args(
     argv: Sequence[str],
-) -> tuple[Path, Path, list[Path], Path | None, dict[str, Any]]:
+) -> tuple[Path, Path, Path, list[Path], Path | None, dict[str, Any]]:
     """Parse the provided command-line options to identify the parameters to use
     when generating the resource pack
 
@@ -42,6 +44,8 @@ def parse_args(
     -------
     Path
         The output path for the resource pack zip
+    Path
+        The output path for the datapack zip
     Path
         The output path for the mod config file
     list of Paths
@@ -97,6 +101,18 @@ def parse_args(
             " if you want to keep the music bundled with the mod or to a different"
             " number to avoid conflicting with another FoxNap resource pack (in which"
             " case you'll also want to use -g."
+        ),
+    )
+
+    parser.add_argument(
+        "-d",
+        "--datapack",
+        action="store",
+        default=_get_cwd() / "FoxNapDP.zip",
+        type=Path,
+        help=(
+            "the path and filename for saving the resource pack"
+            "\n(default is FoxNapDP.zip in the current working directory)"
         ),
     )
 
@@ -189,7 +205,14 @@ def parse_args(
 
     config_path = args.config_dir / "foxnap.yaml"
 
-    return args.output, config_path, inputs, args.spec_file, builder_kwargs
+    return (
+        args.output,
+        args.datapack,
+        config_path,
+        inputs,
+        args.spec_file,
+        builder_kwargs,
+    )
 
 
 def resolve_tracks(
@@ -237,7 +260,7 @@ def resolve_tracks(
                 continue
 
 
-def main():
+def main() -> None:
     console_logger = logging.StreamHandler()
 
     console_logger.setFormatter(
@@ -245,12 +268,16 @@ def main():
     )
     LOGGER.addHandler(console_logger)
     PACKGEN_LOGGER.addHandler(console_logger)
+    DATAGEN_LOGGER.addHandler(console_logger)
 
-    output_path, config_path, inputs, config, builder_kwargs = parse_args(sys.argv)
+    output_path, datapack_path, config_path, inputs, config, builder_kwargs = (
+        parse_args(sys.argv)
+    )
 
     log_level = builder_kwargs.pop("verbosity")
     LOGGER.setLevel(log_level)
     PACKGEN_LOGGER.setLevel(log_level)
+    DATAGEN_LOGGER.setLevel(log_level)
 
     if config:
         specs: Iterable[Spec] = read_specs_from_config_file(config)
@@ -259,6 +286,13 @@ def main():
     with TrackBuilder(*specs, **builder_kwargs) as builder:
         tracks = resolve_tracks(builder, *inputs)
         track_durations = generate_resource_pack(output_path, *tracks)
+    jukebox_spec = (
+        (f"track_{num}", duration, (num - 1) % 15 + 1)
+        for num, duration in track_durations.items()
+    )
+    LOGGER.info(f"Writing datapack zip to {datapack_path}")
+    generate_datapack(datapack_path, jukebox_spec)
+
     LOGGER.info(f"Writing config file to {config_path}")
     with config_path.open("w") as config_file:
         # TODO: make pyyaml a requirement and actually use YAML dump
@@ -270,6 +304,3 @@ def main():
                 "  # WARNING! This may cause issues during multiplayer!"
                 "\n"
             )
-        config_file.write("track_lengths:\n")
-        for num, length in track_durations.items():
-            config_file.write(f"  {num}: {length}\n")
