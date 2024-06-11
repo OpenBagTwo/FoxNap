@@ -5,7 +5,7 @@
 [![lint status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml)
 [![mod build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_mod.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_mod.yml)
 [![RPG build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml)
-![supported versions](https://img.shields.io/badge/Supported_Versions-1.19--1.20.5-blue)
+![supported versions](https://img.shields.io/badge/Supported_Versions-1.19--1.21-blue)
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/foxnap)](https://modrinth.com/mod/foxnap)
 
 _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music to Minecraft**_
@@ -15,10 +15,9 @@ _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music 
 <img src="https://i.imgur.com/Ol1Tcf8.png" alt="Requires Fabric" width="150"/>
 
 <!-- TOC -->
-
-* [What is This?](#what-is-this)
+* [What is This?](#what-is-this-)
 * [Setup and Customization](#setup-and-customization)
-    * [Manual Resource Pack Creation](#manual-resource-pack-creation)
+    * [Manual Pack Creation](#manual-resource---data-pack-creation)
     * [Resource Pack Generator](#resource-pack-generator)
     * [Obtaining Records _and More!_](#obtaining-records-and-more)
 * [Contributing](#contributing)
@@ -100,17 +99,16 @@ all of which are permissively licensed under the terms specified
 
 If this built-in playlist sounds like your jam, and you have no desire to add anything else, then
 congrats! This is easy! This is a Fabric mod with builds for 1.19+ and depends only on
-the [Fabric API](https://modrinth.com/mod/fabric-api) (_that being said, I highly recommend
-grabbing the [SBM Jukebox mod](https://modrinth.com/mod/sbm-jukebox/)_), so just download
+the [Fabric API](https://modrinth.com/mod/fabric-api), so just download
 the appropriate build to your instance's mods folder, start the game, and
 [go find a village](#obtaining-records-and-more).
 
 But if you're interested in some customization, read on:
 
-### Manual Resource Pack Creation
+### Manual Resource / Data Pack Creation
 
 FoxNap's item and sound registration structure was designed to make it as easy as possible for you
-to replace or add to the built-in tracks via a resource pack similar to what
+to replace or add to the mod's built-in tracks via a resource pack similar to what
 [you'd make if you were replacing one of the vanilla discs](https://www.planetminecraft.com/blog/how-to-add-costume-music-the-easy-way-1-12/),
 with the advantage that the number of discs provided by the mod is _completely dynamic_ and can be
 set or changed simply by going into your instance's mod `config` folder, opening `foxnap.yaml` in
@@ -160,23 +158,42 @@ name will get automatically extracted, and any album art will be used to help ge
 disc texture._
 
 When you're ready, simply double-click the `FoxNapRPG` executable. A terminal window may pop
-up showing progress of the resource pack creation, and before you know it you should have a
-new file in your folder named `FoxNapRP.zip`, which you can then add as a resource pack to your
-game. You will then need to go into your minecraft `config` folder and edit `foxnap.yaml` to raise
-the number of `n_discs` to match the ones added by the resource pack.
+up showing progress of the resource pack creation, and before you know it you should have some
+new files in your current directory:
 
-When playing on a server, it's the **server's** `n_discs` value that will dictate the number of
-tracks that are available, but it's **each player's resource pack** that determines _which_ songs
-each track corresponds with. Explicitly:
+- `FoxNapRP.zip` is the resource pack containing all your converted songs and music disc textures,
+  and you can throw that into your Minecraft `resourcepacks` folder
+- `FoxNapDP.zip` is the datapack that defines all the properties of the tracks themselves. You'll
+  need to put this pack into the `datapacks` folder of any world where you want to use your music
+  (see note below about multiplayer).
+- `foxnap.yaml` needs to go into your Minecraft `config` folder. This tells the game how many
+  music discs to enable for you.
 
-- if the server has a greater number of discs specified than both what's built in (seven) and what
-  you have defined in your resource pack, some discs will show up for you with missing textures and
-  sound files
+#### What About Multiplayer?
+
+When playing on a server, it's the ***server's*** datapacks and config file that will dictate:
+
+- how long each song will play
+- the redstone signal strength coming out of jukeboxes playing each disc
+- the number of tracks available from the Maestro
+
+but it's ***each player's*** resource pack and config file that will control:
+
+- the songs that each disc will play
+- the appearance (and description) of each disc
+- which discs show up as "placeholder" records
+
+Explicitly:
+
+- if the server has a greater number of discs specified than both what you've specified in your
+  config, some discs will show up for you with placeholder
+  textures and sound files
 - if you have more discs in your resource pack than are set on the server, then not all tracks will
-  be available in your game
+  be available in your shared game
+- some music discs may continue silently after a song ends, and some might cut off
 
 Beyond the number of discs, though, there's no reason why every player can't come online with
-a completely custom playlist.
+a completely custom playlist of songs with similar lengths!
 
 #### Advanced Options: Command-Line Options
 
@@ -248,6 +265,13 @@ Find a bug? Have a suggestion or a question? Want to contribute a new feature or
 [Open an issue](https://github.com/OpenBagTwo/FoxNap/issues/new)!
 
 ### Building the Mod from Source
+
+1. Clone this repo
+1. Download and install a Java 21 OpenJDK such as [Temurin](https://adoptium.net/temurin/releases/)
+1. From the root of this repo, run `./gradlew build` or load this project into your favorite Java
+   IDE and run the "build" gradle task
+
+The compiled jar will be found under `build/libs`.
 
 ### Building the Resource Pack Generator from Source
 
