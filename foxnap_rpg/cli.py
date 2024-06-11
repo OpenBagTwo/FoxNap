@@ -97,7 +97,7 @@ def parse_args(
         type=int,
         help=(
             "The minumum track number to auto-assign. Default is 1, which will overwrite"
-            f" the tracks included with the mod. Set to {BUILT_IN_DISC_COUNT}"
+            f" the tracks included with the mod. Set to {BUILT_IN_DISC_COUNT + 1}"
             " if you want to keep the music bundled with the mod or to a different"
             " number to avoid conflicting with another FoxNap resource pack (in which"
             " case you'll also want to use -g."

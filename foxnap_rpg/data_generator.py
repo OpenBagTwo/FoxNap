@@ -35,7 +35,7 @@ def generate_datapack(
         The title for the datapack. Default is "Custom Fox Nap Records"
     """
     with TemporaryDirectory() as tmpdir:
-        song_directory = Path(tmpdir) / "foxnap" / "jukebox_song"
+        song_directory = Path(tmpdir) / "data" / "foxnap" / "jukebox_song"
         song_directory.mkdir(parents=True)
         for song_spec in jukebox_songs:
             LOGGER.debug("Generating %s", f"{song_spec[0]}.json")
