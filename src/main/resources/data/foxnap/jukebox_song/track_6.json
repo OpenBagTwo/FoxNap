@@ -1,0 +1,8 @@
+{
+    "comparator_output": 6,
+    "description": {
+        "translate": "item.foxnap.track_6.desc"
+    },
+    "length_in_seconds": 140,
+    "sound_event": "foxnap:track_6"
+}
