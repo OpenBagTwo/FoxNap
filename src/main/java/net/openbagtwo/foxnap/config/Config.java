@@ -9,10 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import net.fabricmc.loader.api.FabricLoader;
 import org.yaml.snakeyaml.DumperOptions;
@@ -36,9 +34,9 @@ public class Config {
   private int numDiscs;
 
   /**
-   * The length of each track in seconds
+   * The number of disc items that will be registered for the mod
    */
-  private List<Integer> trackLengths;
+  private int maximumNumberOfDiscs;
 
   /**
    * Whether to enable the Maestro
@@ -53,17 +51,10 @@ public class Config {
   }
 
   /**
-   * Get the length (in seconds) to register for each track on the server side
-   */
-  public List<Integer> getTrackLengths() {
-    return new ArrayList<>(trackLengths);
-  }
-
-  /**
    * Get the number of discs to be added to the server-side item registry
    */
   public int getMaximumNumberOfDiscs() {
-    return this.trackLengths.size();
+    return this.maximumNumberOfDiscs;
   }
 
   /**
@@ -78,7 +69,6 @@ public class Config {
    */
   private static final int DEFAULT_N_DISCS = 7;
   private static final int DEFAULT_MAX_DISCS = 64;
-  private static final int DEFAULT_TRACK_LENGTH = 600;  // technically default default track length
   private static final boolean DEFAULT_MAESTRO_ENABLED = true;
 
   /**
@@ -87,19 +77,19 @@ public class Config {
   public static Config loadConfiguration() {
     Config config;
     try {
-      config = net.openbagtwo.foxnap.config.Config.fromConfigFile();
+      config = fromConfigFile();
       LOGGER.debug("Loaded " + MOD_NAME + " configuration.");
     } catch (FileNotFoundException e) {
       LOGGER.warn("No " + MOD_NAME + " configuration file found.");
       try {
-        net.openbagtwo.foxnap.config.Config.writeDefaultConfigFile();
+        writeDefaultConfigFile();
       } catch (ConfigException writee) {
         LOGGER.error("Could not write " + MOD_NAME + " configuration:\n" + writee);
       }
-      config = net.openbagtwo.foxnap.config.Config.getDefaultConfiguration();
+      config = getDefaultConfiguration();
     } catch (ConfigException e) {
       LOGGER.error(MOD_NAME + " configuration is invalid:\n" + e);
-      config = net.openbagtwo.foxnap.config.Config.getDefaultConfiguration();
+      config = getDefaultConfiguration();
     }
     return config;
   }
@@ -118,10 +108,7 @@ public class Config {
     LOGGER.info("Loading default " + MOD_NAME + " configuration");
     Config config = new Config();
     config.numDiscs = DEFAULT_N_DISCS;
-    config.trackLengths = new ArrayList<>();
-    for (int i = 0; i < DEFAULT_MAX_DISCS; i++) {
-      config.trackLengths.add(DEFAULT_TRACK_LENGTH);
-    }
+    config.maximumNumberOfDiscs = DEFAULT_MAX_DISCS;
     config.enableMaestro = true;
     return config;
   }
@@ -143,7 +130,6 @@ public class Config {
     }
     Map<String, Object> writeme = new LinkedHashMap<>();
     writeme.put("n_discs", DEFAULT_N_DISCS);
-    writeme.put("default_track_length", DEFAULT_TRACK_LENGTH);
 
     (new Yaml(configFormat)).dump(writeme, configWriter);
     LOGGER.info("Wrote " + MOD_NAME + " configuration file to " + config_path);
@@ -164,8 +150,6 @@ public class Config {
     try {
       // Now we actually construct the thing
       int numDiscs = Integer.parseInt(settings.getOrDefault("n_discs", DEFAULT_N_DISCS).toString());
-      int defaultTrackLength = Integer.parseInt(settings.getOrDefault("default_track_length",
-          DEFAULT_TRACK_LENGTH).toString());
       int maxNumDiscs = Integer.parseInt(
           settings.getOrDefault("max_discs", DEFAULT_MAX_DISCS).toString()
       );
@@ -173,31 +157,9 @@ public class Config {
           settings.getOrDefault("enable_maestro", DEFAULT_MAESTRO_ENABLED).toString()
       );
 
-      ArrayList<Integer> trackLengths = new ArrayList<>();
-      for (int i = 0; i < maxNumDiscs; i++) {
-        trackLengths.add(defaultTrackLength);
-      }
-
-      if (settings.containsKey("track_lengths")) {
-        Object trackSpecs = settings.get("track_lengths");
-        if (trackSpecs instanceof Map trackMap) {
-          for (Object key : trackMap.keySet()) {
-            trackLengths.set(
-                Integer.parseInt(key.toString()) - 1,
-                Integer.parseInt(trackMap.get(key).toString())
-            );
-          }
-        } else if (trackSpecs instanceof List trackList) {
-          for (int i = 0; i < trackList.size(); i++) {
-            trackLengths.set(i, Integer.parseInt(trackList.get(i).toString()));
-          }
-        } else {
-          throw new ConfigException("Track list is invalid");
-        }
-      }
       Config config = new Config();
       config.numDiscs = numDiscs;
-      config.trackLengths = trackLengths;
+      config.maximumNumberOfDiscs = maxNumDiscs;
       config.enableMaestro = enableMaestro;
       return config;
 
