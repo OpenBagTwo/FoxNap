@@ -83,7 +83,7 @@ class Track(NamedTuple):
 def generate_resource_pack(
     output_path: os.PathLike | str,
     *tracks: Track,
-    title: str = "Custom FoxNap Records",
+    title: str = "Custom Fox Nap Records",
     license_summary: License | str | None = None,
     license_file: os.PathLike | str | None = None,
     title_color: str = "gold",
@@ -99,7 +99,7 @@ def generate_resource_pack(
         The tracks to generate
     title : str, optional
         The title for the pack to be displayed on the resource pack loading screen.
-        Default is "Custom FoxNap Records"
+        Default is "Custom Fox Nap Records"
     license_summary : License or str, optional
         The usage summary to display on the resource pack loading screen. If using a
         License level enum, the level must be at least as restrictive as the most
@@ -320,7 +320,7 @@ def generate_mcmeta(
     else:
         license_color = license_color or "white"
     return (
-        assets.MCMETA.replace("%%title%%", title)
+        assets.RP_MCMETA.replace("%%title%%", title)
         .replace("%%title_color%%", title_color)
         .replace("%%license%%", license_summary)
         .replace("%%license_color%%", license_color)

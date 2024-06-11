@@ -8,11 +8,15 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Iterable
 
+from . import assets
+
 LOGGER = logging.getLogger(__name__)
 
 
 def generate_datapack(
-    output_path: os.PathLike | str, jukebox_songs: Iterable[tuple[str, float, int]]
+    output_path: os.PathLike | str,
+    jukebox_songs: Iterable[tuple[str, float, int]],
+    title: str = "Custom Fox Nap Records",
 ) -> None:
     """Given a list of track numbers, durations and redstone strengths,
     generate an accompanying datapack
@@ -27,6 +31,8 @@ def generate_datapack(
             2. The duration of the track in seconds
             3. The redstone signal strength of the comparator output that should
                be emitted from a jukebox playing that track
+    title : str, optional
+        The title for the datapack. Default is "Custom Fox Nap Records"
     """
     with TemporaryDirectory() as tmpdir:
         song_directory = Path(tmpdir) / "foxnap" / "jukebox_song"
@@ -43,6 +49,7 @@ def generate_datapack(
             "Compressing archive and saving as %s",
             Path(output_path_as_str).with_suffix(".zip").absolute(),
         )
+        (Path(tmpdir) / "pack.mcmeta").write_text(generate_mcmeta(title))
         shutil.make_archive(output_path_as_str, "zip", tmpdir)
 
 
@@ -71,3 +78,19 @@ def generate_jukebox_song(
         sort_keys=True,
         indent=4,
     )
+
+
+def generate_mcmeta(title: str) -> str:
+    """Fill out the pack.mcmeta template
+
+    Parameters
+    ----------
+    title : str
+        The datapack title
+
+    Returns
+    -------
+    str
+        The filled-out mcmeta, ready to be written to file
+    """
+    return assets.DP_MCMETA.replace("%%title%%", title)
