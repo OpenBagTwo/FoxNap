@@ -14,7 +14,9 @@ public class FoxNapClient implements ClientModInitializer {
   public void onInitializeClient() {
     Config config = Config.loadConfiguration();
 
-    ModelLoadingPlugin.register(new DiscRenderer(config));
+    ModelLoadingPlugin.register(pluginContext -> {
+      pluginContext.resolveModel().register(new DiscRenderer(config));
+    });
 
     LOGGER.info(MOD_NAME + " Client Initialization Complete");
   }

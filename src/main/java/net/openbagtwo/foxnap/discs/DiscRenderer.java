@@ -4,12 +4,14 @@ import static net.openbagtwo.foxnap.FoxNap.MOD_ID;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelResolver;
+import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.util.Identifier;
 import net.openbagtwo.foxnap.config.Config;
+import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public class DiscRenderer implements ModelLoadingPlugin {
+public class DiscRenderer implements ModelResolver {
 
   private final int placeholderStart;
   private final int maxNumDiscs;
@@ -20,16 +22,14 @@ public class DiscRenderer implements ModelLoadingPlugin {
   }
 
   @Override
-  public void onInitializeModelLoader(Context pluginContext) {
+  public @Nullable UnbakedModel resolveModel(Context context) {
     Identifier placeholder = Identifier.of(MOD_ID, "item/placeholder");
-    pluginContext.modifyModelOnLoad().register((original, context) -> {
-      for (int i = this.placeholderStart; i < this.maxNumDiscs; i++) {
-        Identifier matchMe = Identifier.of(MOD_ID, String.format("item/track_%d", i + 1));
-        if (context.topLevelId().equals(matchMe)) {
-          return context.getOrLoadModel(placeholder);
-        }
+    for (int i = placeholderStart; i < maxNumDiscs; i++) {
+      Identifier matchMe = Identifier.of(MOD_ID, String.format("item/track_%d", i + 1));
+      if (context.id().equals(matchMe)) {
+        return context.getOrLoadModel(placeholder);
       }
-      return original;
-    });
+    }
+    return null;
   }
 }
