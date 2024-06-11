@@ -1,4 +1,5 @@
 """Run integration tests on built executable"""
+
 import argparse
 import subprocess
 from pathlib import Path

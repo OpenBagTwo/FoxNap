@@ -1,4 +1,5 @@
 """Tests of the validation utils"""
+
 import os
 import random
 import re

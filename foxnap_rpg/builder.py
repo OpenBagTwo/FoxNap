@@ -1,4 +1,5 @@
 """Logic for translating user intent into Track definitions"""
+
 import logging
 import os
 from contextlib import AbstractContextManager
@@ -196,9 +197,11 @@ class TrackBuilder(AbstractContextManager):
             track_file,
             hue=spec.hue if spec.hue is not None else self.defaults["hue"],
             description=spec.description,
-            use_album_art=spec.use_album_art
-            if spec.use_album_art is not None
-            else self.defaults["use_album_art"],
+            use_album_art=(
+                spec.use_album_art
+                if spec.use_album_art is not None
+                else self.defaults["use_album_art"]
+            ),
             license=spec.license_type or self.defaults["license"],
         )
 

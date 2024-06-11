@@ -1,4 +1,5 @@
 """Command-line interface"""
+
 import argparse
 import logging
 import sys
@@ -179,9 +180,9 @@ def parse_args(
         "verbosity": args.verbosity or 20,
         "required": args.default_required,
         "unspecified_file_handling": args.unspecified_file_handling,
-        "enforce_contiguous_track_numbers": "error"
-        if args.enforce_contiguous
-        else "ignore",
+        "enforce_contiguous_track_numbers": (
+            "error" if args.enforce_contiguous else "ignore"
+        ),
     }
 
     inputs = args.inputs or [_get_cwd()]

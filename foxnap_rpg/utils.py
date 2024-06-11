@@ -1,4 +1,5 @@
 """Assorted helper functions"""
+
 import math
 import os
 from collections import Counter

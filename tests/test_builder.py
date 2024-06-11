@@ -1,4 +1,5 @@
 """Tests of the track builder"""
+
 import logging
 from pathlib import Path
 

@@ -1,4 +1,5 @@
 """Tests of config parsing"""
+
 import csv
 import json
 import os
