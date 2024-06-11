@@ -40,7 +40,7 @@ public class BetterEnd {
     ArrayList<Item> tonewoodItemList = new ArrayList<>();
     for (String woodType : tonewoods) {
       Optional<Item> strippedWood = Registries.ITEM.getOrEmpty(
-          new Identifier(mod_id, woodType + "_stripped_bark")
+          Identifier.of(mod_id, woodType + "_stripped_bark")
       );
       strippedWood.ifPresent(tonewoodItemList::add);
     }
@@ -55,7 +55,7 @@ public class BetterEnd {
 
     for (String end_disc_name : tracks) {
       Optional<Item> endDisc = Registries.ITEM.getOrEmpty(
-          new Identifier("betterend", "music_disc_" + end_disc_name)
+          Identifier.of("betterend", "music_disc_" + end_disc_name)
       );
       endDisc.ifPresent(discList::add);
     }

@@ -13,7 +13,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.item.MusicDiscItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -57,7 +56,7 @@ public class Conductor {
    * @param records     The list of custom records created by this mod, as returned by
    *                    DiscRegistry.init()
    */
-  public static void init(List<SecretlyJustAGoatHorn> instruments, List<MusicDiscItem> records) {
+  public static void init(List<SecretlyJustAGoatHorn> instruments, List<Item> records) {
 
     List<TradeOffers.Factory> level1Trades = Arrays.asList(
         MusicAndArts.BUY_TONEWOOD,
@@ -86,13 +85,13 @@ public class Conductor {
     );
 
     List<TradeOffers.Factory> level5Trades = new ArrayList<>();
-    for (MusicDiscItem disc : records) {
+    for (Item disc : records) {
       level5Trades.add(MusicAndArts.sellMusicDisc(disc));
     }
 
     if (FabricLoader.getInstance().isModLoaded("betterend")) {
       List<Item> endTonewoods = BetterEnd.getTonewoods();
-      if (endTonewoods.size() > 0) {
+      if (!endTonewoods.isEmpty()) {
         level3Trades = new ArrayList<>(level3Trades);
         level3Trades.add(
             new MusicAndArts.BuyItemFromPoolForOneEmeraldFactory(
@@ -111,7 +110,7 @@ public class Conductor {
         );
       }
       List<Item> endDiscs = BetterEnd.getMusicDiscs();
-      if (endDiscs.size() > 0) {
+      if (!endDiscs.isEmpty()) {
         level4Trades = new ArrayList<>(level4Trades);
         level4Trades.add(
             MusicAndArts.buyMusicDisc(endDiscs)

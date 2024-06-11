@@ -1,7 +1,7 @@
 package net.openbagtwo.foxnap;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.item.MusicDiscItem;
+import net.minecraft.item.Item;
 import net.openbagtwo.foxnap.config.Config;
 import net.openbagtwo.foxnap.discs.DiscRegistry;
 import net.openbagtwo.foxnap.instruments.InstrumentRegistry;
@@ -23,7 +23,7 @@ public class FoxNap implements ModInitializer {
     Config config = Config.loadConfiguration();
     LOGGER.info("Registering " + MOD_NAME);
     List<SecretlyJustAGoatHorn> instruments = InstrumentRegistry.init();
-    List<MusicDiscItem> custom_discs = DiscRegistry.init(
+    List<Item> custom_discs = DiscRegistry.init(
         config.getNumDiscs(),
         config.getTrackLengths()
     );

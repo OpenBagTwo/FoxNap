@@ -10,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.MusicDiscItem;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
@@ -187,7 +186,7 @@ public class MusicAndArts implements TradeOffers.Factory {
    * @return Trade factory that will enable the villager to sell a music disc at a base rate of 32
    * emeralds per disc
    */
-  public static TradeOffers.Factory sellMusicDisc(List<MusicDiscItem> discs) {
+  public static TradeOffers.Factory sellMusicDisc(List<Item> discs) {
     return new SellOneItemFromPoolFactory(discs, 32, 3, 30);
   }
 
@@ -201,7 +200,7 @@ public class MusicAndArts implements TradeOffers.Factory {
    * @return Trade factory that will enable the villager to sell a music disc at a base rate of 32
    * emeralds per disc
    */
-  public static TradeOffers.Factory sellMusicDisc(MusicDiscItem disc) {
+  public static TradeOffers.Factory sellMusicDisc(Item disc) {
     return new SellOneItemFromPoolFactory(Collections.singletonList(disc), 32, 3, 30);
   }
 

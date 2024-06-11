@@ -3,11 +3,19 @@ package net.openbagtwo.foxnap.discs;
 import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.block.jukebox.JukeboxSong;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
-import net.minecraft.item.MusicDiscItem;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Rarity;
+import net.minecraft.util.Util;
 import net.openbagtwo.foxnap.FoxNap;
 
 /**
@@ -25,18 +33,32 @@ public class DiscRegistry {
    *                         by Allays (presumably to determine when to stop dancing and duping?).
    * @return the fully instantiated and registered music disc
    */
-  public static Disc registerDisc(String trackName, int comparatorOutput, int trackLength) {
-    Disc disc = Registry.register(Registries.ITEM, new Identifier(FoxNap.MOD_ID, trackName),
-        new Disc(comparatorOutput, registerTrack(trackName), trackLength));
+  public static Item registerDisc(String trackName, int comparatorOutput, int trackLength) {
+
+    JukeboxSong jukeboxSong = new JukeboxSong(
+        registerTrack(trackName),
+        Text.translatable(
+            Util.createTranslationKey(
+                "jukebox_song",
+                RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(FoxNap.MOD_ID, trackName))
+                    .getValue()
+            )
+        ),
+        (float) trackLength,
+        comparatorOutput
+    );
+    Item disc = new Item((new Item.Settings()).maxCount(1).rarity(Rarity.RARE).jukeboxPlayable(
+        RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(FoxNap.MOD_ID, trackName)))
+    );
 
     FoxNap.LOGGER.debug(
-        "Registered " + trackName + " with comparator signal " + disc.getComparatorOutput());
+        "Registered " + trackName + " with comparator signal " + jukeboxSong.comparatorOutput());
     return disc;
   }
 
-  private static Track registerTrack(String trackName) {
-    Identifier track_id = new Identifier(FoxNap.MOD_ID, trackName);
-    return Registry.register(Registries.SOUND_EVENT, track_id, new Track(track_id));
+  private static RegistryEntry.Reference<SoundEvent> registerTrack(String trackName) {
+    Identifier track_id = Identifier.of(FoxNap.MOD_ID, trackName);
+    return Registry.registerReference(Registries.SOUND_EVENT, track_id, new Track(track_id));
   }
 
   /**
@@ -48,10 +70,10 @@ public class DiscRegistry {
    *                     use on the server (read: for the Maestro).
    * @return A list of fully instantiated and registered music discs
    */
-  public static List<MusicDiscItem> init(List<Integer> trackLengths) {
-    ArrayList<MusicDiscItem> discs = new ArrayList<>();
+  public static List<Item> init(List<Integer> trackLengths) {
+    ArrayList<Item> discs = new ArrayList<>();
     for (int i = 1; i <= trackLengths.size(); i++) {
-      Disc disc = registerDisc(
+      Item disc = registerDisc(
           String.format("track_%d", i),
           (i - 1) % 15 + 1,
           trackLengths.get(i - 1)
@@ -72,11 +94,11 @@ public class DiscRegistry {
    *                      discs)
    * @return The list of discs that should actually be available for use
    */
-  public static List<MusicDiscItem> init(int numberOfDiscs, List<Integer> trackLengths) {
+  public static List<Item> init(int numberOfDiscs, List<Integer> trackLengths) {
     registerTrack("placeholder");  // really tempting to make placeholder a placeholder
     int placeholderCount = 0;
     for (int i = numberOfDiscs + 1; i <= trackLengths.size(); i++) {
-      Disc disc = registerDisc(
+      Item disc = registerDisc(
           String.format("track_%d", i),
           0,
           trackLengths.get(i - 1)
