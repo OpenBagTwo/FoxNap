@@ -14,11 +14,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.VillagerProfession;
+import net.minecraft.world.poi.PointOfInterestType;
 import net.openbagtwo.foxnap.FoxNap;
 import net.openbagtwo.foxnap.instruments.InstrumentRegistry;
 import net.openbagtwo.foxnap.instruments.SecretlyJustAGoatHorn;
@@ -40,10 +42,21 @@ public class Conductor {
         ImmutableSet.copyOf(Blocks.JUKEBOX.getStateManager().getStates())
     );
 
-    return VillagerProfession.register(
-        (Identifier.of(MOD_ID, "conductor")).toString(),
-        RegistryKey.of(Registries.POINT_OF_INTEREST_TYPE.getKey(), poi_id),
-        CONDUCTOR_WORK_SOUND
+    return Registry.register(
+        Registries.VILLAGER_PROFESSION,
+        Identifier.of(MOD_ID, "conductor"),
+        new VillagerProfession(
+            "conductor",
+            entry -> entry.matchesKey(
+                RegistryKey.of(Registries.POINT_OF_INTEREST_TYPE.getKey(), poi_id)
+            ),
+            entry -> entry.matchesKey(
+                RegistryKey.of(Registries.POINT_OF_INTEREST_TYPE.getKey(), poi_id)
+            ),
+            ImmutableSet.of(),
+            ImmutableSet.of(),
+            CONDUCTOR_WORK_SOUND
+        )
     );
   }
 

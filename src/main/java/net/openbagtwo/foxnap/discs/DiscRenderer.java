@@ -25,7 +25,7 @@ public class DiscRenderer implements ModelLoadingPlugin {
     pluginContext.modifyModelOnLoad().register((original, context) -> {
       for (int i = this.placeholderStart; i < this.maxNumDiscs; i++) {
         Identifier matchMe = Identifier.of(MOD_ID, String.format("item/track_%d", i + 1));
-        if (context.resourceId().equals(matchMe)) {
+        if (context.topLevelId().equals(matchMe)) {
           return context.getOrLoadModel(placeholder);
         }
       }

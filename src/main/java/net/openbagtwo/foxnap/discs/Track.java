@@ -17,8 +17,8 @@ public class Track extends SoundEvent {
    */
   public boolean isPlaceholder = false;
 
-  public Track(Identifier id) {
-    super(id, 16.0f, false);
+  public Track(String trackName) {
+    super(Identifier.of(FoxNap.MOD_ID, trackName), 16.0f, false);
   }
 
   @Override
