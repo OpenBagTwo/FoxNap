@@ -6,7 +6,7 @@ on: # run on any push to the primary branch
   pull_request:
   push:
     branches:
-      - 1.20.5
+      - 1.21
 
 jobs:
   test_and_build_rpg:
@@ -18,10 +18,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # TODO: try removing this after the initial release
-      - name: Set up Python 3.10
+      - name: Set up Python 3.12
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Cache ffmpeg binaries
         id: cache-ffmpeg
         uses: actions/cache@v3

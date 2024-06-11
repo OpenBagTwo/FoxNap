@@ -2,7 +2,7 @@ name: foxnap
 channels:
   - conda-forge
 dependencies:
-  - python>=3.10
+  - python>=3.12
   - pillow
   - pip:
       - ffmpeg-python  # conda dep will install conda ffmpeg which we don't want
