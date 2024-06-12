@@ -15,9 +15,10 @@ _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music 
 <img src="https://i.imgur.com/Ol1Tcf8.png" alt="Requires Fabric" width="150"/>
 
 <!-- TOC -->
+
 * [What is This?](#what-is-this-)
 * [Setup and Customization](#setup-and-customization)
-    * [Manual Pack Creation](#manual-resource---data-pack-creation)
+    * [Manual Pack Creation](#manual-resource--data-pack-creation)
     * [Resource Pack Generator](#resource-pack-generator)
     * [Obtaining Records _and More!_](#obtaining-records-and-more)
 * [Contributing](#contributing)
