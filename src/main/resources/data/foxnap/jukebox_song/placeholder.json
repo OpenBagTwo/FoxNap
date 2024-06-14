@@ -1,8 +1,10 @@
 {
-    "comparator_output": 8,
-    "description": {
-        "translate": "item.foxnap.placeholder_disc.desc"
-    },
-    "length_in_seconds": 4.33,
-    "sound_event": "foxnap:placeholder"
+  "comparator_output": 8,
+  "description": {
+    "translate": "item.foxnap.placeholder_disc.desc"
+  },
+  "length_in_seconds": 4.33,
+  "sound_event": {
+    "sound_id": "foxnap:placeholder"
+  }
 }
