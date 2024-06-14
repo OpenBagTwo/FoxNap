@@ -57,7 +57,7 @@ I ever post it--> I wanted to add an outdoor concert venue to my survival world 
 is an homage to the [Wolf Trap](https://www.wolftrap.org/) center for the performing arts, which was
 a huge fixture of my childhood), but what I kept getting hung up on was how I could source and
 provide the music without violating copyright--forget about adding my own personal music collection,
-even Youtube's "Free" [audio library](https://www.youtube.com/audiolibrary) was off-limits, as the
+even YouTube's "Free" [audio library](https://www.youtube.com/audiolibrary) was off-limits, as the
 license terms explicitly state:
 
 > You may not make available, distribute or perform the music files from this library separately
@@ -141,9 +141,9 @@ setup required) resource pack generator.
 1. Download the executable from [the release page](https://github.com/OpenBagTwo/FoxNap/releases)
    that matches your operating system and your version of the mod.
 1. Depending on your operating system and security settings, you may need
-   to explicitly make the resource pack generator executable (on \*nix systems.
-   You can do this from a terminal by running `chmod u+x /path/to/FoxNapRPG` or by
-   going into Properties in most file managers.
+   to explicitly make the resource pack generator executable (on \*nix systems,
+   you can do this from a terminal by running `chmod u+x /path/to/FoxNapRPG` or by
+   going into Properties in most file managers).
 
 You can also [build the generator from source](#building-the-resource-pack-generator-from-source).
 
