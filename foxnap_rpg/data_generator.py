@@ -73,7 +73,7 @@ def generate_jukebox_song(
             "comparator_output": comparator_output,
             "description": {"translate": f"item.foxnap.{song_name}.desc"},
             "length_in_seconds": length_in_seconds,
-            "sound_event": f"foxnap:{song_name}",
+            "sound_event": {"sound_id": f"foxnap:{song_name}"},
         },
         sort_keys=True,
         indent=4,
