@@ -89,11 +89,14 @@ public class DiscRegistry {
    */
   public static List<Item> init(int numberOfDiscs, int maxNumDiscs) {
     Track placeholder = new Track("placeholder");
-    placeholder.isPlaceholder = true;
     registerTrack(placeholder);
+    placeholder.isPlaceholder = true;  // doesn't really matter--just redirecting to itself
 
     int placeholderCount = 0;
     for (int i = numberOfDiscs + 1; i <= maxNumDiscs; i++) {
+      Track track = new Track(String.format("track_%d", i));
+      registerTrack(track);  // still needed to populate the registry for server-side matching
+      track.isPlaceholder = true;
       registerDisc(placeholder, String.format("track_%d", i));
       placeholderCount++;
     }
