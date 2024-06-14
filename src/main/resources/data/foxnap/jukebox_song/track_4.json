@@ -1,8 +1,10 @@
 {
-    "comparator_output": 4,
-    "description": {
-        "translate": "item.foxnap.track_4.desc"
-    },
-    "length_in_seconds": 103,
-    "sound_event": "foxnap:track_4"
+  "comparator_output": 4,
+  "description": {
+    "translate": "item.foxnap.track_4.desc"
+  },
+  "length_in_seconds": 103,
+  "sound_event": {
+    "sound_id": "foxnap:track_4"
+  }
 }
