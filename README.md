@@ -16,11 +16,12 @@ _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music 
 
 <!-- TOC -->
 
-* [What is This?](#what-is-this-)
+* [What is This?](#what-is-this)
 * [Setup and Customization](#setup-and-customization)
-    * [Manual Pack Creation](#manual-resource--data-pack-creation)
-    * [Resource Pack Generator](#resource-pack-generator)
-    * [Obtaining Records _and More!_](#obtaining-records-and-more)
+    + [Manual Resource / Data Pack Creation](#manual-resource--data-pack-creation)
+    + [Resource Pack Generator](#resource-pack-generator)
+    + [What About Multiplayer?](#what-about-multiplayer)
+* [Obtaining Records _and More!_](#obtaining-records-and-more)
 * [Contributing](#contributing)
 * [License and Acknowledgements](#license-and-acknowledgements)
 
@@ -126,6 +127,8 @@ From there, if you're used to vanilla disc replacement resource packs, the diffe
 - when changing the names of the tracks to display, you'll need to edit
   `assets/foxnap/lang/en_us.json` and refer to the language entries as `item.foxnap.track_1` /
   `item.foxnap.track_1.desc`, `item.foxnap.track_2` / `item.foxnap.track_2.desc`, etc.
+- you'll also likely need to create a custom datapack with files in a `data/foxnap/jukebox_songs`
+  folder that set the track lengths and comparator outputs for each track you're overwriting.
 
 ### Resource Pack Generator
 
@@ -144,7 +147,7 @@ setup required) resource pack generator.
 
 You can also [build the generator from source](#building-the-resource-pack-generator-from-source).
 
-#### Generating Resource Packs
+#### Generating Resource and Data Packs
 
 Place the generator executable in an empty folder, then move any music you
 want to turn into records into that folder. **There is no limit** to the
@@ -169,32 +172,6 @@ new files in your current directory:
   (see note below about multiplayer).
 - `foxnap.yaml` needs to go into your Minecraft `config` folder. This tells the game how many
   music discs to enable for you.
-
-#### What About Multiplayer?
-
-When playing on a server, it's the ***server's*** datapacks and config file that will dictate:
-
-- how long each song will play
-- the redstone signal strength coming out of jukeboxes playing each disc
-- the number of tracks available from the Maestro
-
-but it's ***each player's*** resource pack and config file that will control:
-
-- the songs that each disc will play
-- the appearance (and description) of each disc
-- which discs show up as "placeholder" records
-
-Explicitly:
-
-- if the server has a greater number of discs specified than both what you've specified in your
-  config, some discs will show up for you with placeholder
-  textures and sound files
-- if you have more discs in your resource pack than are set on the server, then not all tracks will
-  be available in your shared game
-- some music discs may continue silently after a song ends, and some might cut off
-
-Beyond the number of discs, though, there's no reason why every player can't come online with
-a completely custom playlist of songs with similar lengths!
 
 #### Advanced Options: Command-Line Options
 
@@ -232,10 +209,36 @@ To use a spec configuration file when running the resource pack generator, use t
 flag, _e.g._
 
 ```bash
-$ ./FoxNapRPG -i /path/to/my/music -s track_specs.conf
+$ ./FoxNapRPG -i /path/to/my/music -s track_specs.csv
 ```
 
-### Obtaining Records _and More!_
+### What About Multiplayer?
+
+When playing on a server, it's the ***server's*** datapacks and config file that will dictate:
+
+- how long each song will play
+- the redstone signal strength coming out of jukeboxes playing each disc
+- the number of tracks available from the Maestro
+
+but it's ***each player's*** resource pack and config file that will control:
+
+- the songs that each disc will play
+- the appearance (and description) of each disc
+- which discs show up as "placeholder" records
+
+Explicitly:
+
+- if the server has a greater number of discs specified than both what you've specified in your
+  config, some discs will show up for you with placeholder
+  textures and sound files
+- if you have more discs in your resource pack than are set on the server, then not all tracks will
+  be available in your shared game
+- some music discs may continue silently after a song ends, and some might cut off
+
+Beyond the number of discs, though, there's no reason why every player can't come online with
+a completely custom playlist of songs with similar lengths!
+
+## Obtaining Records _and More!_
 
 So now that you've registered these custom records to the game, how do you actually get them?
 Outside of commands (_e.g._ `/give @s foxnap:track_1`) and Creative Mode, the sole way to obtain
@@ -254,7 +257,7 @@ music discs, a wide variety of playable musical instruments (with textures adopt
 
 If you'd prefer _not_ to add The Maestro to your game (and would like to obtain your music discs
 in some other way, such as a datapack), you can disable this part of the mod by editing your
-[`foxnap.yaml` config file](#generating-resource-packs) and adding the following line:
+[`foxnap.yaml` config file](#manual-resource--data-pack-creation) and adding the following line:
 
 ```yaml
 enable_maestro: false
