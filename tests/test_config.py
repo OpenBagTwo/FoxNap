@@ -51,6 +51,7 @@ class TestConfigParsing:
                 License.RESTRICTED,
                 False,
                 "This is the Axolotl Song",
+                hue=82,
             ),
             Spec(Path("basic.wav")),
         ]
