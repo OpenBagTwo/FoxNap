@@ -148,7 +148,12 @@ def _convert_dict_to_spec(as_dict: dict[str, Any]) -> Spec:
         try:
             spec_fields["hue"] = _normalize_boolean(spec_fields["hue"])
         except ValueError:
-            raise ValueError(f"entry has invalid value for hue: '{spec_fields['hue']}'")
+            try:
+                spec_fields["hue"] = float(spec_fields["hue"])
+            except (TypeError, ValueError):
+                raise ValueError(
+                    "entry has invalid value for hue: '{spec_fields['hue']}'"
+                )
 
     if spec_fields["hue"] is not None and not isinstance(spec_fields["hue"], bool):
         try:

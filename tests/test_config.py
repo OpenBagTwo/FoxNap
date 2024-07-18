@@ -53,6 +53,14 @@ class TestConfigParsing:
                 "This is the Axolotl Song",
                 hue=82,
             ),
+            Spec(
+                Path("Music") / "my_song.ogg",
+                False,
+                License.ATTRIBUTION,
+                False,
+                "Your song",
+                hue=True,
+            ),
             Spec(Path("basic.wav")),
         ]
 
