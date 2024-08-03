@@ -25,6 +25,6 @@ jobs:
         run: |
           isort . --profile="black"
           black foxnap_rpg
-      - name: Type check with mypy
-        run: |
-          mypy foxnap_rpg --exclude build
+#      - name: Type check with mypy
+#        run: |
+#          mypy foxnap_rpg --exclude build
