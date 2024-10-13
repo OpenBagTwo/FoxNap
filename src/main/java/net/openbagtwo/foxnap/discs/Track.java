@@ -1,5 +1,6 @@
 package net.openbagtwo.foxnap.discs;
 
+import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.registry.Registries;
@@ -18,16 +19,16 @@ public class Track extends SoundEvent {
   public boolean isPlaceholder = false;
 
   public Track(String trackName) {
-    super(Identifier.of(FoxNap.MOD_ID, trackName), 16.0f, false);
+    super(Identifier.of(FoxNap.MOD_ID, trackName), Optional.of(16.0f));
   }
 
   @Override
   @Environment(EnvType.CLIENT)
-  public Identifier getId() {
+  public Identifier id() {
     if (isPlaceholder) {
       return getPlaceholderTrackId();
     }
-    return super.getId();
+    return super.id();
   }
 
   public static Identifier getPlaceholderTrackId() {

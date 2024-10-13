@@ -28,7 +28,7 @@ public class DiscRegistry {
    * @return the fully instantiated and registered music disc
    */
   public static Item registerDisc(Track track) {
-    return registerDisc(track, track.getId().getPath());
+    return registerDisc(track, track.id().getPath());
   }
 
   /**
@@ -44,7 +44,7 @@ public class DiscRegistry {
         Identifier.of(FoxNap.MOD_ID, trackName),
         new Item(
             (new Item.Settings()).maxCount(1).rarity(Rarity.RARE).jukeboxPlayable(
-                RegistryKey.of(RegistryKeys.JUKEBOX_SONG, track.getId())
+                RegistryKey.of(RegistryKeys.JUKEBOX_SONG, track.id())
             )
         )
     );
@@ -54,7 +54,7 @@ public class DiscRegistry {
   }
 
   private static RegistryEntry.Reference<SoundEvent> registerTrack(Track track) {
-    return Registry.registerReference(Registries.SOUND_EVENT, track.getId(), track);
+    return Registry.registerReference(Registries.SOUND_EVENT, track.id(), track);
   }
 
   /**

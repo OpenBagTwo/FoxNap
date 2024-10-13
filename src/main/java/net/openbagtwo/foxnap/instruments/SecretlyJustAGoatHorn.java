@@ -8,10 +8,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
@@ -22,8 +24,8 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
 
   public SecretlyJustAGoatHorn(SoundEvent soundEvent, int cooldown) {
     super(
-        new Item.Settings().rarity(Rarity.UNCOMMON).maxCount(1),
-        null
+        null,
+        new Item.Settings().rarity(Rarity.UNCOMMON).maxCount(1)
     );
     this.soundEvent = soundEvent;
     this.cooldown = cooldown;
@@ -39,7 +41,7 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
   }
 
   @Override
-  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
         /*
        TODO:
              - implement handed instruments (can only be held in right or left hand)
@@ -51,8 +53,9 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
     user.setCurrentHand(hand);
 
     playSound(world, user, this.soundEvent);
-    user.getItemCooldownManager().set(this, this.cooldown);
-    return TypedActionResult.consume(itemStack);
+    user.getItemCooldownManager().set(itemStack, MathHelper.floor(this.cooldown));
+    user.incrementStat(Stats.USED.getOrCreateStat(this));
+    return ActionResult.CONSUME;
   }
 
   private static void playSound(World world, PlayerEntity player, SoundEvent soundEvent) {
