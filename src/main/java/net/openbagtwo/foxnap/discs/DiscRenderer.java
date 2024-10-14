@@ -27,7 +27,8 @@ public class DiscRenderer implements ModelResolver {
     for (int i = placeholderStart; i < maxNumDiscs; i++) {
       Identifier matchMe = Identifier.of(MOD_ID, String.format("item/track_%d", i + 1));
       if (context.id().equals(matchMe)) {
-        return context.getOrLoadModel(placeholder);
+//        return context.getOrLoadModel(placeholder);
+        return null;
       }
     }
     return null;
