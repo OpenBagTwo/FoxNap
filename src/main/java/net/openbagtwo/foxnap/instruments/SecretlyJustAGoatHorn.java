@@ -6,6 +6,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GoatHornItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
@@ -25,7 +27,8 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
   public SecretlyJustAGoatHorn(SoundEvent soundEvent, int cooldown) {
     super(
         null,
-        new Item.Settings().rarity(Rarity.UNCOMMON).maxCount(1)
+        new Item.Settings().registryKey(RegistryKey.of(RegistryKeys.ITEM, soundEvent.id()))
+            .rarity(Rarity.UNCOMMON).maxCount(1)
     );
     this.soundEvent = soundEvent;
     this.cooldown = cooldown;

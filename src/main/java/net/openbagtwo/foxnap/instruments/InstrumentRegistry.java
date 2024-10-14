@@ -40,13 +40,12 @@ public class InstrumentRegistry {
    * @return the fully instantiated and registered instrument
    */
   public static SecretlyJustAGoatHorn registerInstrument(String instrumentName) {
-    return Registry.register(
-        Registries.ITEM,
-        Identifier.of(FoxNap.MOD_ID, instrumentName),
-        new SecretlyJustAGoatHorn(
-            registerInstrumentSound(instrumentName),
-            20 * INSTRUMENTS.get(instrumentName))
+    SecretlyJustAGoatHorn instrument = new SecretlyJustAGoatHorn(
+        registerInstrumentSound(instrumentName),
+        20 * INSTRUMENTS.get(instrumentName)
     );
+    Registry.register(Registries.ITEM, instrumentName, instrument);
+    return instrument;
   }
 
   public static SoundEvent registerInstrumentSound(String instrumentName) {

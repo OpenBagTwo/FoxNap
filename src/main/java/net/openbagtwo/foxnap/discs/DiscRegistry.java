@@ -2,6 +2,7 @@ package net.openbagtwo.foxnap.discs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -27,7 +28,7 @@ public class DiscRegistry {
    * @param track The sound event (read: jukebox song) to tie to the disc
    * @return the fully instantiated and registered music disc
    */
-  public static Item registerDisc(Track track) {
+  public static Item registerDisc(SoundEvent track) {
     return registerDisc(track, track.id().getPath());
   }
 
@@ -38,23 +39,22 @@ public class DiscRegistry {
    * @param trackName The identifier for the music disc (if distinct from the track ID)
    * @return the fully instantiated and registered music disc
    */
-  public static Item registerDisc(Track track, String trackName) {
-    Item disc = Registry.register(
-        Registries.ITEM,
-        Identifier.of(FoxNap.MOD_ID, trackName),
-        new Item(
-            (new Item.Settings()).maxCount(1).rarity(Rarity.RARE).jukeboxPlayable(
-                RegistryKey.of(RegistryKeys.JUKEBOX_SONG, track.id())
-            )
+  public static Item registerDisc(SoundEvent track, String trackName) {
+    Item disc = new Item(new Item.Settings().registryKey(
+            RegistryKey.of(RegistryKeys.ITEM, Identifier.of(FoxNap.MOD_ID, trackName))).maxCount(1)
+        .rarity(Rarity.RARE).jukeboxPlayable(
+            RegistryKey.of(RegistryKeys.JUKEBOX_SONG, track.id())
         )
     );
+    Registry.register(Registries.ITEM, Identifier.of(FoxNap.MOD_ID, trackName), disc);
 
     FoxNap.LOGGER.debug("Registered " + disc);
     return disc;
   }
 
-  private static RegistryEntry.Reference<SoundEvent> registerTrack(Track track) {
-    return Registry.registerReference(Registries.SOUND_EVENT, track.id(), track);
+  private static RegistryEntry.Reference<SoundEvent> registerTrack(SoundEvent track,
+      Identifier trackId) {
+    return Registry.registerReference(Registries.SOUND_EVENT, trackId, track);
   }
 
   /**
@@ -69,8 +69,9 @@ public class DiscRegistry {
   public static List<Item> init(int numberOfDiscs) {
     ArrayList<Item> discs = new ArrayList<>();
     for (int i = 1; i <= numberOfDiscs; i++) {
-      Track track = new Track(String.format("track_%d", i));
-      registerTrack(track);
+      Identifier trackId = Identifier.of(FoxNap.MOD_ID, String.format("track_%d", i));
+      SoundEvent track = new SoundEvent(trackId, Optional.of(16.0f));
+      registerTrack(track, trackId);
       Item disc = registerDisc(track);
       discs.add(disc);
       ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(disc));
@@ -88,15 +89,13 @@ public class DiscRegistry {
    * @return The list of discs that should actually be available for use
    */
   public static List<Item> init(int numberOfDiscs, int maxNumDiscs) {
-    Track placeholder = new Track("placeholder");
-    registerTrack(placeholder);
-    placeholder.isPlaceholder = true;  // doesn't really matter--just redirecting to itself
+    Identifier placeholderId = Identifier.of(FoxNap.MOD_ID, "placeholder");
+    SoundEvent placeholder = new SoundEvent(placeholderId, Optional.of(16.0f));
+
+    registerTrack(placeholder, placeholderId);
 
     int placeholderCount = 0;
     for (int i = numberOfDiscs + 1; i <= maxNumDiscs; i++) {
-      Track track = new Track(String.format("track_%d", i));
-      registerTrack(track);  // still needed to populate the registry for server-side matching
-      track.isPlaceholder = true;
       registerDisc(placeholder, String.format("track_%d", i));
       placeholderCount++;
     }
