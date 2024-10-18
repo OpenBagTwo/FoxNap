@@ -1,6 +1,7 @@
 package net.openbagtwo.foxnap.instruments;
 
 import java.util.List;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GoatHornItem;
@@ -77,4 +78,8 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
     );
   }
 
+  @Override
+  public int getMaxUseTime(ItemStack stack, LivingEntity user) {
+    return this.cooldown;
+  }
 }
