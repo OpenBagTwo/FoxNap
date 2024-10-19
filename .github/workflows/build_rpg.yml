@@ -6,7 +6,7 @@ on: # run on any push to the primary branch
   pull_request:
   push:
     branches:
-      - 1.21
+      - 1.21.2
 
 jobs:
   test_and_build_rpg:
@@ -15,16 +15,16 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # TODO: try removing this after the initial release
       - name: Set up Python 3.12
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Cache ffmpeg binaries
         id: cache-ffmpeg
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: ffmpeg-cache
         with:
@@ -90,7 +90,7 @@ jobs:
           pyinstaller launcher.py --console --onefile -n FoxNapRPG --collect-all foxnap_rpg
       - name: Cache integration test music
         id: cache-music
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: music-cache
         with:
@@ -107,7 +107,7 @@ jobs:
         run: |
           python run_integration_tests.py build/dist/FoxNapRPG 7
       - name: capture build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ResourcepackGenerator-${{ runner.os }}
