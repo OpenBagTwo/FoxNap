@@ -7,16 +7,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GoatHornItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
@@ -27,9 +23,8 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
 
   public SecretlyJustAGoatHorn(SoundEvent soundEvent, int cooldown) {
     super(
-        null,
-        new Item.Settings().registryKey(RegistryKey.of(RegistryKeys.ITEM, soundEvent.id()))
-            .rarity(Rarity.UNCOMMON).maxCount(1)
+        new Item.Settings().rarity(Rarity.UNCOMMON).maxCount(1),
+        null
     );
     this.soundEvent = soundEvent;
     this.cooldown = cooldown;
@@ -45,7 +40,7 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
   }
 
   @Override
-  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         /*
        TODO:
              - implement handed instruments (can only be held in right or left hand)
@@ -57,9 +52,8 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
     user.setCurrentHand(hand);
 
     playSound(world, user, this.soundEvent);
-    user.getItemCooldownManager().set(itemStack, MathHelper.floor(this.cooldown));
-    user.incrementStat(Stats.USED.getOrCreateStat(this));
-    return ActionResult.CONSUME;
+    user.getItemCooldownManager().set(this, this.cooldown);
+    return TypedActionResult.consume(itemStack);
   }
 
   private static void playSound(World world, PlayerEntity player, SoundEvent soundEvent) {
