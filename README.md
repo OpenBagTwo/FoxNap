@@ -14,18 +14,18 @@ _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music 
 
 <img src="https://i.imgur.com/Ol1Tcf8.png" alt="Requires Fabric" width="150"/>
 
-<!-- TOC -->
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 
 * [What is This?](#what-is-this)
 * [Setup and Customization](#setup-and-customization)
-    + [Manual Resource / Data Pack Creation](#manual-resource--data-pack-creation)
-    + [Resource Pack Generator](#resource-pack-generator)
-    + [What About Multiplayer?](#what-about-multiplayer)
+* [Resource Pack Generator](#resource-pack-generator)
+* [What About Multiplayer?](#what-about-multiplayer)
 * [Obtaining Records _and More!_](#obtaining-records-and-more)
+* [Fox Nap Vanilla](#fox-nap-vanilla)
 * [Contributing](#contributing)
 * [License and Acknowledgements](#license-and-acknowledgements)
 
-<!-- TOC -->
+<!-- TOC end -->
 
 ## What is This?
 
@@ -47,31 +47,6 @@ giving you the creative freedom to stage
 ["live music" performances](https://www.google.com/search?q=lip+syncing+concert).
 
 ![The Armor Stand Ensemble](_static/ensemble.png)
-
-### Motivation
-
-I started work on this mod after being inspired to extend the
-[SBM Jukebox mod](https://github.com/StrikerRockers-Mods/SBM-Jukebox-fabric), which
-brings the Bedrock music disc playlist functionality to Java. <!--TODO: link to my SBM tutorial if
-I ever post it--> I wanted to add an outdoor concert venue to my survival world (the name FoxNap
-is an homage to the [Wolf Trap](https://www.wolftrap.org/) center for the performing arts, which was
-a huge fixture of my childhood), but what I kept getting hung up on was how I could source and
-provide the music without violating copyright--forget about adding my own personal music collection,
-even YouTube's "Free" [audio library](https://www.youtube.com/audiolibrary) was off-limits, as the
-license terms explicitly state:
-
-> You may not make available, distribute or perform the music files from this library separately
-> from videos and other content into which you have incorporated these music files
-> (e.g., **standalone distribution of these files is not permitted**).
-
-As I saw it, there were two options for getting around this limitation (besides abandoning the
-project or not sharing this mod with anyone)
-
-1. Limit the music included with the mod to permissively-licensed (public domain, attribution or
-   [copyleft](https://www.gnu.org/licenses/copyleft.en.html)) audio
-1. Allow users to provide their own music via a config or a resource pack
-
-In the end, I decided, [why not both?](https://www.youtube.com/watch?v=vqgSO8_cRio&t=5s)
 
 ## Setup and Customization
 
@@ -107,113 +82,17 @@ the appropriate build to your instance's mods folder, start the game, and
 
 But if you're interested in some customization, read on:
 
-### Manual Resource / Data Pack Creation
+## Resource Pack Generator
 
-FoxNap's item and sound registration structure was designed to make it as easy as possible for you
-to replace or add to the mod's built-in tracks via a resource pack similar to what
-[you'd make if you were replacing one of the vanilla discs](https://www.planetminecraft.com/blog/how-to-add-costume-music-the-easy-way-1-12/),
-with the advantage that the number of discs provided by the mod is _completely dynamic_ and can be
-set or changed simply by going into your instance's mod `config` folder, opening `foxnap.yaml` in
-any plaintext editor and changing the value of `n_discs`.
-
-From there, if you're used to vanilla disc replacement resource packs, the differences will be:
-
-- instead of `assets/minecraft`, all your files should be in `assets/foxnap`
-- the ids of the sound files you'll be replacing (in `assets/foxnap/sounds.json`) will be
-  `foxnap:track_1`, `foxnap:track_2`, etc. all the way up to the number `n_discs`
-  you set in the `foxnap.yaml` config file stored in your instance's mod `config` folder.
-- to set or replace the record textures, you'll need to create files named `track_1.json`,
-  `track_2.json`, etc. within `assets/foxnap/models/item`
-- when changing the names of the tracks to display, you'll need to edit
-  `assets/foxnap/lang/en_us.json` and refer to the language entries as `item.foxnap.track_1` /
-  `item.foxnap.track_1.desc`, `item.foxnap.track_2` / `item.foxnap.track_2.desc`, etc.
-- you'll also likely need to create a custom datapack with files in a `data/foxnap/jukebox_songs`
-  folder that set the track lengths and comparator outputs for each track you're overwriting.
-
-### Resource Pack Generator
-
-If manually converting mp3s and hand-editing JSON isn't your idea of a fun time, **this project
+While you can always [manually](../../wiki/Manual-Resource---Data-Pack-Creation)
+convert mp3s and hand-edit JSON files to create a set of Fox Nap
+packs, **this project
 provides an alternative** in the form of a stand-alone and portable (read: no installation or
 setup required) resource pack generator.
 
-#### Installation
+You can read more about that [here](../../wiki/Resource-Pack-Generator).
 
-1. Download the executable from [the release page](https://github.com/OpenBagTwo/FoxNap/releases)
-   that matches your operating system and your version of the mod.
-1. Depending on your operating system and security settings, you may need
-   to explicitly make the resource pack generator executable (on \*nix systems,
-   you can do this from a terminal by running `chmod u+x /path/to/FoxNapRPG` or by
-   going into Properties in most file managers).
-
-You can also [build the generator from source](#building-the-resource-pack-generator-from-source).
-
-#### Generating Resource and Data Packs
-
-Place the generator executable in an empty folder, then move any music you
-want to turn into records into that folder. **There is no limit** to the
-number of tracks you can include, and they **do not** need to be pre-converted
-to [Ogg](https://en.wikipedia.org/wiki/Ogg). The only requirement is that
-the files have to be
-[decodable by
-`ffmpeg`](https://www.ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features).
-
-_**Pro Tip:** if your music files include [metadata](https://en.wikipedia.org/wiki/ID3), the title
-and artist
-name will get automatically extracted, and any album art will be used to help generate the music
-disc texture._
-
-When you're ready, simply double-click the `FoxNapRPG` executable. A terminal window may pop
-up showing progress of the resource pack creation, and before you know it you should have some
-new files in your current directory:
-
-- `FoxNapRP.zip` is the resource pack containing all your converted songs and music disc textures,
-  and you can throw that into your Minecraft `resourcepacks` folder
-- `FoxNapDP.zip` is the datapack that defines all the properties of the tracks themselves. You'll
-  need to put this pack into the `datapacks` folder of any world where you want to use your music
-  (see note below about multiplayer).
-- `foxnap.yaml` needs to go into your Minecraft `config` folder. This tells the game how many
-  music discs to enable for you.
-
-#### Advanced Options: Command-Line Options
-
-You can also run the generator from the command-line, which will give you access to a bunch of
-additional customization options, such as setting the directories to search for music or the
-locations the generated resource pack and mod config should be saved.
-
-For further details, run:
-
-```bash
-$ ./FoxNapRPG --help
-```
-
-from the folder where you saved the generator executable.
-
-#### Advanced Options: Spec File
-
-The Resource Pack Generator also allows you to finely tune the resource pack generation
-behavior via a configuration file. The pack generator currently supports the following formats:
-
-- INI (.ini, .cfg, .config, .conf, .txt)
-- JSON (.json)
-- CSV (.csv, .tsv)
-  where each entry specifies a single track via either its full path or its file name.
-
-For each track, you can specify:
-
-- `num`: a track number (to override the tracks bundled with the mod or just to make sure the tracks
-  are ordered consistently)
-- `description`: the name to give to the track (if you don't want this read from the ID3 tag)
-- `hue`: the color to give to the vinyl part of the record template
-- `use_album_art`: whether the album art (embedded in the track tag data) for the inlay
-
-To use a spec configuration file when running the resource pack generator, use the `-s` command-line
-flag, _e.g._
-
-```bash
-$ ./FoxNapRPG -i /path/to/my/music -s track_specs.csv
-```
-
-### What About Multiplayer?
+## What About Multiplayer?
 
 When playing on a server, it's the ***server's*** datapacks and config file that will dictate:
 
@@ -254,7 +133,7 @@ blocks of rare wood types--goat horns and non-FoxNap records and sells, alongsid
 music discs, a wide variety of playable musical instruments (with textures adopted from the classic
 [mxTune mod](https://github.com/AeronicaMC/mxTune)).
 
-#### Disabling The Maestro
+### Disabling The Maestro
 
 If you'd prefer _not_ to add The Maestro to your game (and would like to obtain your music discs
 in some other way, such as a datapack), you can disable this part of the mod by editing your
@@ -263,6 +142,13 @@ in some other way, such as a datapack), you can disable this part of the mod by 
 ```yaml
 enable_maestro: false
 ```
+
+## Fox Nap Vanilla
+
+With the release of Minecraft 1.21, music discs are now entirely data-driven! As such, the
+resource and datapacks generated by the Fox Nap Resource Pack Generator are entirely compatible
+with the vanilla game. Details can be found on
+[the wiki](../../wiki/Using-the-Resource-Pack-Generator-in-Vanilla).
 
 ## Contributing
 
@@ -280,33 +166,8 @@ The compiled jar will be found under `build/libs`.
 
 ### Building the Resource Pack Generator from Source
 
-You can also build the generator from source.
-
-1. Clone this repo
-1. [Download](https://ffmpeg.org/download.html) or install a version of `ffmpeg` that can decode
-   files from your music library and that has support for encoding using `libvorbis`. Put the
-   executable (or symbolic links to the executable) in the `foxnap_rpg/bin` folder.
-1. Create and activate a virtual environment using python 3.10 or above
-    1. If you have a [`conda`-based](https://docs.conda.io/en/latest/) environment and package
-       manager installed on your
-       system, such as [mambaforge](https://github.com/conda-forge/miniforge#mambaforge), you can
-       use the project's
-       dedicated dev/build environment, creatable from the repo root via
-       `mamba env create -f environment.yml` (substitute `conda` for `mamba` as needed)
-1. From the repo's root, with your virtual environment activated, run `python -m pip install .`
-1. At this point, you have two options:
-    1. Use FoxNap as a python package, with `$ FoxNapRPG` available from the command line
-    1. Create a stand-alone executable using [`pyinstaller`](https://pyinstaller.org/en/stable/) (
-       included in the `conda`
-       environment). The scripts `./rpg-build.sh` for \*nix or `.\rpg-build.bat` for Windows are
-       available for reference.
-
-## Fox Nap Vanilla
-
-With the release of Minecraft 1.21, music discs are now entirely data-driven! As such, the
-resource and datapacks generated by the Fox Nap Resource Pack Generator are entirely compatible
-with the vanilla game. Details can be found on
-[the wiki](https://github.com/OpenBagTwo/FoxNap/wiki/Using-the-Resource-Pack-Generator-in-Vanilla).
+Instructions for building the resource pack generator can be found
+[on the wiki](../../wiki/Resource-Pack-Generator#building-the-resource-pack-generator-from-source)
 
 ## License and Acknowledgements
 
