@@ -71,4 +71,8 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
     );
   }
 
+  @Override
+  public int getMaxUseTime(ItemStack stack) {
+    return this.cooldown;
+  }
 }
