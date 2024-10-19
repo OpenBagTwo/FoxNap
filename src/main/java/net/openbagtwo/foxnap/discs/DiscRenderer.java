@@ -5,7 +5,6 @@ import static net.openbagtwo.foxnap.FoxNap.MOD_ID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelResolver;
-import net.minecraft.client.render.model.ItemModel;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.util.Identifier;
 import net.openbagtwo.foxnap.config.Config;
@@ -28,7 +27,7 @@ public class DiscRenderer implements ModelResolver {
     for (int i = placeholderStart; i < maxNumDiscs; i++) {
       Identifier matchMe = Identifier.of(MOD_ID, String.format("item/track_%d", i + 1));
       if (context.id().equals(matchMe)) {
-        return new ItemModel(placeholder);
+        return context.getOrLoadModel(placeholder);
       }
     }
     return null;
