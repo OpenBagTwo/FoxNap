@@ -40,11 +40,17 @@ public class DiscRegistry {
    * @return the fully instantiated and registered music disc
    */
   public static Item registerDisc(SoundEvent track, String trackName) {
-    Item disc = new Item(new Item.Settings().registryKey(
-            RegistryKey.of(RegistryKeys.ITEM, Identifier.of(FoxNap.MOD_ID, trackName))).maxCount(1)
-        .rarity(Rarity.RARE).jukeboxPlayable(
-            RegistryKey.of(RegistryKeys.JUKEBOX_SONG, track.id())
-        )
+    Item disc = new Item(
+        new Item.Settings()
+            .registryKey(
+                RegistryKey.of(RegistryKeys.ITEM, Identifier.of(FoxNap.MOD_ID, trackName))
+            )
+            .translationKey("item.minecraft.music_disc_cat")
+            .maxCount(1)
+            .rarity(Rarity.RARE)
+            .jukeboxPlayable(
+                RegistryKey.of(RegistryKeys.JUKEBOX_SONG, track.id())
+            )
     );
     Registry.register(Registries.ITEM, Identifier.of(FoxNap.MOD_ID, trackName), disc);
 
