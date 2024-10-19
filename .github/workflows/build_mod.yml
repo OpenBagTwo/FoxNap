@@ -7,12 +7,13 @@ on: # run on any push to the supported version branches,
   pull_request:
   push:
     branches:
+      - 1.21.2
       - "1.21"
       - 1.20.5
       - 1.20.4
       - 1.20.0
       - 1.19.4
-      - 1.19
+      - "1.19"
 jobs:
   build_mod:
     strategy:

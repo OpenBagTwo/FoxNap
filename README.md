@@ -5,7 +5,7 @@
 [![lint status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/lint.yml)
 [![mod build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_mod.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_mod.yml)
 [![RPG build status](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml/badge.svg)](https://github.com/OpenBagTwo/FoxNap/actions/workflows/build_rpg.yml)
-![supported versions](https://img.shields.io/badge/Supported_Versions-1.19--1.21-blue)
+![supported versions](https://img.shields.io/badge/Supported_Versions-1.19--1.21.2-blue)
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/foxnap)](https://modrinth.com/mod/foxnap)
 
 _**A Survival-, Multiplayer- and Copyright-friendly mod for adding custom music to Minecraft**_
@@ -154,7 +154,8 @@ want to turn into records into that folder. **There is no limit** to the
 number of tracks you can include, and they **do not** need to be pre-converted
 to [Ogg](https://en.wikipedia.org/wiki/Ogg). The only requirement is that
 the files have to be
-[decodable by `ffmpeg`](https://www.ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features).
+[decodable by
+`ffmpeg`](https://www.ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features).
 
 _**Pro Tip:** if your music files include [metadata](https://en.wikipedia.org/wiki/ID3), the title
 and artist
