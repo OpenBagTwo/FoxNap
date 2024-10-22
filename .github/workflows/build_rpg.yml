@@ -99,7 +99,7 @@ jobs:
       - name: Download music for integration test
         if: ${{ steps.cache-music.outputs.cache-hit != 'true' }}
         run: |
-          curl --create-dirs -JL "https://archive.org/compress/gustav-holst-the-planets-op.-32/formats=VBR%20MP3&file=/gustav-holst-the-planets-op.-32.zip" --output music/holst-the-planets.zip
+          curl --create-dirs -JL "https://openbagtwo.github.io/ThePlanets.zip" --output music/holst-the-planets.zip
       - name: Extract integration test music
         run: |
           python -c "from zipfile import ZipFile; zip = ZipFile('music/holst-the-planets.zip'); zip.extractall('build/dist')"
