@@ -14,7 +14,6 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.TradedItem;
-import net.openbagtwo.foxnap.instruments.SecretlyJustAGoatHorn;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -171,7 +170,7 @@ public class MusicAndArts implements TradeOffers.Factory {
    * @return Trade factory that will enable the villager to sell an instrument at a base rate of 12
    * emeralds per instrument
    */
-  public static TradeOffers.Factory sellInstrument(List<SecretlyJustAGoatHorn> instruments,
+  public static TradeOffers.Factory sellInstrument(List<Item> instruments,
       int level) {
     return new SellOneItemFromPoolFactory(instruments, 12, 12, xpMap[level - 1]);
   }

@@ -20,10 +20,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.VillagerProfession;
-import net.minecraft.world.poi.PointOfInterestType;
 import net.openbagtwo.foxnap.FoxNap;
 import net.openbagtwo.foxnap.instruments.InstrumentRegistry;
-import net.openbagtwo.foxnap.instruments.SecretlyJustAGoatHorn;
 import net.openbagtwo.foxnap.integration.BetterEnd;
 
 /**
@@ -69,7 +67,7 @@ public class Conductor {
    * @param records     The list of custom records created by this mod, as returned by
    *                    DiscRegistry.init()
    */
-  public static void init(List<SecretlyJustAGoatHorn> instruments, List<Item> records) {
+  public static void init(List<Item> instruments, List<Item> records) {
 
     List<TradeOffers.Factory> level1Trades = Arrays.asList(
         MusicAndArts.BUY_TONEWOOD,
