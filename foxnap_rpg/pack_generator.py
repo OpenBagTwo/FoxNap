@@ -227,11 +227,15 @@ def generate_resource_pack(
             )
 
         models = foxnap_root / "models" / "item"
+        model_meta = foxnap_root / "items"
         models.mkdir(parents=True, exist_ok=True)
+        model_meta.mkdir(parents=True, exist_ok=True)
         LOGGER.info("Writing record item model jsons")
         for track in tracks:
             with (models / f"track_{track.num}.json").open("w") as f:
                 json.dump(generate_model(track.num), f, **json_opts)
+            with (model_meta / f"track_{track.num}.json").open("w") as f:
+                json.dump(generate_model_meta(track.num), f, **json_opts)
 
         item_textures = foxnap_root / "textures" / "item"
         item_textures.mkdir(exist_ok=True, parents=True)
@@ -382,6 +386,27 @@ def generate_model(track_number: int) -> dict:
     return {
         "parent": "minecraft:item/generated",
         "textures": {"layer0": f"foxnap:item/track_{track_number}"},
+    }
+
+
+def generate_model_meta(track_number: int) -> dict:
+    """Generate a model metadata JSON for a new record
+
+    Parameters
+    ----------
+    track_number : int
+        The number of the track to generate
+
+    Returns
+    -------
+    dict
+        The model info, all set to be written as JSON
+    """
+    return {
+        "model": {
+            "type": "minecraft:model",
+            "model": f"foxnap:item/track_{track_number}",
+        }
     }
 
 
