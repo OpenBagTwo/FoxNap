@@ -11,6 +11,7 @@ import java.util.List;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.render.entity.LightningEntityRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
@@ -24,7 +25,7 @@ import net.minecraft.village.TradeOffers;
 import net.minecraft.village.VillagerProfession;
 import net.openbagtwo.foxnap.FoxNap;
 import net.openbagtwo.foxnap.instruments.InstrumentRegistry;
-import net.openbagtwo.foxnap.integration.BetterEnd;
+import net.openbagtwo.foxnap.integration.LighterEnd;
 
 /**
  * The villager who will sell you all these goodies
@@ -102,40 +103,33 @@ public class Conductor {
       level5Trades.add(MusicAndArts.sellMusicDisc(disc));
     }
 
-    if (FabricLoader.getInstance().isModLoaded("betterend")) {
-      List<Item> endTonewoods = BetterEnd.getTonewoods();
-      if (!endTonewoods.isEmpty()) {
-        level3Trades = new ArrayList<>(level3Trades);
-        level3Trades.add(
-            new MusicAndArts.BuyItemFromPoolForOneEmeraldFactory(
-                endTonewoods,
-                3,
-                16,
-                16
-            )
-        );
-        LOGGER.info(
-            String.format(
-                "Integrating BetterEnd woods into %s's %s trades",
-                FoxNap.MOD_NAME,
-                "Conductor"
-            )
-        );
-      }
-      List<Item> endDiscs = BetterEnd.getMusicDiscs();
-      if (!endDiscs.isEmpty()) {
-        level4Trades = new ArrayList<>(level4Trades);
-        level4Trades.add(
-            MusicAndArts.buyMusicDisc(endDiscs)
-        );
-        LOGGER.info(
-            String.format(
-                "Integrating BetterEnd music discs into %s's %s trades",
-                FoxNap.MOD_NAME,
-                "Conductor"
-            )
-        );
-      }
+    if (FabricLoader.getInstance().isModLoaded(LighterEnd.MOD_ID)) {
+      level3Trades = new ArrayList<>(level3Trades);
+      level3Trades.add(
+          new MusicAndArts.BuyItemFromPoolForOneEmeraldFactory(
+              LighterEnd::getTonewoods,
+              3,
+              16,
+              16
+          )
+      );
+      LOGGER.info(
+          String.format(
+              "Integrating BetterEnd woods into %s's %s trades",
+              FoxNap.MOD_NAME,
+              "Conductor"
+          )
+      );
+
+      level4Trades = new ArrayList<>(level4Trades);
+      level4Trades.add(MusicAndArts.buyMusicDisc(LighterEnd::getMusicDiscs));
+      LOGGER.info(
+          String.format(
+              "Integrating BetterEnd music discs into %s's %s trades",
+              FoxNap.MOD_NAME,
+              "Conductor"
+          )
+      );
     }
 
     makeConductor();

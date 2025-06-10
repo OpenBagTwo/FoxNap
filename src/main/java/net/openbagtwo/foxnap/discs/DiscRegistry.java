@@ -68,8 +68,8 @@ public class DiscRegistry {
    * with a sound event named track_i and emitting a comparator signal of strength i), starting at i
    * = 1
    *
-   * @param numberOfDiscs The length (in seconds) of the tracks that will be made available on the
-   *                      use on the server (read: for the Maestro).
+   * @param numberOfDiscs The number of tracks that will be made available for use on the server
+   *                      (read: offered by The Maestro).
    * @return A list of fully instantiated and registered music discs
    */
   public static List<Item> init(int numberOfDiscs) {

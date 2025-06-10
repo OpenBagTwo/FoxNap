@@ -6,6 +6,7 @@ import static net.openbagtwo.foxnap.FoxNap.LOGGER;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,10 +27,11 @@ public class MusicAndArts implements TradeOffers.Factory {
   private final int price;  // items / emerald or emeralds / item
   private final int maxUses;
   private final int xp;  // this is evidently the XP the *villager* earns?!
-  private final List<? extends Item> itemPool;
+  private final Supplier<List<? extends Item>> poolProvider;
 
-  private MusicAndArts(List<? extends Item> itemPool, int price, int maxUses, int xp) {
-    this.itemPool = itemPool;
+  private MusicAndArts(Supplier<List<? extends Item>> poolProvider, int price, int maxUses,
+      int xp) {
+    this.poolProvider = poolProvider;
     if (price > 0) {
       this.price = price;
       this.isBuy = true;
@@ -52,10 +54,11 @@ public class MusicAndArts implements TradeOffers.Factory {
   @Nullable
   @Override
   public TradeOffer create(Entity entity, Random random) {
-    if (this.price == 0 || this.itemPool.isEmpty()) {
+    List<? extends Item> itemPool = this.poolProvider.get();
+    if (this.price == 0 || itemPool.isEmpty()) {
       return null;
     }
-    Item selectedItem = this.itemPool.get(random.nextInt(this.itemPool.size()));
+    Item selectedItem = itemPool.get(random.nextInt(itemPool.size()));
     if (isBuy) {
       return new TradeOffer(new TradedItem(selectedItem, this.price), new ItemStack(Items.EMERALD),
           this.maxUses, this.xp, 0.05F);
@@ -72,19 +75,19 @@ public class MusicAndArts implements TradeOffers.Factory {
   public static class BuyItemFromPoolForOneEmeraldFactory extends MusicAndArts {
 
     /**
-     * @param itemPool The items to choose from
-     * @param price    The base number of items the player will need to offer to receive one
-     *                 emerald
-     * @param maxUses  The maximum number of this trade a villager can make before restocking
-     * @param xp       The XP the *villager* will earn through this trade
+     * @param poolProvider A method that returns the items to choose from
+     * @param price        The base number of items the player will need to offer to receive one
+     *                     emerald
+     * @param maxUses      The maximum number of this trade a villager can make before restocking
+     * @param xp           The XP the *villager* will earn through this trade
      */
     public BuyItemFromPoolForOneEmeraldFactory(
-        List<? extends Item> itemPool,
+        Supplier<List<? extends Item>> poolProvider,
         int price,
         int maxUses,
         int xp
     ) {
-      super(itemPool, max(price, 0), maxUses, xp);
+      super(poolProvider, max(price, 0), maxUses, xp);
     }
   }
 
@@ -94,19 +97,19 @@ public class MusicAndArts implements TradeOffers.Factory {
   public static class SellOneItemFromPoolFactory extends MusicAndArts {
 
     /**
-     * @param itemPool The items to choose from
-     * @param price    The base number of emeralds the player will need to offer to receive one of
-     *                 this item
-     * @param maxUses  The maximum number of this trade a villager can make before restocking
-     * @param xp       The XP the *villager* will earn through this trade
+     * @param poolProvider A method that returns the items to choose from
+     * @param price        The base number of emeralds the player will need to offer to receive one
+     *                     of this item
+     * @param maxUses      The maximum number of this trade a villager can make before restocking
+     * @param xp           The XP the *villager* will earn through this trade
      */
     public SellOneItemFromPoolFactory(
-        List<? extends Item> itemPool,
+        Supplier<List<? extends Item>> poolProvider,
         int price,
         int maxUses,
         int xp
     ) {
-      super(itemPool, -max(price, 0), maxUses, xp);
+      super(poolProvider, -max(price, 0), maxUses, xp);
     }
   }
 
@@ -125,13 +128,13 @@ public class MusicAndArts implements TradeOffers.Factory {
    * Factory to enable a villager to buy tonewood at a base rate of 4 blocks / 1 emerald
    */
   public static final TradeOffers.Factory BUY_TONEWOOD = new BuyItemFromPoolForOneEmeraldFactory(
-      TONEWOODS, 4, 16, 3);
+      () -> TONEWOODS, 4, 16, 3);
 
   /**
    * Factory to enable a villager to buy noteblocks at a base rate of 2 blocks / 1 emerald
    */
   public static final TradeOffers.Factory BUY_NOTEBLOCK = new BuyItemFromPoolForOneEmeraldFactory(
-      Collections.singletonList(Items.NOTE_BLOCK),
+      () -> Collections.singletonList(Items.NOTE_BLOCK),
       2,
       12,
       15);
@@ -140,11 +143,22 @@ public class MusicAndArts implements TradeOffers.Factory {
    * this mod) at a rate of 1 horn / 1 emerald
    */
   public static final TradeOffers.Factory BUY_SHOFAR = new BuyItemFromPoolForOneEmeraldFactory(
-      Collections.singletonList(Items.GOAT_HORN),
+      () -> Collections.singletonList(Items.GOAT_HORN),
       1,
       8,
       20
   );
+
+  /**
+   * Create a trade factory for selling (preferably common) music discs to a villager.
+   *
+   * @param discProvider A method to fetch the list of discs to choose from
+   * @return Trade factory that will enable the villager to buy one specific music disc for one
+   * emerald
+   */
+  public static TradeOffers.Factory buyMusicDisc(Supplier<List<? extends Item>> discProvider) {
+    return new BuyItemFromPoolForOneEmeraldFactory(discProvider, 1, 8, 30);
+  }
 
   /**
    * Create a trade factory for selling (preferably common) music discs to a villager.
@@ -154,7 +168,7 @@ public class MusicAndArts implements TradeOffers.Factory {
    * emerald
    */
   public static TradeOffers.Factory buyMusicDisc(List<Item> musicDiscs) {
-    return new BuyItemFromPoolForOneEmeraldFactory(musicDiscs, 1, 8, 30);
+    return buyMusicDisc(() -> musicDiscs);
   }
 
   private static final int[] xpMap = {2, 5, 10, 15, 20};
@@ -172,7 +186,7 @@ public class MusicAndArts implements TradeOffers.Factory {
    */
   public static TradeOffers.Factory sellInstrument(List<Item> instruments,
       int level) {
-    return new SellOneItemFromPoolFactory(instruments, 12, 12, xpMap[level - 1]);
+    return new SellOneItemFromPoolFactory(() -> instruments, 12, 12, xpMap[level - 1]);
   }
 
   /**
@@ -186,7 +200,7 @@ public class MusicAndArts implements TradeOffers.Factory {
    * emeralds per disc
    */
   public static TradeOffers.Factory sellMusicDisc(List<Item> discs) {
-    return new SellOneItemFromPoolFactory(discs, 32, 3, 30);
+    return new SellOneItemFromPoolFactory(() -> discs, 32, 3, 30);
   }
 
   /**
@@ -200,7 +214,7 @@ public class MusicAndArts implements TradeOffers.Factory {
    * emeralds per disc
    */
   public static TradeOffers.Factory sellMusicDisc(Item disc) {
-    return new SellOneItemFromPoolFactory(Collections.singletonList(disc), 32, 3, 30);
+    return new SellOneItemFromPoolFactory(() -> Collections.singletonList(disc), 32, 3, 30);
   }
 
 }
