@@ -30,7 +30,10 @@ def is_valid_music_track(file_path: str | os.PathLike) -> bool:
         if not
     """
     try:
-        metadata = ffmpeg.probe(file_path, cmd=bin.ffprobe)
+        try:
+            metadata = ffmpeg.probe(file_path, cmd=bin.ffprobe)
+        except FileNotFoundError:
+            metadata = ffmpeg.probe(file_path)
     except ffmpeg.Error:
         return False
 
@@ -60,7 +63,10 @@ def extract_track_duration(track_path: os.PathLike | str) -> int:
         If for some reason the track's duration cannot be parsed from the
         metadata/
     """
-    metadata = ffmpeg.probe(os.fspath(track_path), cmd=bin.ffprobe)
+    try:
+        metadata = ffmpeg.probe(os.fspath(track_path), cmd=bin.ffprobe)
+    except FileNotFoundError:
+        metadata = ffmpeg.probe(os.fspath(track_path))
     try:
         return math.ceil(float(metadata["format"]["duration"]))
     except (KeyError, TypeError, ValueError) as parse_fail:

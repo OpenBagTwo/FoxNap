@@ -342,7 +342,10 @@ def convert_music_to_ogg(
     LOGGER.debug(
         f"Converting using the following command: {' '.join(converter.compile())}"
     )
-    converter.run(cmd=bin.ffmpeg, capture_stdout=True)
+    try:
+        converter.run(cmd=bin.ffmpeg, capture_stdout=True)
+    except FileNotFoundError:
+        converter.run(capture_stdout=True)
 
 
 def generate_sound_registry(*track_numbers: int) -> dict:
@@ -467,7 +470,10 @@ def extract_album_art(track: os.PathLike | str) -> Image.Image | None:
     """
     track_path = os.fspath(track)
     try:
-        metadata = ffmpeg.probe(track_path, cmd=bin.ffprobe)
+        try:
+            metadata = ffmpeg.probe(track_path, cmd=bin.ffprobe)
+        except FileNotFoundError:
+            metadata = ffmpeg.probe(track_path)
     except ffmpeg.Error as could_not_probe:
         LOGGER.warning(f"Could not probe track {track_path}:" f"\n\t{could_not_probe}")
         return None
@@ -475,9 +481,14 @@ def extract_album_art(track: os.PathLike | str) -> Image.Image | None:
         return None
     with NamedTemporaryFile(mode="w+b", suffix=".png") as cover:
         try:
-            ffmpeg.input(track_path).video.output(
-                os.fspath(cover.name)
-            ).overwrite_output().run(bin.ffmpeg, capture_stdout=True)
+            try:
+                ffmpeg.input(track_path).video.output(
+                    os.fspath(cover.name)
+                ).overwrite_output().run(bin.ffmpeg, capture_stdout=True)
+            except FileNotFoundError:
+                ffmpeg.input(track_path).video.output(
+                    os.fspath(cover.name)
+                ).overwrite_output().run(capture_stdout=True)
         except ffmpeg.Error as extraction_fail:
             LOGGER.warning(
                 f"Could not extract album art from {track_path}:"
@@ -571,7 +582,10 @@ def extract_track_description(track_path: os.PathLike | str) -> str:
         A description of the track (comprising title, artist, composer, etc.)
         if such information was encoded, or just the filename otherwise.
     """
-    metadata = ffmpeg.probe(os.fspath(track_path), cmd=bin.ffprobe)
+    try:
+        metadata = ffmpeg.probe(os.fspath(track_path), cmd=bin.ffprobe)
+    except FileNotFoundError:
+        metadata = ffmpeg.probe(os.fspath(track_path))
     track_info = metadata.get("format", {}).get("tags", {})
     title = track_info.get("title")
     artist = track_info.get("artist")
