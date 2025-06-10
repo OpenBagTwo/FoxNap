@@ -18,6 +18,9 @@
   "entrypoints": {
     "main": [
       "net.openbagtwo.foxnap.FoxNap"
+    ],
+    "modmenu": [
+      "net.openbagtwo.foxnap.config.ModMenu"
     ]
   },
   "depends": {

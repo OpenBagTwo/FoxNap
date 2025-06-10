@@ -50,6 +50,10 @@ public class Config {
     return this.numDiscs;
   }
 
+  public void setNumDiscs(int numDiscs) {
+    this.numDiscs = numDiscs;
+  }
+
   /**
    * Get the number of discs to be added to the server-side item registry
    */
@@ -57,11 +61,19 @@ public class Config {
     return this.maximumNumberOfDiscs;
   }
 
+  public void setMaxDiscs(int maxDiscs) {
+    this.maximumNumberOfDiscs = maxDiscs;
+  }
+
   /**
    * Determine whether the Maestro should be enabled
    */
   public boolean getMaestroEnabled() {
     return this.enableMaestro;
+  }
+
+  public void setMaestroEnabled(boolean enable) {
+    this.enableMaestro = enable;
   }
 
   /**
@@ -113,28 +125,6 @@ public class Config {
     return config;
   }
 
-
-  /**
-   * Write a new configuration file with default options
-   *
-   * @throws ConfigException If the writer encounters any sort of IO error (permissions?)
-   */
-  private static void writeDefaultConfigFile() throws ConfigException {
-    FileWriter configWriter;
-    try {
-      configWriter = new FileWriter(config_path.toFile());
-    } catch (IOException e) {
-      throw new ConfigException(
-          "Could not open " + config_path + " for writing.", e
-      );
-    }
-    Map<String, Object> writeme = new LinkedHashMap<>();
-    writeme.put("n_discs", DEFAULT_N_DISCS);
-
-    (new Yaml(configFormat)).dump(writeme, configWriter);
-    LOGGER.info("Wrote " + MOD_NAME + " configuration file to " + config_path);
-  }
-
   /**
    * Load the settings for the mod, either from file or from defaults
    *
@@ -168,7 +158,41 @@ public class Config {
     }
   }
 
-  private static class ConfigException extends Exception {
+  /**
+   * Write the configuration to file
+   *
+   * @throws ConfigException If the writer encounters any sort of IO error (permissions?)
+   */
+  protected void writeConfigToFile() throws ConfigException {
+    FileWriter configWriter;
+    try {
+      configWriter = new FileWriter(config_path.toFile());
+    } catch (IOException e) {
+      throw new ConfigException(
+          "Could not open " + config_path + " for writing.", e
+      );
+    }
+    Map<String, Object> writeme = new LinkedHashMap<>();
+    writeme.put("n_discs", this.numDiscs);
+    if (this.maximumNumberOfDiscs != DEFAULT_MAX_DISCS) {
+      writeme.put("max_discs", this.maximumNumberOfDiscs);
+    }
+    writeme.put("enable_maestro", this.enableMaestro);
+
+    (new Yaml(configFormat)).dump(writeme, configWriter);
+    LOGGER.info("Wrote " + MOD_NAME + " configuration file to " + config_path);
+  }
+
+  /**
+   * Write a new configuration file with default options
+   *
+   * @throws ConfigException If the writer encounters any sort of IO error (permissions?)
+   */
+  private static void writeDefaultConfigFile() throws ConfigException {
+    Config.getDefaultConfiguration().writeConfigToFile();
+  }
+
+  protected static class ConfigException extends Exception {
 
     ConfigException(String message, Exception e) {
       super(message, e);
