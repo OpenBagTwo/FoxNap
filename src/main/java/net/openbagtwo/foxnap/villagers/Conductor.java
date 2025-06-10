@@ -16,9 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.village.TradeOffers;
@@ -47,7 +45,7 @@ public class Conductor {
         Registries.VILLAGER_PROFESSION,
         Identifier.of(MOD_ID, "conductor"),
         new VillagerProfession(
-            Text.literal("conductor"),
+            "conductor",
             entry -> entry.matchesKey(
                 RegistryKey.of(Registries.POINT_OF_INTEREST_TYPE.getKey(), poi_id)
             ),
@@ -132,11 +130,10 @@ public class Conductor {
       );
     }
 
-    makeConductor();
+    VillagerProfession conductor = makeConductor();
 
     TradeOffers.PROFESSION_TO_LEVELED_TRADE.put(
-        RegistryKey.of(RegistryKeys.VILLAGER_PROFESSION, Identifier.of(MOD_ID, "conductor")),
-        TradeOffers.copyToFastUtilMap(ImmutableMap.of(
+        conductor, TradeOffers.copyToFastUtilMap(ImmutableMap.of(
                 1, level1Trades.toArray(new TradeOffers.Factory[1]),
                 2, level2Trades.toArray(new TradeOffers.Factory[1]),
                 3, level3Trades.toArray(new TradeOffers.Factory[1]),
