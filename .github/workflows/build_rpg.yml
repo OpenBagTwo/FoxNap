@@ -6,7 +6,7 @@ on: # run on any push to the primary branch
   pull_request:
   push:
     branches:
-      - 1.21.9
+      - 1.21.11
 
 jobs:
   test_and_build_rpg:

@@ -62,7 +62,7 @@ public class SecretlyJustAGoatHorn extends GoatHornItem {
     );
     world.emitGameEvent(
         GameEvent.INSTRUMENT_PLAY,
-        player.getPos(),
+        player.getEntityPos(),
         GameEvent.Emitter.of(player)
     );
   }

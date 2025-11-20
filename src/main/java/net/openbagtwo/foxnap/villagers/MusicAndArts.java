@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
@@ -53,7 +54,7 @@ public class MusicAndArts implements TradeOffers.Factory {
 
   @Nullable
   @Override
-  public TradeOffer create(Entity entity, Random random) {
+  public TradeOffer create(ServerWorld world, Entity entity, Random random) {
     List<? extends Item> itemPool = this.poolProvider.get();
     if (this.price == 0 || itemPool.isEmpty()) {
       return null;
