@@ -3,9 +3,9 @@ package net.openbagtwo.foxnap.integration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 
 /**
  * Tonewood and music disc integration for the LighterEnd mod
@@ -39,11 +39,11 @@ public class LighterEnd {
     ArrayList<Item> tonewoodItemList = new ArrayList<>();
     for (String woodType : tonewoods) {
 
-      if (Registries.ITEM.containsId(
-          Identifier.of(MOD_ID, woodType + "_stripped_wood")
+      if (BuiltInRegistries.ITEM.containsKey(
+          Identifier.fromNamespaceAndPath(MOD_ID, woodType + "_stripped_wood")
       )) {
-        tonewoodItemList.add(Registries.ITEM.get(
-            Identifier.of(MOD_ID, woodType + "_stripped_wood")));
+        tonewoodItemList.add(BuiltInRegistries.ITEM.getValue(
+            Identifier.fromNamespaceAndPath(MOD_ID, woodType + "_stripped_wood")));
       }
     }
     return tonewoodItemList;
@@ -55,11 +55,11 @@ public class LighterEnd {
   public static List<Item> getMusicDiscs() {
     ArrayList<Item> discList = new ArrayList<>();
     for (String end_disc_name : tracks) {
-      if (Registries.ITEM.containsId(
-          Identifier.of(MOD_ID, "music_disc_" + end_disc_name)
+      if (BuiltInRegistries.ITEM.containsKey(
+          Identifier.fromNamespaceAndPath(MOD_ID, "music_disc_" + end_disc_name)
       )) {
-        discList.add(Registries.ITEM.get(
-            Identifier.of(MOD_ID, "music_disc_" + end_disc_name)
+        discList.add(BuiltInRegistries.ITEM.getValue(
+            Identifier.fromNamespaceAndPath(MOD_ID, "music_disc_" + end_disc_name)
         ));
       }
     }

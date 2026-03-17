@@ -10,19 +10,18 @@ import java.util.Arrays;
 import java.util.List;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.render.entity.LightningEntityRenderer;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.village.TradeOffers;
-import net.minecraft.village.VillagerProfession;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.VillagerTrades;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.openbagtwo.foxnap.FoxNap;
 import net.openbagtwo.foxnap.instruments.InstrumentRegistry;
 import net.openbagtwo.foxnap.integration.LighterEnd;
@@ -37,22 +36,22 @@ public class Conductor {
 
   private static VillagerProfession makeConductor() {
 
-    Identifier poi_id = Identifier.of(MOD_ID, "conductor_poi");
+    Identifier poi_id = Identifier.fromNamespaceAndPath(MOD_ID, "conductor_poi");
     PointOfInterestHelper.register(poi_id, 1, 1,
         // hoping this is in chunks?
-        ImmutableSet.copyOf(Blocks.JUKEBOX.getStateManager().getStates())
+        ImmutableSet.copyOf(Blocks.JUKEBOX.getStateDefinition().getPossibleStates())
     );
 
     return Registry.register(
-        Registries.VILLAGER_PROFESSION,
-        Identifier.of(MOD_ID, "conductor"),
+        BuiltInRegistries.VILLAGER_PROFESSION,
+        Identifier.fromNamespaceAndPath(MOD_ID, "conductor"),
         new VillagerProfession(
-            Text.literal("conductor"),
-            entry -> entry.matchesKey(
-                RegistryKey.of(Registries.POINT_OF_INTEREST_TYPE.getKey(), poi_id)
+            Component.literal("conductor"),
+            entry -> entry.is(
+                ResourceKey.create(BuiltInRegistries.POINT_OF_INTEREST_TYPE.key(), poi_id)
             ),
-            entry -> entry.matchesKey(
-                RegistryKey.of(Registries.POINT_OF_INTEREST_TYPE.getKey(), poi_id)
+            entry -> entry.is(
+                ResourceKey.create(BuiltInRegistries.POINT_OF_INTEREST_TYPE.key(), poi_id)
             ),
             ImmutableSet.of(),
             ImmutableSet.of(),
@@ -72,22 +71,22 @@ public class Conductor {
    */
   public static void init(List<Item> instruments, List<Item> records) {
 
-    List<TradeOffers.Factory> level1Trades = Arrays.asList(
+    List<VillagerTrades.ItemListing> level1Trades = Arrays.asList(
         MusicAndArts.BUY_TONEWOOD,
         MusicAndArts.sellInstrument(instruments, 1)
     );
 
-    List<TradeOffers.Factory> level2Trades = Arrays.asList(
+    List<VillagerTrades.ItemListing> level2Trades = Arrays.asList(
         MusicAndArts.BUY_NOTEBLOCK,
         MusicAndArts.sellInstrument(instruments, 2)
     );
 
-    List<TradeOffers.Factory> level3Trades = Arrays.asList(
+    List<VillagerTrades.ItemListing> level3Trades = Arrays.asList(
         MusicAndArts.BUY_SHOFAR,
         MusicAndArts.sellInstrument(instruments, 3)
     );
 
-    List<TradeOffers.Factory> level4Trades = Arrays.asList(
+    List<VillagerTrades.ItemListing> level4Trades = Arrays.asList(
         MusicAndArts.buyMusicDisc(
             Arrays.asList(
                 Items.MUSIC_DISC_13,
@@ -98,7 +97,7 @@ public class Conductor {
         MusicAndArts.sellInstrument(instruments, 4)
     );
 
-    List<TradeOffers.Factory> level5Trades = new ArrayList<>();
+    List<VillagerTrades.ItemListing> level5Trades = new ArrayList<>();
     for (Item disc : records) {
       level5Trades.add(MusicAndArts.sellMusicDisc(disc));
     }
@@ -134,14 +133,14 @@ public class Conductor {
 
     makeConductor();
 
-    TradeOffers.PROFESSION_TO_LEVELED_TRADE.put(
-        RegistryKey.of(RegistryKeys.VILLAGER_PROFESSION, Identifier.of(MOD_ID, "conductor")),
-        TradeOffers.copyToFastUtilMap(ImmutableMap.of(
-                1, level1Trades.toArray(new TradeOffers.Factory[1]),
-                2, level2Trades.toArray(new TradeOffers.Factory[1]),
-                3, level3Trades.toArray(new TradeOffers.Factory[1]),
-                4, level4Trades.toArray(new TradeOffers.Factory[1]),
-                5, level5Trades.toArray(new TradeOffers.Factory[1])
+    VillagerTrades.TRADES.put(
+        ResourceKey.create(Registries.VILLAGER_PROFESSION, Identifier.fromNamespaceAndPath(MOD_ID, "conductor")),
+        VillagerTrades.toIntMap(ImmutableMap.of(
+                1, level1Trades.toArray(new VillagerTrades.ItemListing[1]),
+                2, level2Trades.toArray(new VillagerTrades.ItemListing[1]),
+                3, level3Trades.toArray(new VillagerTrades.ItemListing[1]),
+                4, level4Trades.toArray(new VillagerTrades.ItemListing[1]),
+                5, level5Trades.toArray(new VillagerTrades.ItemListing[1])
             )
         )
     );

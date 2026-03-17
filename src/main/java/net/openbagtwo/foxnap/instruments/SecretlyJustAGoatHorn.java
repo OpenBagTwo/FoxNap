@@ -1,74 +1,69 @@
 package net.openbagtwo.foxnap.instruments;
 
 import java.util.List;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Instrument;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.GoatHornItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Rarity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.InstrumentItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 
-public class SecretlyJustAGoatHorn extends GoatHornItem {
+public class SecretlyJustAGoatHorn extends InstrumentItem {
 
   private final SoundEvent soundEvent;
   private final int cooldown;
 
-  public SecretlyJustAGoatHorn(Settings settings, SoundEvent soundEvent, int cooldown) {
+  public SecretlyJustAGoatHorn(Properties settings, SoundEvent soundEvent, int cooldown) {
     super(
-        settings.useItemPrefixedTranslationKey().rarity(Rarity.UNCOMMON).maxCount(1)
+        settings.useItemDescriptionPrefix().rarity(Rarity.UNCOMMON).stacksTo(1)
     );
     this.soundEvent = soundEvent;
     this.cooldown = cooldown;
   }
 
   @Override
-  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+  public InteractionResult use(Level world, Player user, InteractionHand hand) {
         /*
        TODO:
              - implement handed instruments (can only be held in right or left hand)
              - implement two-handed instruments (require other hand to be empty)
              - implement two-item instruments (e.g. violin + bow)
          */
-    ItemStack itemStack = user.getStackInHand(hand);
+    ItemStack itemStack = user.getItemInHand(hand);
 
-    user.setCurrentHand(hand);
+    user.startUsingItem(hand);
 
     playSound(world, user, this.soundEvent);
-    user.getItemCooldownManager().set(itemStack, MathHelper.floor(this.cooldown));
-    user.incrementStat(Stats.USED.getOrCreateStat(this));
-    return ActionResult.CONSUME;
+    user.getCooldowns().addCooldown(itemStack, Mth.floor(this.cooldown));
+    user.awardStat(Stats.ITEM_USED.get(this));
+    return InteractionResult.CONSUME;
   }
 
-  private static void playSound(World world, PlayerEntity player, SoundEvent soundEvent) {
-    world.playSoundFromEntity(
+  private static void playSound(Level world, Player player, SoundEvent soundEvent) {
+    world.playSound(
         player,
         player,
         soundEvent,
-        SoundCategory.RECORDS,
+        SoundSource.RECORDS,
         4.0F,
         1.0F
     );
-    world.emitGameEvent(
+    world.gameEvent(
         GameEvent.INSTRUMENT_PLAY,
-        player.getEntityPos(),
-        GameEvent.Emitter.of(player)
+        player.position(),
+        GameEvent.Context.of(player)
     );
   }
 
   @Override
-  public int getMaxUseTime(ItemStack stack, LivingEntity user) {
+  public int getUseDuration(ItemStack stack, LivingEntity user) {
     return this.cooldown;
   }
 }

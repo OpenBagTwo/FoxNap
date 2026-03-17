@@ -1,41 +1,41 @@
 package net.openbagtwo.foxnap.config;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.network.chat.Component;
 import net.openbagtwo.foxnap.FoxNap;
 
-public class ConfigScreen extends GameOptionsScreen {
+public class ConfigScreen extends OptionsSubScreen {
 
   public Config config;
 
   public ConfigScreen(Screen previous) {
-    super(previous, MinecraftClient.getInstance().options, Text.of(FoxNap.MOD_NAME));
+    super(previous, Minecraft.getInstance().options, Component.nullToEmpty(FoxNap.MOD_NAME));
     this.config = Config.loadConfiguration();
   }
 
   @Override
   protected void addOptions() {
-    if (this.body == null) {
+    if (this.list == null) {
       return;
     }
-    this.body.addSingleOptionEntry(
-        SimpleOption.ofBoolean("Enable Maestro",
+    this.list.addBig(
+        OptionInstance.createBoolean("Enable Maestro",
             this.config.getMaestroEnabled(), (value) -> {
               this.config.setMaestroEnabled(value);
             }));
-    this.body.addSingleOptionEntry(
-        new SimpleOption<>(
+    this.list.addBig(
+        new OptionInstance<>(
             "Number of Discs",
-            SimpleOption.constantTooltip(
-                Text.of("The size of the Maestro's music disc trade pool")),
-            (optionText, value) -> GameOptions.getGenericValueText(optionText,
-                Text.of(String.valueOf(value))),
-            new SimpleOption.ValidatingIntSliderCallbacks(0, 64, false),
+            OptionInstance.cachedConstantTooltip(
+                Component.nullToEmpty("The size of the Maestro's music disc trade pool")),
+            (optionText, value) -> Options.genericValueLabel(optionText,
+                Component.nullToEmpty(String.valueOf(value))),
+            new OptionInstance.IntRange(0, 64, false),
             this.config.getNumDiscs(),
             value -> {
               this.config.setNumDiscs(value);
@@ -43,10 +43,10 @@ public class ConfigScreen extends GameOptionsScreen {
   }
 
   @Override
-  protected void initFooter() {
-    this.layout.addFooter(
-        ButtonWidget.builder(Text.of("Changes will apply after restart"),
-            (button) -> this.close()).width(200).build());
+  protected void addFooter() {
+    this.layout.addToFooter(
+        Button.builder(Component.nullToEmpty("Changes will apply after restart"),
+            (button) -> this.onClose()).width(200).build());
   }
 
   @Override

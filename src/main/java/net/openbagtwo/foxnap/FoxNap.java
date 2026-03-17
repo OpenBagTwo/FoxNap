@@ -1,7 +1,7 @@
 package net.openbagtwo.foxnap;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import net.openbagtwo.foxnap.config.Config;
 import net.openbagtwo.foxnap.discs.DiscRegistry;
 import net.openbagtwo.foxnap.instruments.InstrumentRegistry;
