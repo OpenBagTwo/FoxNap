@@ -7,6 +7,7 @@ on: # run on any push to the supported version branches,
   pull_request:
   push:
     branches:
+      - 26.1
       - 1.21.11
       - 1.21.9
       - 1.21.5
@@ -22,7 +23,7 @@ jobs:
   build_mod:
     strategy:
       matrix:
-        java: [ 21 ]
+        java: [ 25 ]
         os: [ ubuntu-latest ]  # have yet to come across a cross-platform Java build issue
     runs-on: ${{ matrix.os }}
     steps:

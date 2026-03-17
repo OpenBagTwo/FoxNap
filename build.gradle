@@ -1,11 +1,9 @@
 plugins {
-    id 'fabric-loom' version '1.13-SNAPSHOT'
-    id 'maven-publish'
+    id "net.fabricmc.fabric-loom" version '1.15-SNAPSHOT'
     id "fr.brouillard.oss.gradle.jgitver" version "0.9.1"
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gradleup.shadow' version '9.3.1'
 }
 
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
@@ -21,14 +19,13 @@ loom {
 dependencies {
 
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc:fabric-loader:$project.loader_version"
 
     // Fabric API
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // ModMenu support
-    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+    implementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     //SnakeYAML
     compileOnly "org.yaml:snakeyaml:${project.snakeyaml_version}"
@@ -45,8 +42,8 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    // Minecraft 1.20.5 upwards uses Java 21.
-    it.options.release = 21
+    // Minecraft 26.1 upwards uses Java 21.
+    it.options.release = 25
 }
 
 java {
@@ -54,46 +51,24 @@ java {
     // if it is present.
     // If you remove this line, sources will not be generated.
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${project.base.archivesName.get()}" }
     }
 }
 
 shadowJar {
     configurations = [project.configurations.shadow]
     archiveClassifier.set("dev")
-    relocate "org.yaml", "{${project.maven_group}.${project.archivesBaseName}.shadow.org.yaml"
-}
-
-remapJar {
-    dependsOn(shadowJar)
-    inputFile = tasks.shadowJar.archiveFile
+    relocate "org.yaml", "${project.maven_group}.shadow.org.yaml"
 }
 
 jgitver {
     useDirty = true
     useGitCommitID = true
     gitCommitIDLength = 8
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
 }
