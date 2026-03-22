@@ -3,7 +3,7 @@ package net.openbagtwo.foxnap.discs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,7 +43,8 @@ public class DiscRegistry {
     Item disc = new Item(
         new Item.Properties()
             .setId(
-                ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(FoxNap.MOD_ID, trackName))
+                ResourceKey.create(Registries.ITEM,
+                    Identifier.fromNamespaceAndPath(FoxNap.MOD_ID, trackName))
             )
             .overrideDescription("item.minecraft.music_disc_cat")
             .stacksTo(1)
@@ -52,7 +53,8 @@ public class DiscRegistry {
                 ResourceKey.create(Registries.JUKEBOX_SONG, track.location())
             )
     );
-    Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(FoxNap.MOD_ID, trackName), disc);
+    Registry.register(BuiltInRegistries.ITEM,
+        Identifier.fromNamespaceAndPath(FoxNap.MOD_ID, trackName), disc);
 
     FoxNap.LOGGER.debug("Registered " + disc);
     return disc;
@@ -75,12 +77,14 @@ public class DiscRegistry {
   public static List<Item> init(int numberOfDiscs) {
     ArrayList<Item> discs = new ArrayList<>();
     for (int i = 1; i <= numberOfDiscs; i++) {
-      Identifier trackId = Identifier.fromNamespaceAndPath(FoxNap.MOD_ID, String.format("track_%d", i));
+      Identifier trackId = Identifier.fromNamespaceAndPath(FoxNap.MOD_ID,
+          String.format("track_%d", i));
       SoundEvent track = new SoundEvent(trackId, Optional.of(16.0f));
       registerTrack(track, trackId);
       Item disc = registerDisc(track);
       discs.add(disc);
-      ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> entries.accept(disc));
+      CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+          .register(entries -> entries.accept(disc));
     }
     return discs;
   }

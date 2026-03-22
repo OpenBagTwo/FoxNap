@@ -24,10 +24,9 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.18.5",
-    "fabric": "*",
+    "fabricloader": ">=0.18.4",
+    "fabric-api": "*",
     "minecraft": ">26.0",
     "java": ">=25"
-  },
-  "accessWidener": "foxnap.accesswidener"
+  }
 }

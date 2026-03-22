@@ -1,2 +1,0 @@
-accessWidener  v1  official
-accessible    method    net/minecraft/world/entity/npc/villager/VillagerTrades    toIntMap    (Lcom/google/common/collect/ImmutableMap;)Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;

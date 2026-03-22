@@ -21,13 +21,13 @@ public class FoxNap implements ModInitializer {
   public void onInitialize() {
     Config config = Config.loadConfiguration();
     LOGGER.info("Registering " + MOD_NAME);
-    List<Item> instruments = InstrumentRegistry.init();
-    List<Item> custom_discs = DiscRegistry.init(
+    InstrumentRegistry.init();
+    DiscRegistry.init(
         config.getNumDiscs(),
         config.getMaximumNumberOfDiscs()
     );
     if (config.getMaestroEnabled()) {
-      Conductor.init(instruments, custom_discs);
+      Conductor.init();
     }
     LOGGER.info(MOD_NAME + " Initialization Complete");
   }

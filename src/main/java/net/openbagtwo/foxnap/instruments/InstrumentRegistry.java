@@ -1,6 +1,6 @@
 package net.openbagtwo.foxnap.instruments;
 
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -10,7 +10,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
-import net.minecraft.world.item.Items;
 import net.openbagtwo.foxnap.FoxNap;
 
 import java.util.ArrayList;
@@ -45,20 +44,24 @@ public class InstrumentRegistry {
    * @return the fully instantiated and registered instrument
    */
   public static Item registerInstrument(String instrumentName) {
-    return Items.registerItem(
-        ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(FoxNap.MOD_ID, instrumentName)),
-        settings -> new SecretlyJustAGoatHorn(
-            settings,
+    ResourceKey<Item> key = ResourceKey.create(
+        Registries.ITEM, Identifier.fromNamespaceAndPath(FoxNap.MOD_ID, instrumentName)
+    );
+    return Registry.register(
+        BuiltInRegistries.ITEM,
+        key,
+        new SecretlyJustAGoatHorn(
+            new Properties().setId(key),
             registerInstrumentSound(instrumentName),
             20 * INSTRUMENTS.get(instrumentName)
-        ),
-        new Properties()
+        )
     );
   }
 
   public static SoundEvent registerInstrumentSound(String instrumentName) {
     Identifier playSoundId = Identifier.fromNamespaceAndPath(FoxNap.MOD_ID, instrumentName);
-    return Registry.register(BuiltInRegistries.SOUND_EVENT, playSoundId, SoundEvent.createVariableRangeEvent(playSoundId));
+    return Registry.register(BuiltInRegistries.SOUND_EVENT, playSoundId,
+        SoundEvent.createVariableRangeEvent(playSoundId));
   }
 
   /**
@@ -70,7 +73,8 @@ public class InstrumentRegistry {
     ArrayList<Item> instruments = new ArrayList<>();
     for (String instrument : INSTRUMENTS.keySet()) {
       Item tooter = registerInstrument(instrument);
-      ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> entries.accept(tooter));
+      CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+          .register(entries -> entries.accept(tooter));
       instruments.add(tooter);
       FoxNap.LOGGER.debug("Registered " + instrument);
     }
