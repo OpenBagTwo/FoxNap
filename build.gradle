@@ -59,7 +59,9 @@ jar {
 
 shadowJar {
     configurations = [project.configurations.shadow]
-    archiveClassifier.set("dev")
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
     relocate "org.yaml", "${project.maven_group}.shadow.org.yaml"
 }
 
