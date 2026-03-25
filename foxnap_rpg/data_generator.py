@@ -8,7 +8,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Iterable
 
-from . import assets
+from . import assets, utils
 
 LOGGER = logging.getLogger(__name__)
 
@@ -37,11 +37,35 @@ def generate_datapack(
     with TemporaryDirectory() as tmpdir:
         song_directory = Path(tmpdir) / "data" / "foxnap" / "jukebox_song"
         song_directory.mkdir(parents=True)
+        trade_directory = (
+            Path(tmpdir)
+            / "data"
+            / "foxnap"
+            / "villager_trade"
+            / "conductor"
+            / "music_disc_sells"
+        )
+        trade_directory.mkdir(parents=True)
+
+        level_5_trades: list[str] = []
         for song_spec in jukebox_songs:
             LOGGER.debug("Generating %s", f"{song_spec[0]}.json")
             (song_directory / f"{song_spec[0]}.json").write_text(
                 generate_jukebox_song(*song_spec)
             )
+            (trade_directory / f"{song_spec[0]}.json").write_text(
+                generate_disc_trade(song_spec[0])
+            )
+            level_5_trades.append(f"foxnap:conductor/music_disc_sells/{song_spec[0]}")
+
+        trade_tag_directory = (
+            Path(tmpdir) / "data" / "foxnap" / "tags" / "villager_trade" / "conductor"
+        )
+        trade_tag_directory.mkdir(parents=True)
+        (trade_tag_directory / "level_5.json").write_text(
+            json.dumps({"values": level_5_trades}, sort_keys=False, indent=2)
+        )
+
         output_path_as_str = str(output_path)
         if output_path_as_str.endswith(".zip"):
             output_path_as_str = output_path_as_str[:-4]
@@ -67,6 +91,11 @@ def generate_jukebox_song(
     comparator_output : int
         The redstone signal strength of the comparator output that should be emitted
         from a jukebox playing that track
+
+    Returns
+    -------
+    str
+        The jukebox song JSON, ready to be written to file
     """
     return json.dumps(
         {
@@ -76,7 +105,31 @@ def generate_jukebox_song(
             "sound_event": {"sound_id": f"foxnap:{song_name}"},
         },
         sort_keys=True,
-        indent=4,
+        indent=2,
+    )
+
+
+def generate_disc_trade(song_name: str) -> str:
+    """Generate a disc trade spec JSON given the provided song name
+
+    Parameters
+    ----------
+    song_name : str
+        The name of the jukebox song
+
+    Returns
+    -------
+    str
+        The disc trade JSON, ready to be written to file
+    """
+    return json.dumps(
+        {
+            "gives": {"count": 1, "id": f"foxnap:{song_name}"},
+            "max_uses": 3,
+            "reputation_discount": 0.05,
+            "wants": {"count": 32, "id": "minecraft:emerald"},
+            "xp": 30,
+        }
     )
 
 
