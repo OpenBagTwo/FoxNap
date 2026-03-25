@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -36,12 +37,10 @@ public class SecretlyJustAGoatHorn extends InstrumentItem {
              - implement two-handed instruments (require other hand to be empty)
              - implement two-item instruments (e.g. violin + bow)
          */
-    ItemStack itemStack = user.getItemInHand(hand);
-
     user.startUsingItem(hand);
 
     playSound(world, user, this.soundEvent);
-    user.getCooldowns().addCooldown(itemStack, Mth.floor(this.cooldown));
+    user.getCooldowns().addCooldown(user.getItemInHand(hand), this.cooldown);
     user.awardStat(Stats.ITEM_USED.get(this));
     return InteractionResult.CONSUME;
   }
