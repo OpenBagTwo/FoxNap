@@ -6,7 +6,6 @@ import java.util.Optional;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -14,7 +13,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.JukeboxPlayable;
 import net.minecraft.world.item.Rarity;
 import net.openbagtwo.foxnap.FoxNap;
 
@@ -51,18 +49,8 @@ public class DiscRegistry {
             .overrideDescription("item.minecraft.music_disc_cat")
             .stacksTo(1)
             .rarity(Rarity.RARE)
-            .delayedComponent(
-                DataComponents.JUKEBOX_PLAYABLE,
-                context -> new JukeboxPlayable(
-                    context.get(ResourceKey.create(Registries.JUKEBOX_SONG, track.location()))
-                        .orElse(
-                            context.getOrThrow(
-                                ResourceKey.create(
-                                    Registries.JUKEBOX_SONG,
-                                    Identifier.fromNamespaceAndPath(FoxNap.MOD_ID, "placeholder"))
-                            )
-                        )
-                )
+            .jukeboxPlayable(
+                ResourceKey.create(Registries.JUKEBOX_SONG, track.location())
             )
     );
     Registry.register(BuiltInRegistries.ITEM,
